@@ -412,6 +412,9 @@ window.addEventListener('load', function(event) {
         }
         table.model.items = items;
 
+        // narrower
+        table.$el.style.width = '120px';
+
         // request rendering.
         table.invalidate();
       }
