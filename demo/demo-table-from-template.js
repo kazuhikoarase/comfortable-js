@@ -4,7 +4,7 @@
 
 var tableFromTemplate = function(targetId) {
 
-  var $t = comfortable;
+  var $c = comfortable;
 
   var masterData1 = [
     { grpCd : '01', text : 'Group1' },
@@ -38,7 +38,7 @@ var tableFromTemplate = function(targetId) {
     }
   };
 
-  var table = $t.fromTemplate({
+  var table = $c.fromTemplate({
     thead : [[
       { label : 'A', width : 140, backgroundColor : '#ff6666', textAlign : 'center',
         dataField : 'myData1' },

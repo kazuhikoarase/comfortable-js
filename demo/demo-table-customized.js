@@ -4,7 +4,7 @@
 
 var tableCustomized = function(targetId) {
 
-  var $t = comfortable;
+  var $c = comfortable;
 
   var headers = [ {},{} ];
   var columns = [];
@@ -14,9 +14,9 @@ var tableCustomized = function(targetId) {
     items.push({});
   }
   headers[0][4] = { label : 'Number' };
-  columns[4].renderer = $t.createDefaultCellRenderer({ dataType : 'number' });
+  columns[4].renderer = $c.createDefaultCellRenderer({ dataType : 'number' });
 
-  var table = $t.createTable();
+  var table = $c.createTable();
 
   table.$el.style.width = '900px';
   table.$el.style.height  = '400px';
@@ -25,7 +25,7 @@ var tableCustomized = function(targetId) {
   table.lockRow = headers.length;
   table.lockColumn = 2;
 
-  table.model = $t.util.extend(table.model, {
+  table.model = $c.util.extend(table.model, {
     cellWidth : { 4 : 60 },
     cellHeight : { 8 : 50 },
     columnIndices : columns.map(function(c, i) { return i; }),
@@ -117,7 +117,7 @@ var tableCustomized = function(targetId) {
       this.cellWidth[this.columnIndices[detail.col]] = detail.cellWidth;
     }
   }).on('columndragged', function(event, detail) {
-    this.columnIndices = $t.util.moveSublist(
+    this.columnIndices = $c.util.moveSublist(
         this.columnIndices, detail.colFrom, detail.colSpan, detail.colTo);
     if (detail.colFrom < table.lockColumn && table.lockColumn <= detail.colTo) {
       table.lockColumn -= detail.colSpan;

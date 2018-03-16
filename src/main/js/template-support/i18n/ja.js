@@ -9,11 +9,11 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
-  ($t.i18n = $t.i18n || {}).ja = {
+  ($c.i18n = $c.i18n || {}).ja = {
     messages : {
       RESET_FILTER : '並び替えとフィルタをクリア',
       EDIT_COLUMNS : '列の表示と順序',

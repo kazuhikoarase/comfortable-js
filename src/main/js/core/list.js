@@ -9,13 +9,13 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
   var createList = function() {
 
-    var util = $t.util;
+    var util = $c.util;
 
     var listContent = util.createElement('div', {
       style : { position : 'absolute' } });
@@ -52,12 +52,12 @@
       return cell;
     };
 
-    var $public = util.extend($t.createUIEventTarget(), {
+    var $public = util.extend($c.createUIEventTarget(), {
       $el : frame,
       getItemAt : function(index) { return 'item' + index; },
       getItemCount : function() { return 100000; },
       createCell : function() {
-        return { $el : $t.util.createElement('div', {
+        return { $el : $c.util.createElement('div', {
           props : { textContent : 'M' },
           style : { borderBottom : '1px solid silver' }
         }) };
@@ -125,6 +125,6 @@
     return $public;
   };
 
-  $t.createList = createList;
+  $c.createList = createList;
 
 }(window.comfortable || (window.comfortable = {}) );

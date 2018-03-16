@@ -418,13 +418,13 @@ window.addEventListener('load', function(event) {
     }
   ];
 
-  var $t = comfortable;
+  var $c = comfortable;
 
   // toc
-  document.getElementById('samples').appendChild($t.util.createElement('ul',
+  document.getElementById('samples').appendChild($c.util.createElement('ul',
     samples.map(function(sample, i) {
-      return $t.util.createElement('li', [
-        $t.util.createElement('a', {
+      return $c.util.createElement('li', [
+        $c.util.createElement('a', {
           attrs : { href : '#sample' + (i + 1) },
           props : { textContent : sample.title } })] );
     }) ) );
@@ -435,18 +435,18 @@ window.addEventListener('load', function(event) {
     // freeze a template before creation.
     var template = stringify(sample.template);
     //
-    var table = $t.fromTemplate(sample.template);
+    var table = $c.fromTemplate(sample.template);
     sample.code(table);
-    document.getElementById('samples').appendChild($t.util.createElement('div',[
-      $t.util.createElement('a', { attrs : { name : 'sample' + (i + 1) } }),
-      $t.util.createElement('h3', { props : { textContent : sample.title} }),
-      $t.util.createElement('pre', { attrs : { 'class': 'sample-code' } },
+    document.getElementById('samples').appendChild($c.util.createElement('div',[
+      $c.util.createElement('a', { attrs : { name : 'sample' + (i + 1) } }),
+      $c.util.createElement('h3', { props : { textContent : sample.title} }),
+      $c.util.createElement('pre', { attrs : { 'class': 'sample-code' } },
           ('var table = comfortable.fromTemplate(' +
             template + ');\n' +
             extractCode(sample.code) +
             '\n\ndocument.body.appendChild(table.$el);').split(/\n/g).map(function(line) {
-              return line.length == 0? $t.util.createElement('br') :
-                $t.util.createElement('div', { props : { textContent : line },
+              return line.length == 0? $c.util.createElement('br') :
+                $c.util.createElement('div', { props : { textContent : line },
                   attrs : { 'class' : line.match(/^\s*\/\//) ? 'comment' : '' } });
             }) ),
       table.$el

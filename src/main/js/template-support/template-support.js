@@ -9,30 +9,30 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
-  $t.classNamePrefix = 'jct-';
+  $c.classNamePrefix = 'ctj-';
 
-  $t.i18n = $t.i18n || {};
-  $t.getI18N = function(lang) {
+  $c.i18n = $c.i18n || {};
+  $c.getI18N = function(lang) {
     lang = lang || navigator.language || navigator.userLanguage;
-    return $t.util.extend({}, $t.i18n.en, $t.i18n[lang] ||
-        $t.i18n[lang.replace(/\-\w+$/, '')] || {});
+    return $c.util.extend({}, $c.i18n.en, $c.i18n[lang] ||
+        $c.i18n[lang.replace(/\-\w+$/, '')] || {});
   };
-  $t.getMessages = function() { return this.getI18N().messages; };
+  $c.getMessages = function() { return this.getI18N().messages; };
 
-  $t.SortOrder = { ASC : 'asc', DESC : 'desc' };
+  $c.SortOrder = { ASC : 'asc', DESC : 'desc' };
 
   var showMenu = function(left, top, menuItems) {
     var subMenu = null;
-    var menu = $t.util.createElement('div', {
-      attrs : { 'class' : $t.classNamePrefix + 'contextmenu' },
+    var menu = $c.util.createElement('div', {
+      attrs : { 'class' : $c.classNamePrefix + 'contextmenu' },
       style : { position : 'absolute', left : left + 'px', top : top + 'px' } },
       menuItems.map(function(menuItem) {
-        return $t.util.createElement('div', {
-            attrs : { 'class' : $t.classNamePrefix + 'menuitem' },
+        return $c.util.createElement('div', {
+            attrs : { 'class' : $c.classNamePrefix + 'menuitem' },
             props : { textContent : menuItem.label },
             style : { position : 'relative', whiteSpace : 'nowrap' },
             on : {
@@ -63,42 +63,42 @@
       }
     };
     var mousedownHandler = function(event) {
-      $t.util.$(document).off('mousedown', mousedownHandler);
+      $c.util.$(document).off('mousedown', mousedownHandler);
       dispose();
     };
-    $t.util.$(document).on('mousedown', mousedownHandler);
+    $c.util.$(document).on('mousedown', mousedownHandler);
     document.body.appendChild(menu);
     return { dispose : dispose };
   };
 
-  $t.ui = $t.ui || {};
+  $c.ui = $c.ui || {};
 
-  $t.ui.createButton = function(label, action) {
-    return $t.util.createElement('div',{
+  $c.ui.createButton = function(label, action) {
+    return $c.util.createElement('div',{
       style : { display : 'inline-block' },
       props : { textContent : label },
-      attrs : { 'class' : $t.classNamePrefix + 'button' },
+      attrs : { 'class' : $c.classNamePrefix + 'button' },
       on : { mousedown : function(event) {
         event.preventDefault();
       }, click : function(event) { action(event); } } });
   };
 
-  $t.ui.createDialog = function(children) {
-    var dialog = $t.util.extend($t.createEventTarget(), {
-      $el : $t.util.createElement('div', {
-          attrs : { 'class' : $t.classNamePrefix + 'dialog' },
+  $c.ui.createDialog = function(children) {
+    var dialog = $c.util.extend($c.createEventTarget(), {
+      $el : $c.util.createElement('div', {
+          attrs : { 'class' : $c.classNamePrefix + 'dialog' },
           style : { position : 'absolute' }
       }, children),
       show : function() {
         document.body.appendChild(this.$el);
         this.trigger('beforeshow');
-        $t.util.callLater(function() {
-          $t.util.$(document).on('mousedown', mousedownHandler);
+        $c.util.callLater(function() {
+          $c.util.$(document).on('mousedown', mousedownHandler);
         });
       },
       dispose : function() {
         if (this.$el) {
-          $t.util.$(document).off('mousedown', mousedownHandler);
+          $c.util.$(document).off('mousedown', mousedownHandler);
           document.body.removeChild(this.$el);
           this.$el = null;
           this.trigger('dispose');
@@ -106,7 +106,7 @@
       }
     } );
     var mousedownHandler = function(event) {
-      if (!$t.util.closest(event.target,
+      if (!$c.util.closest(event.target,
           { $el : dialog.$el, root : document.body }) ) {
         dialog.dispose();
       }
@@ -134,7 +134,7 @@
 
   var showColumnEditDialog = function(table) {
 
-    var messages = $t.getMessages();
+    var messages = $c.getMessages();
     var tableModel = table.model;
 
     var columns = function() {
@@ -155,8 +155,8 @@
     }();
 
     var columnItems = columns.map(function(column) {
-      return $t.util.createElement('div', {
-          attrs : { 'class' : $t.classNamePrefix + 'listitem' },
+      return $c.util.createElement('div', {
+          attrs : { 'class' : $c.classNamePrefix + 'listitem' },
           style : { color : column.type == 'lockColumn'? 'blue' : '' },
           on : { mousedown : function(event) {
             event.preventDefault();
@@ -167,9 +167,9 @@
               if (!started) {
                 return;
               }
-              var listitem = $t.util.closest(event.target,
-                  { className : $t.classNamePrefix + 'listitem', root : dialog.$el });
-              indexTo = $t.util.indexOf(listitem);
+              var listitem = $c.util.closest(event.target,
+                  { className : $c.classNamePrefix + 'listitem', root : dialog.$el });
+              indexTo = $c.util.indexOf(listitem);
               if (indexTo != -1 && indexFrom != indexTo) {
                 var top = listitem.offsetTop - 2 -
                   listitem.parentNode.scrollTop;
@@ -180,48 +180,48 @@
               }
             };
             var mouseupHandler = function(event) {
-              $t.util.$(document).off('mousemove', mousemoveHandler).
+              $c.util.$(document).off('mousemove', mousemoveHandler).
                 off('mouseup', mouseupHandler);
               lastTarget = target;
               dialog.$el.removeChild(bar);
               if (indexTo != -1 && indexFrom != indexTo) {
                 var parent = target.parentNode;
                 var ref = parent.childNodes[indexTo];
-                columns = $t.util.moveSublist(columns, indexFrom, 1, indexTo);
+                columns = $c.util.moveSublist(columns, indexFrom, 1, indexTo);
                 parent.removeChild(target);
                 parent.insertBefore(target, ref);
               }
             };
-            $t.util.$(document).on('mousemove', mousemoveHandler).
+            $c.util.$(document).on('mousemove', mousemoveHandler).
               on('mouseup', mouseupHandler);
             var target = event.currentTarget;
-            var bar = $t.util.createElement('div', {
+            var bar = $c.util.createElement('div', {
               style : { position : 'absolute', left : '0px',
                 display : 'none', width : target.offsetWidth + 'px',
                 borderTop : '3px solid #000000' }
             });
-            var indexFrom = $t.util.indexOf(target);
+            var indexFrom = $c.util.indexOf(target);
             var indexTo = -1;
             var started = false;
             var dragPoint = { x : event.pageX, y : event.pageY };
             dialog.$el.appendChild(bar);
             if (lastTarget != null) {
-              $t.util.$(lastTarget).removeClass($t.classNamePrefix + 'listitem-selected');
+              $c.util.$(lastTarget).removeClass($c.classNamePrefix + 'listitem-selected');
             }
-            $t.util.$(target).addClass($t.classNamePrefix + 'listitem-selected');
+            $c.util.$(target).addClass($c.classNamePrefix + 'listitem-selected');
           }}
         },[
-        $t.util.createElement('input',{
+        $c.util.createElement('input',{
           attrs : { type : 'checkbox' },
           props : { checked : !column.hidden },
           style : { verticalAlign : 'middle' },
           on:{ click : function(event) {
             var target = event.currentTarget;
-            var index = $t.util.indexOf(target.parentNode);
+            var index = $c.util.indexOf(target.parentNode);
             columns[index].hidden = !target.checked;
           }}
         }),
-        $t.util.createElement('span',{
+        $c.util.createElement('span',{
           style : { verticalAlign : 'middle' },
           props : { textContent : column.label }
         }) ]);
@@ -229,13 +229,13 @@
 
     var lastTarget = null;
 
-    var dialog =  $t.util.extend($t.ui.createDialog([
+    var dialog =  $c.util.extend($c.ui.createDialog([
       // columns
-      $t.util.createElement('div',
+      $c.util.createElement('div',
         { style : { overflow : 'auto',  height : '200px' } }, columnItems),
       // buttons
-      $t.util.createElement('div', { style : { float : 'right'} }, [
-        $t.ui.createButton(messages.RESET, function() {
+      $c.util.createElement('div', { style : { float : 'right'} }, [
+        $c.ui.createButton(messages.RESET, function() {
           dialog.dispose();
           tableModel.orderedColumnIndices = null;
           tableModel.hiddenColumns = {};
@@ -244,7 +244,7 @@
           table.enableLockColumn = true;
           table.invalidate();
         }),
-        $t.ui.createButton(messages.APPLY, function() {
+        $c.ui.createButton(messages.APPLY, function() {
           dialog.dispose();
           var orderedColumnIndices = [];
           var hiddenColumns = {};
@@ -270,7 +270,7 @@
           table.enableLockColumn = enableLockColumn;
           table.invalidate();
         }),
-        $t.ui.createButton(messages.CANCEL, function() {
+        $c.ui.createButton(messages.CANCEL, function() {
           dialog.dispose();
         })
       ])
@@ -293,7 +293,7 @@
     template.thead.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.renderer && cell.dataType) {
-          cell.renderer = $t.createDefaultHeaderCellRenderer(cell);
+          cell.renderer = $c.createDefaultHeaderCellRenderer(cell);
         }
       });
     });
@@ -301,7 +301,7 @@
       row.forEach(function(cell) {
         if (!cell.renderer && cell.dataType) {
           cell.renderer =
-            $t.createDefaultCellRenderer(cell);
+            $c.createDefaultCellRenderer(cell);
         }
       });
     });
@@ -314,7 +314,7 @@
       var setSpaned = function(row, col, cell) {
         for (var r = 0; r < cell.rowSpan; r += 1) {
           for (var c = 0; c < cell.colSpan; c += 1) {
-            spaned[$t.util.getCellId(row + r, col + c)] = true;
+            spaned[$c.util.getCellId(row + r, col + c)] = true;
           }
         }
       };
@@ -323,13 +323,13 @@
         var col = 0;
         var c = 0;
         while (c < tr.length) {
-          var id = $t.util.getCellId(row, col);
+          var id = $c.util.getCellId(row, col);
           if (spaned[id]) {
             col += 1;
             continue;
           }
           var td = tr[c];
-          var cell = $t.util.extend({ rowSpan : 1, colSpan : 1 }, td);
+          var cell = $c.util.extend({ rowSpan : 1, colSpan : 1 }, td);
           setSpaned(row, col, cell);
           if (typeof cell.width == 'number') {
             cellWidth[col] = cell.width;
@@ -357,7 +357,7 @@
     var headLength = template.thead.length;
     var bodyLength = template.tbody.length;
 
-    var table = $t.util.extend($t.createTable(), {
+    var table = $c.util.extend($c.createTable(), {
       lockRow : headLength,
       lockColumn : template.lockColumn || 0,
       enableLockColumn : true,
@@ -381,7 +381,7 @@
       var col = detail.col;
       var orderedCol = tableModel.orderedColumnIndices[col];
 */
-      var messages = $t.getMessages();
+      var messages = $c.getMessages();
       var tableModel = table.model;
 
       var menuItems = [
@@ -396,7 +396,7 @@
       ];
 
       detail.originalEvent.preventDefault();
-      $t.util.callLater(function() {
+      $c.util.callLater(function() {
         showMenu(
             detail.originalEvent.pageX,
             detail.originalEvent.pageY,
@@ -407,9 +407,9 @@
     // keep default value for restore.
     table.defaultLockColumn = table.lockColumn;
 
-    table.model = $t.util.extend(table.model, {
+    table.model = $c.util.extend(table.model, {
       // user defines
-      defaultHeaderCellRenderer : $t.createDefaultHeaderCellRenderer(),
+      defaultHeaderCellRenderer : $c.createDefaultHeaderCellRenderer(),
       cellWidth : cellWidth,
       cellHeight : cellHeight,
       orderedColumnIndices : null,
@@ -471,18 +471,18 @@
       },
       getCellStyleAt : function(row, col) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
-        var style = $t.util.extend({}, getCellStyleAt(row, orderedCol) );
+        var style = $c.util.extend({}, getCellStyleAt(row, orderedCol) );
         style.className = style.className || '';
         if (row < headLength) {
-          style.className += ' ' + $t.classNamePrefix + 'header';
+          style.className += ' ' + $c.classNamePrefix + 'header';
           style.editable = false;
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
           row -= headLength;
-          style.className += ' ' + $t.classNamePrefix +
+          style.className += ' ' + $c.classNamePrefix +
             (itemIndex.row % 2 == 0? 'even' : 'odd');
           if (style.editable === false) {
-            style.className += ' ' + $t.classNamePrefix + 'disabled';
+            style.className += ' ' + $c.classNamePrefix + 'disabled';
           }
         }
         return style;
@@ -505,7 +505,7 @@
         this.cellWidth[orderedCol] = detail.cellWidth;
       }
     }).on('columndragged', function(event, detail) {
-      this.orderedColumnIndices = $t.util.moveSublist(
+      this.orderedColumnIndices = $c.util.moveSublist(
           this.orderedColumnIndices, detail.colFrom, detail.colSpan, detail.colTo);
       if (detail.colFrom < table.lockColumn && table.lockColumn <= detail.colTo) {
         table.lockColumn -= detail.colSpan;
@@ -530,7 +530,7 @@
 
       var sort = this.filterContext.sort;
       if (sort) {
-        var order = sort.sortOrder == $t.SortOrder.ASC? 1 : -1;
+        var order = sort.sortOrder == $c.SortOrder.ASC? 1 : -1;
         var dataField = sort.dataField;
         var indexField = '.index';
         var sortKeyField = '.sortKey';
@@ -574,7 +574,7 @@
         detail.itemIndex = this.getItemIndexAt(detail.row, detail.col);
       });
     });
-    $t.tableEventTypes.forEach(function(type) {
+    $c.tableEventTypes.forEach(function(type) {
       table.on(type, function(event, detail) {
         detail.itemIndex = this.model.getItemIndexAt(detail.row, detail.col);
       });
@@ -583,6 +583,6 @@
     return table;
   };
 
-  $t.fromTemplate = fromTemplate;
+  $c.fromTemplate = fromTemplate;
 
 }(window.comfortable || (window.comfortable = {}) );

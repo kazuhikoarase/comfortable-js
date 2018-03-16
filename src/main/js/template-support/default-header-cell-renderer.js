@@ -9,13 +9,13 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
   // selector of sort order
   var createSelector = function() {
-    var rect = $t.util.createElement('span', { style : {
+    var rect = $c.util.createElement('span', { style : {
         display:'inline-block',
         width:'12px', height : '12px', border : '1px solid #333333'
       } });
@@ -35,16 +35,16 @@
   // filter checkbox
   var createCheckbox = function() {
     var defaultColor = '#333333';
-    var path = $t.util.createSVGElement('path', { attrs : {
+    var path = $c.util.createSVGElement('path', { attrs : {
         d : 'M 2 5 L 5 9 L 10 3', 'stroke-width' : 2,
         stroke : defaultColor, fill : 'none'
       } });
     return {
-      $el : $t.util.createElement('span', {
+      $el : $c.util.createElement('span', {
         style : { display : 'inline-block',
           width : '12px', height : '12px', border : '1px solid #333333' }
         }, [
-          $t.util.createSVGElement('svg', {
+          $c.util.createSVGElement('svg', {
             attrs : { width : 12, height : 12 } }, [ path ])
         ] ),
       checked : true,
@@ -63,17 +63,17 @@
 
   var createFilterDialog = function(opts, cell) {
 
-    var messages = $t.getMessages();
-    var SortOrder = $t.SortOrder;
+    var messages = $c.getMessages();
+    var SortOrder = $c.SortOrder;
     var labelStyle = { marginLeft : '4px', verticalAlign : 'middle' };
     var createSortButton = function(label) {
       var selector = createSelector();
       selector.$el.style.verticalAlign = 'middle';
       return {
         selector : selector,
-        $el : $t.util.createElement('div', [
+        $el : $c.util.createElement('div', [
           selector.$el,
-          $t.util.createElement('span', {
+          $c.util.createElement('span', {
             style : labelStyle, props : { textContent : label } })
         ], { on : {
           mousedown : function(event) { event.preventDefault(); },
@@ -97,13 +97,13 @@
         };
       });
 
-    var filterItemList = $t.util.extend($t.createList(), {
+    var filterItemList = $c.util.extend($c.createList(), {
       items : filterItems,
       getItemAt : function(row) { return this.items[row]; },
       getItemCount : function() { return this.items.length; },
       createCell : function() {
         var checkbox = createCheckbox();
-        var label = $t.util.createElement('span', { style : labelStyle,
+        var label = $c.util.createElement('span', { style : labelStyle,
           props : { textContent : 'M' } });
         checkbox.$el.style.verticalAlign = 'middle';
         var $public = {
@@ -112,7 +112,7 @@
           setLabel : function(text) {
             label.textContent = text || messages.SELECT_BLANK;
           },
-          $el : $t.util.createElement('div', {
+          $el : $c.util.createElement('div', {
             on : {
               mousedown : function(event) { event.preventDefault(); },
               click : function() {
@@ -143,12 +143,12 @@
     filterItemList.$el.style.width = '150px';
     filterItemList.invalidate();
 
-    var dialog = $t.util.extend($t.ui.createDialog([
+    var dialog = $c.util.extend($c.ui.createDialog([
       // sort
       sortAscButton.$el,
       sortDescButton.$el,
       // search box
-      $t.util.createElement('input', { attrs : { type : 'text' },
+      $c.util.createElement('input', { attrs : { type : 'text' },
         style : { width : '150px', margin : '4px 0px' },
         on : { keyup : function(event) {
           var value = event.currentTarget.value;
@@ -160,14 +160,14 @@
       // filter items
         filterItemList.$el,
       // buttons
-      $t.util.createElement('div', { style :
+      $c.util.createElement('div', { style :
           { marginTop : '4px', display : 'inline-block', float : 'right' } },
         [
-          $t.ui.createButton(messages.OK, function() {
+          $c.ui.createButton(messages.OK, function() {
             dialog.dispose();
             dialog.trigger('applyfilter');
           }),
-          $t.ui.createButton(messages.CANCEL, function() {
+          $c.ui.createButton(messages.CANCEL, function() {
             dialog.dispose();
           })
         ])
@@ -244,7 +244,7 @@
   var createFilterButton = function() {
     var defaultColor = '#333333';
     return {
-      $el : $t.util.createSVGElement('svg',
+      $el : $c.util.createSVGElement('svg',
           { attrs : { width : 15, height : 15 } }),
       filtered : false,
       sortOrder : null,
@@ -262,39 +262,39 @@
           this.$el.removeChild(this.$el.firstChild);
         }
         // outer rect
-        this.$el.appendChild($t.util.createSVGElement('rect', {
+        this.$el.appendChild($c.util.createSVGElement('rect', {
           attrs : { x : 0, y : 0,
             width: 15, height : 15, rx: 3, ry : 3 },
           style : { fill : '#000000', stroke : 'none', opacity : '0.1' } }) );
         // and others.
         if (this.filtered) {
-          this.$el.appendChild($t.util.createSVGElement('path', {
+          this.$el.appendChild($c.util.createSVGElement('path', {
             attrs : { stroke : 'none', fill : defaultColor,
               d : 'M 5 4 L 8 7 L 8 12 L 11 12 L 11 7 L 14 4 Z' } }) );
           if (this.sortOrder == null) {
-            this.$el.appendChild($t.util.createSVGElement('path', {
+            this.$el.appendChild($c.util.createSVGElement('path', {
               attrs : { stroke : 'none', fill : defaultColor,
                 d: 'M 0 8 L 3 12 L 6 8 Z' } }) );
           }
         } else if (this.sortOrder == null) {
-          this.$el.appendChild($t.util.createSVGElement('path', {
+          this.$el.appendChild($c.util.createSVGElement('path', {
             attrs : { stroke : 'none', fill : defaultColor,
               d: 'M 1 4 L 7 11 L 13 4 Z' } }) );
         } else {
-          this.$el.appendChild($t.util.createSVGElement('path', {
+          this.$el.appendChild($c.util.createSVGElement('path', {
             attrs : { stroke : 'none', fill : defaultColor,
               d: 'M 4 5 L 9 11 L 14 5 Z' } }) );
         }
         if (this.sortOrder != null) {
-          this.$el.appendChild($t.util.createSVGElement('path', {
+          this.$el.appendChild($c.util.createSVGElement('path', {
             attrs : { stroke : defaultColor, fill : 'none',
               d: 'M 3 2 L 3 12'} } ) );
-          if (this.sortOrder == $t.SortOrder.ASC) {
-            this.$el.appendChild($t.util.createSVGElement('path', {
+          if (this.sortOrder == $c.SortOrder.ASC) {
+            this.$el.appendChild($c.util.createSVGElement('path', {
               attrs : { stroke : defaultColor, fill : 'none',
                 d: 'M 1 5 L 3 2 L 5 5'} }) );
           } else {
-            this.$el.appendChild($t.util.createSVGElement('path', {
+            this.$el.appendChild($c.util.createSVGElement('path', {
               attrs : { stroke : defaultColor, fill : 'none',
                 d : 'M 1 9 L 3 12 L 5 9' } }) );
           }
@@ -334,11 +334,11 @@
 
   var createDefaultHeaderCellRenderer = function(opts) {
 
-    opts = $t.util.extend($t.createDefaultCellRendererOpts(), opts || {});
+    opts = $c.util.extend($c.createDefaultCellRendererOpts(), opts || {});
 
     return function(td, tableModel) {
 
-      var labelRenderer = $t.createMultiLineLabelRenderer(td);
+      var labelRenderer = $c.createMultiLineLabelRenderer(td);
 
       var filterButton = null;
       var dialog = null;
@@ -348,7 +348,7 @@
         var dataField = filterButton.cell.dataField;
         var filterValues = getFilterValues(tableModel, dataField,
             filterButton.cell.comparator);
-        var dialog = createFilterDialog($t.util.extend({
+        var dialog = createFilterDialog($c.util.extend({
           sortOrder : filterContext.sort &&
             filterContext.sort.dataField == dataField?
             filterContext.sort.sortOrder : null,
@@ -363,7 +363,7 @@
           filterContext.filters[dataField] = this.rejects;
           tableModel.trigger('filterchange');
         });
-        var off = $t.util.offset(td);
+        var off = $c.util.offset(td);
         dialog.$el.style.left = off.left + 'px',
         dialog.$el.style.top = (off.top + td.offsetHeight) + 'px';
         dialog.show();
@@ -379,13 +379,13 @@
 
             if (!filterButton) {
               filterButton = createFilterButton();
-              $t.util.set(filterButton.$el, {
+              $c.util.set(filterButton.$el, {
                 style : { position : 'absolute', right : '4px' },
                 on : { mousedown : function(event) {
                     event.preventDefault();
                     if (dialog == null) {
                       // wait for end edit then show dialog.
-                      $t.util.callLater(function() {
+                      $c.util.callLater(function() {
                         dialog = showFilterDialog();
                         dialog.on('dispose', function() {
                           dialog = null;
@@ -422,6 +422,6 @@
     };
   };
 
-  $t.createDefaultHeaderCellRenderer = createDefaultHeaderCellRenderer;
+  $c.createDefaultHeaderCellRenderer = createDefaultHeaderCellRenderer;
 
 }(window.comfortable || (window.comfortable = {}) );

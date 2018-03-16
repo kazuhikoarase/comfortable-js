@@ -9,7 +9,7 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
@@ -69,7 +69,7 @@
   };
 
   var createTextEditor = function() {
-    var util = $t.util;
+    var util = $c.util;
     return {
       $el : util.createElement('input', {
         attrs : { type : 'text' },
@@ -106,7 +106,7 @@
   };
 
   var createCheckBox = function() {
-    var util = $t.util;
+    var util = $c.util;
     return {
       $el : util.createElement('input', {
         attrs : { type : 'checkbox' },
@@ -135,7 +135,7 @@
   };
 
   var createSelectBox = function() {
-    var util = $t.util;
+    var util = $c.util;
     var select = util.createElement('select', {
       style : {
         width : '100%', height : '100%',
@@ -251,7 +251,7 @@
 
   var createDefaultCellRenderer = function(opts) {
 
-    opts = $t.util.extend($t.createDefaultCellRendererOpts(), opts || {});
+    opts = $c.util.extend($c.createDefaultCellRendererOpts(), opts || {});
 
     return function(td) {
 
@@ -347,8 +347,8 @@
     };
   };
 
-  $t.createDefaultCellRendererOpts = createDefaultCellRendererOpts;
-  $t.createDefaultCellRenderer = createDefaultCellRenderer;
-  $t.createMultiLineLabelRenderer = createMultiLineLabelRenderer;
+  $c.createDefaultCellRendererOpts = createDefaultCellRendererOpts;
+  $c.createDefaultCellRenderer = createDefaultCellRenderer;
+  $c.createMultiLineLabelRenderer = createMultiLineLabelRenderer;
 
 }(window.comfortable || (window.comfortable = {}) );

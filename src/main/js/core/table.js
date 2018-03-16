@@ -9,17 +9,17 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
   var createDefaultTableModel = function() {
-    var util = $t.util;
-    return util.extend($t.createEventTarget(), {
+    var util = $c.util;
+    return util.extend($c.createEventTarget(), {
       defaultCellWidth : 100,
       defaultCellHeight : 28,
       defaultCellStyle : { rowSpan : 1, colSpan : 1, editable : true },
-      defaultCellRenderer : $t.createDefaultCellRenderer(),
+      defaultCellRenderer : $c.createDefaultCellRenderer(),
       maxRowSpan : 8,
       maxColSpan : 8,
       minCellWidth : 8,
@@ -59,7 +59,7 @@
 
   var createInternalTable = function() {
 
-    var util = $t.util;
+    var util = $c.util;
 
     var colgroup = util.createElement('colgroup');
     var tbody = util.createElement('tbody');
@@ -344,7 +344,7 @@
 
   var createTable = function() {
 
-    var util = $t.util;
+    var util = $c.util;
 
     var tables = function() {
       var tables = [];
@@ -372,7 +372,7 @@
         $public.trigger(event.type,
             { originalEvent : event, row : td.row, col : td.col }); });
       var delegates = {};
-      $t.tableEventTypes.forEach(function(type) {
+      $c.tableEventTypes.forEach(function(type) {
         delegates[type] = delegateHandler;
       });
       util.set(table.$el, {
@@ -996,7 +996,7 @@
       }
     };
 
-    var $public = util.extend($t.createUIEventTarget(), {
+    var $public = util.extend($c.createUIEventTarget(), {
       $el : frame,
       lockRow : 0,
       lockColumn : 0,
@@ -1012,16 +1012,16 @@
     return $public;
   };
 
-  $t.tableEventTypes = [
+  $c.tableEventTypes = [
     'mousedown', 'mouseover', 'mouseout',
     'click', 'dblclick', 'contextmenu' ];
-  $t.createTable = createTable;
+  $c.createTable = createTable;
 
   // export
-  !function($t) {
+  !function($c) {
     if (typeof exports === 'object') {
-      module.exports = $t;
+      module.exports = $c;
     }
-  }($t);
+  }($c);
 
 }(window.comfortable || (window.comfortable = {}) );

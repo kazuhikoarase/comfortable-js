@@ -9,7 +9,7 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
@@ -187,6 +187,6 @@
     }
   });
 
-  $t.util = util;
+  $c.util = util;
 
 }(window.comfortable || (window.comfortable = {}) );

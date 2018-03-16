@@ -9,11 +9,11 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
-  ($t.i18n = $t.i18n || {}).en = {
+  ($c.i18n = $c.i18n || {}).en = {
     messages : {
       RESET_FILTER : 'Clear Sort and Filters',
       EDIT_COLUMNS : 'Column Visibility and Order',

@@ -9,7 +9,7 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($t) {
+!function($c) {
 
   'use strict';
 
@@ -38,11 +38,11 @@
   };
 
   var createUIEventTarget = function() {
-    return $t.util.extend(createEventTarget(), {
+    return $c.util.extend(createEventTarget(), {
       valid : true,
       invalidate : function() {
         this.valid = false;
-        $t.util.callLater(function() {
+        $c.util.callLater(function() {
           if (!this.valid) {
             this.valid = true;
             this.render();
@@ -54,7 +54,7 @@
     });
   };
 
-  $t.createEventTarget = createEventTarget;
-  $t.createUIEventTarget = createUIEventTarget;
+  $c.createEventTarget = createEventTarget;
+  $c.createUIEventTarget = createUIEventTarget;
 
 }(window.comfortable || (window.comfortable = {}) );
