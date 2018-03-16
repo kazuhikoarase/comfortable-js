@@ -1,0 +1,11 @@
+
+.sample-code {
+  border-left : 8px solid #666666;
+  background-color : #f0f0f0;
+  font-family : monospace;
+  padding : 8px;
+}
+
+.comment {
+  color : #3f7f5f;
+}

@@ -1,0 +1,77 @@
+/*
+ * comfortable - template-support
+ *
+ * Copyright (c) 2017 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+
+.jct-dialog {
+  font-family : 'ms pgothic', sans-serif;
+  font-size : 14px;
+  background-color : #ffffff;
+  cursor : default;
+  -webkit-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+          box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+  padding : 4px;
+}
+
+.jct-contextmenu {
+  font-family : 'ms pgothic', sans-serif;
+  font-size : 14px;
+  background-color : #ffffff;
+  cursor : default;
+  -webkit-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+          box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.jct-menuitem {
+  padding : 4px 12px;
+}
+
+.jct-menuitem:hover {
+  background-color : rgba(0,255,0,0.2);
+}
+
+.jct-button {
+  border : 1px solid #666666;
+  padding : 4px;
+  margin : 0px 4px;
+  background-color : rgba(0,0,0,0.1);
+}
+
+.jct-button:hover {
+  background-color : rgba(0,255,0,0.2);
+}
+
+.jct-button:active {
+  background-color : rgba(0,0,0,0.2);
+}
+
+.jct-listitem {
+  padding : 4px;
+}
+
+.jct-listitem-selected {
+  background-color : rgba(0,0,0,0.2);
+}
+
+.jct-header {
+  font-weight : bold;
+}
+
+.jct-even {
+  background-color : rgba(0,0,0,0.05);
+}
+
+.jct-odd {
+}
+
+.jct-disabled {
+  color : rgba(0,0,0,0.2);
+}
