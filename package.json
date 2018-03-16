@@ -1,6 +1,6 @@
 {
   "name": "comfortable-js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Simple, High Performance, Customizable Table in JavaScript.",
   "author": "Kazuhiko Arase",
   "main": "lib/comfortable.js",
@@ -11,12 +11,16 @@
   "bugs": {
     "url": "https://github.com/kazuhikoarase/comfortable-js/issues"
   },
-  "keywords": [ "grid", "table" ],
+  "keywords": [
+    "grid",
+    "table"
+  ],
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.0.0",
     "del": "^3.0.0",
     "run-sequence": "^2.0.0",
+    "gulp-order": "^1.0.0",
     "gulp-concat": "^2.0.0",
     "gulp-rename": "^1.0.0",
     "gulp-jasmine": "^2.0.0",
