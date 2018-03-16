@@ -1,3 +1,6 @@
+.title-table {
+  color : #33cc99;
+}
 
 .sample-code {
   border-left : 8px solid #666666;
@@ -7,5 +10,5 @@
 }
 
 .comment {
-  color : #3f7f5f;
+  color : #33cc99;
 }
