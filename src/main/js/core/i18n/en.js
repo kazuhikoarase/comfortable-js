@@ -1,5 +1,5 @@
 //
-// comfortable - template-support - en
+// comfortable - i18n - en
 //
 // Copyright (c) 2017 Kazuhiko Arase
 //
