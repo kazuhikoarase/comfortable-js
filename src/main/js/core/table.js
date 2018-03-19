@@ -13,8 +13,6 @@
 
   'use strict';
 
-  $c.classNamePrefix = 'ctj-';
-
   var createDefaultTableModel = function() {
     var util = $c.util;
     return util.extend($c.createEventTarget(), {

@@ -63,7 +63,7 @@
 
   var createFilterDialog = function(opts, cell) {
 
-    var messages = $c.getMessages();
+    var messages = $c.i18n.getMessages();
     var SortOrder = $c.SortOrder;
     var labelStyle = { marginLeft : '4px', verticalAlign : 'middle' };
     var createSortButton = function(label) {

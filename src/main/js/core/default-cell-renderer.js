@@ -13,61 +13,6 @@
 
   'use strict';
 
-  // number utility
-  var numUtil = {
-    re : /^([\+\-]?)([0-9]*)(\.[0-9]*)?$/,
-    format : function(value, digits, s1, s2) {
-      digits = digits || 0;
-      s1 = typeof s1 == 'string'? s1 : ',';
-      s2 = typeof s2 == 'string'? s2 : '.';
-      if (typeof value == 'number') {
-        value = '' + value;
-      }
-      if (typeof value != 'string') {
-        return '';
-      }
-      var mat = value.match(this.re);
-      if (mat) {
-        if (mat[2].length == 0 && (!mat[3] || mat[3].length == 1) ) {
-          return '';
-        }
-        var iPart = mat[2].length > 0? mat[2] : '0';
-        var neg = mat[1] == '-';
-        var s = '';
-        while (iPart.length > 3) {
-          s = s1 + iPart.substring(iPart.length - 3) + s;
-          iPart = iPart.substring(0, iPart.length - 3);
-        }
-        s = iPart + s;
-        if (digits > 0) {
-          var fPart = mat[3] || s2;
-          s += s2;
-          for (var i = 0; i < digits; i += 1) {
-            s += (i + 1 < fPart.length)? fPart[i + 1] : '0';
-          }
-        }
-        return neg? '-' + s : s;
-      }
-      return value;
-    },
-    toNarrow : function() {
-      var wide = '０１２３４５６７８９＋－．，';
-      var narrow = '0123456789+-.,';
-      if (wide.length != narrow.length) {
-        throw wide + ',' + narrow;
-      }
-      return function(value) {
-        var s = '';
-        for (var i = 0; i < value.length; i += 1) {
-          var c = value.charAt(i);
-          var index = wide.indexOf(c);
-          s += (index != -1)? narrow.charAt(index) : c;
-        }
-        return s;
-      };
-    }()
-  };
-
   var createTextEditor = function() {
     var util = $c.util;
     return {
@@ -220,7 +165,7 @@
           return '';
         }
         if (this.dataType == 'number') {
-          return numUtil.format(value, this.decimalDigits);
+          return $c.numUtil.format(value, this.decimalDigits);
         }
         return value;
       },
@@ -236,7 +181,7 @@
       // validate editor
       isValid : function(editor) {
         if (this.dataType == 'number') {
-          return numUtil.toNarrow(editor.getValue() ).match(numUtil.re);
+          return !!$c.numUtil.toNarrow(editor.getValue() ).match($c.numUtil.re);
         }
         return true;
       },
@@ -248,8 +193,8 @@
       },
       getEditorValue : function(editor) {
         if (this.dataType == 'number') {
-          var value = numUtil.format(
-              numUtil.toNarrow(editor.getValue() ),
+          var value = $c.numUtil.format(
+              $c.numUtil.toNarrow(editor.getValue() ),
               this.decimalDigits, '');
           return editor.valueType == 'number'? +value : value;
         }

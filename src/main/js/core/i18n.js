@@ -20,7 +20,7 @@
   };
 
   var getMessages = function() {
-    return this.i18n.getInstance().messages;
+    return this.getInstance().messages;
   };
 
   $c.i18n = $c.i18n || {};
