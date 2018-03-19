@@ -19,7 +19,7 @@
       defaultCellWidth : 100,
       defaultCellHeight : 28,
       defaultCellStyle : { rowSpan : 1, colSpan : 1, editable : true },
-      defaultCellRenderer : $c.createDefaultCellRenderer(),
+      defaultCellRendererFactory : $c.createDefaultCellRendererFactory(),
       maxRowSpan : 8,
       maxColSpan : 8,
       minCellWidth : 8,
@@ -29,7 +29,7 @@
       getLineRowCountAt : function(row) { return this.getRowCount(); },
       getValueAt : function(row, col) { return row + ',' + col; },
       getCellStyleAt : function(row, col) { return {}; },
-      getCellRendererAt : function(row, col) { return this.defaultCellRenderer; },
+      getCellRendererFactoryAt : function(row, col) { return this.defaultCellRendererFactory; },
       getCellWidthAt : function(col) { return this.defaultCellWidth; },
       getCellHeightAt : function(row) { return this.defaultCellHeight; },
       getCellAt : function(row, col) {
@@ -314,7 +314,7 @@
             var cell = this.model.getCellAt(row, col);
             setSpaned(row, col, td.$el, cell);
 
-            var factory = this.model.getCellRendererAt(row, col);
+            var factory = this.model.getCellRendererFactoryAt(row, col);
             if (!td.factory || td.factory != factory) {
               td.factory = factory;
               td.$el.innerHTML = '';

@@ -1,5 +1,5 @@
 //
-// comfortable - default-header-cell-renderer
+// comfortable - default-header-cell-renderer-factory
 //
 // Copyright (c) 2017 Kazuhiko Arase
 //
@@ -333,9 +333,9 @@
     return filterValues;
   };
 
-  var createDefaultHeaderCellRenderer = function(opts) {
+  var createDefaultHeaderCellRendererFactory = function(opts) {
 
-    opts = $c.util.extend($c.createDefaultCellRendererOpts(), opts || {});
+    opts = $c.util.extend($c.createDefaultCellRendererFactoryOpts(), opts || {});
 
     return function(td, tableModel) {
 
@@ -423,6 +423,6 @@
     };
   };
 
-  $c.createDefaultHeaderCellRenderer = createDefaultHeaderCellRenderer;
+  $c.createDefaultHeaderCellRendererFactory = createDefaultHeaderCellRendererFactory;
 
 }(window.comfortable || (window.comfortable = {}) );

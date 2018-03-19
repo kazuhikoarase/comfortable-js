@@ -14,7 +14,7 @@ var tableCustomized = function(targetId) {
     items.push({});
   }
   headers[0][4] = { label : 'Number' };
-  columns[4].renderer = $c.createDefaultCellRenderer({ dataType : 'number' });
+  columns[4].factory = $c.createDefaultCellRendererFactory({ dataType : 'number' });
 
   var table = $c.createTable();
 
@@ -49,12 +49,12 @@ var tableCustomized = function(targetId) {
     getCellHeightAt : function(row) {
       return this.cellHeight[row] || this.defaultCellHeight;
     },
-    getCellRendererAt : function(row, col) {
+    getCellRendererFactoryAt : function(row, col) {
       col = this.columnIndices[col];
       if (row < headers.length) {
-        return this.defaultCellRenderer;
+        return this.defaultCellRendererFactory;
       } else {
-        return columns[col].renderer || this.defaultCellRenderer;
+        return columns[col].factory || this.defaultCellRendererFactory;
       }
     },
     getCellStyleAt : function(row, col) {

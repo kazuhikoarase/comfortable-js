@@ -1,5 +1,5 @@
 //
-// comfortable - default-cell-renderer
+// comfortable - default-cell-renderer-factory
 //
 // Copyright (c) 2017 Kazuhiko Arase
 //
@@ -145,7 +145,7 @@
     return options || [];
   };
 
-  var createDefaultCellRendererOpts = function() {
+  var createDefaultCellRendererFactoryOpts = function() {
     return {
       // value to label
       labelFunction : function(value, cell) {
@@ -203,9 +203,9 @@
     };
   };
 
-  var createDefaultCellRenderer = function(opts) {
+  var createDefaultCellRendererFactory = function(opts) {
 
-    opts = $c.util.extend($c.createDefaultCellRendererOpts(), opts || {});
+    opts = $c.util.extend($c.createDefaultCellRendererFactoryOpts(), opts || {});
 
     return function(td) {
 
@@ -303,8 +303,8 @@
     };
   };
 
-  $c.createDefaultCellRendererOpts = createDefaultCellRendererOpts;
-  $c.createDefaultCellRenderer = createDefaultCellRenderer;
+  $c.createDefaultCellRendererFactoryOpts = createDefaultCellRendererFactoryOpts;
+  $c.createDefaultCellRendererFactory = createDefaultCellRendererFactory;
   $c.createMultiLineLabelRenderer = createMultiLineLabelRenderer;
 
 }(window.comfortable || (window.comfortable = {}) );

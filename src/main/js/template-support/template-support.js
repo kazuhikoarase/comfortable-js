@@ -188,16 +188,15 @@
 
     template.thead.forEach(function(row) {
       row.forEach(function(cell) {
-        if (!cell.renderer && cell.dataType) {
-          cell.renderer = $c.createDefaultHeaderCellRenderer(cell);
+        if (!cell.factory && cell.dataType) {
+          cell.factory = $c.createDefaultHeaderCellRendererFactory(cell);
         }
       });
     });
     template.tbody.forEach(function(row) {
       row.forEach(function(cell) {
-        if (!cell.renderer && cell.dataType) {
-          cell.renderer =
-            $c.createDefaultCellRenderer(cell);
+        if (!cell.factory && cell.dataType) {
+          cell.factory = $c.createDefaultCellRendererFactory(cell);
         }
       });
     });
@@ -305,7 +304,7 @@
 
     table.model = $c.util.extend(table.model, {
       // user defines
-      defaultHeaderCellRenderer : $c.createDefaultHeaderCellRenderer(),
+      defaultHeaderCellRendererFactory : $c.createDefaultHeaderCellRendererFactory(),
       cellWidth : cellWidth,
       cellHeight : cellHeight,
       orderedColumnIndices : null,
@@ -360,10 +359,11 @@
       getCellHeightAt : function(row) {
         return this.cellHeight[row] || this.defaultCellHeight;
       },
-      getCellRendererAt : function(row, col) {
+      getCellRendererFactoryAt : function(row, col) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
-        return getCellStyleAt(row, orderedCol).renderer || (row < headLength?
-            this.defaultHeaderCellRenderer : this.defaultCellRenderer);
+        return getCellStyleAt(row, orderedCol).factory || (row < headLength?
+            this.defaultHeaderCellRendererFactory :
+            this.defaultCellRendererFactory);
       },
       getCellStyleAt : function(row, col) {
         var orderedCol = this.getOrderedColumnIndexAt(col);

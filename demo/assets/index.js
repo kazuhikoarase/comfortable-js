@@ -362,7 +362,7 @@ window.addEventListener('load', function(event) {
       template : { thead : [
         [ { label : 'Button' } ]
       ],tbody : [
-        [ { renderer : function(td) {
+        [ { factory : function(td) {
               var currentCell = null;
               var oldValue = null;
               var newValue = null;
