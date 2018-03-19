@@ -13,6 +13,8 @@
 
   'use strict';
 
+  $c.classNamePrefix = 'ctj-';
+
   var createDefaultTableModel = function() {
     var util = $c.util;
     return util.extend($c.createEventTarget(), {
@@ -804,11 +806,11 @@
             },
             on : { mousedown : mousedownHandler }
           }, [util.createElement('div',{
+            attrs : { 'class' : $c.classNamePrefix + 'v-resize-line' },
             style : {
               position : 'absolute',
-              left : handleStyle.offset + 'px', top : '0px',
-              borderLeft : handleStyle.lineWidth + 'px dashed #999999',
-              borderWidth : handleStyle.lineWidth + 'px', width : '0px' }
+              left : handleStyle.offset + 'px', top : '0px', width : '0px',
+              borderLeftWidth : handleStyle.lineWidth + 'px' }
           })]) };
           frame.appendChild(handle.$el);
           colResizeHandles.push(handle);
@@ -936,16 +938,19 @@
             if (table.col == 0) { height += rect.height; }
           });
           // horizontal
-          var lockLineBorder = '1px solid rgba(0,0,0,0.5)';
-          util.set(lockLines[0], { style : {
-            display : $public.getLockRow() == 0? 'none' : '',
-            left : '0px', borderTop : lockLineBorder,
-            top : (cornerRect.height - 1) + 'px', width : width + 'px' } });
+          util.set(lockLines[0], {
+            attrs :{ 'class' : $c.classNamePrefix + 'h-lock-line' },
+            style : {
+              display : $public.getLockRow() == 0? 'none' : '', left : '0px',
+              top : (cornerRect.height - 1) + 'px', width : width + 'px'
+            } });
           // vertical
-          util.set(lockLines[1], { style : {
-            display : $public.getLockColumn() == 0? 'none' : '',
-            top : '0px', borderLeft : lockLineBorder,
-            left : (cornerRect.width - 1) + 'px', height : height + 'px' } });
+          util.set(lockLines[1], {
+            attrs :{ 'class' : $c.classNamePrefix + 'v-lock-line' },
+            style : {
+              display : $public.getLockColumn() == 0? 'none' : '', top : '0px',
+              left : (cornerRect.width - 1) + 'px', height : height + 'px'
+            } });
         }();
 
         // resize handles.

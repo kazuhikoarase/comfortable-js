@@ -13,8 +13,6 @@
 
   'use strict';
 
-  $c.classNamePrefix = 'ctj-';
-
   $c.i18n = $c.i18n || {};
   $c.getI18N = function(lang) {
     lang = lang || navigator.language || navigator.userLanguage;
@@ -196,9 +194,9 @@
               on('mouseup', mouseupHandler);
             var target = event.currentTarget;
             var bar = $c.util.createElement('div', {
+              attrs : { 'class' : $c.classNamePrefix + 'column-edit-bar' },
               style : { position : 'absolute', left : '0px',
-                display : 'none', width : target.offsetWidth + 'px',
-                borderTop : '3px solid #000000' }
+                display : 'none', width : target.offsetWidth + 'px' }
             });
             var indexFrom = $c.util.indexOf(target);
             var indexTo = -1;
