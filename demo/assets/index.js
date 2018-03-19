@@ -97,7 +97,7 @@ window.addEventListener('load', function(event) {
       }
     },
     {
-      title : 'Define a TBODY',
+      title : 'Multi-Line Data',
       template : { thead : [
         [
           { rowSpan : 2 }, {}, {}
@@ -106,7 +106,8 @@ window.addEventListener('load', function(event) {
       ],tbody : [
         [
           { rowSpan : 2 }, {}, {}
-        ],[
+        ],[ { '//' : 'This cell will be shown at the second line.',
+          color : 'blue' }
         ]
       ] },
       code : function(table) {
