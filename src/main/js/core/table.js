@@ -288,7 +288,10 @@
           }
         };
 
+        var tableModel = this.model;
         var initCell = function(td) {
+          td.renderer = null;
+          td.tableModel = tableModel;
           td.$el.style.overflow = 'hidden';
           td.$el.style.whiteSpace = 'nowrap';
         };
@@ -311,14 +314,14 @@
             td.row = row;
             td.col = col;
 
-            var cell = this.model.getCellAt(row, col);
+            var cell = tableModel.getCellAt(row, col);
             setSpaned(row, col, td.$el, cell);
 
-            var factory = this.model.getCellRendererFactoryAt(row, col);
-            if (!td.factory || td.factory != factory) {
+            var factory = tableModel.getCellRendererFactoryAt(row, col);
+            if (td.factory != factory) {
               td.factory = factory;
               td.$el.innerHTML = '';
-              td.renderer = td.factory(td.$el, this.model);
+              td.renderer = td.factory(td);
             }
 
             util.set(td.$el, getCellStyle(cell) );

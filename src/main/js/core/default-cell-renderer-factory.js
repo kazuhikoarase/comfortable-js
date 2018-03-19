@@ -209,17 +209,17 @@
 
     return function(td) {
 
-      var labelRenderer = createMultiLineLabelRenderer(td);
+      var labelRenderer = createMultiLineLabelRenderer(td.$el);
       var editor = null;
       var oldValue = null;
 
       var beginEdit = function(cell) {
         if (editor == null) {
           editor = opts.createEditor();
-          td.appendChild(editor.$el);
+          td.$el.appendChild(editor.$el);
         }
         labelRenderer.setVisible(false);
-        editor.init(td, cell);
+        editor.init(td.$el, cell);
         editor.$el.style.display = '';
         oldValue = cell.value;
         opts.setEditorValue(editor, oldValue);
@@ -236,7 +236,7 @@
           if (!renderIsEditor) {
             labelRenderer.setLabel(opts.labelFunction(cell.value, cell) );
             if (opts.dataType == 'number') {
-              td.style.textAlign = 'right';
+              td.$el.style.textAlign = 'right';
             }
           } else {
             beginEdit(cell);
@@ -266,13 +266,13 @@
   };
 
   var linesRe = /\r?\n/g;
-  var createMultiLineLabelRenderer = function(td) {
+  var createMultiLineLabelRenderer = function(parent) {
     var elms = null;
     return {
       setLabel : function(label) {
         if (elms == null) {
           elms = [ document.createElement('span') ];
-          td.appendChild(elms[0]);
+          parent.appendChild(elms[0]);
         }
         var lines = label.split(linesRe);
         elms[0].textContent = lines[0];
@@ -281,8 +281,8 @@
           if (elmIndex + 1 >= elms.length) {
             elms.push(document.createElement('br') );
             elms.push(document.createElement('span') );
-            td.appendChild(elms[elmIndex]);
-            td.appendChild(elms[elmIndex + 1]);
+            parent.appendChild(elms[elmIndex]);
+            parent.appendChild(elms[elmIndex + 1]);
           }
           elms[elmIndex].style.display = '';
           elms[elmIndex + 1].style.display = '';

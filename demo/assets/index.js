@@ -378,7 +378,7 @@ window.addEventListener('load', function(event) {
                     }
                   }
                 });
-              td.appendChild(button);
+              td.$el.appendChild(button);
               return {
                 render : function(cell) {
                   currentCell = cell;

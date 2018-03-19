@@ -131,7 +131,8 @@ declare namespace comfortable {
     labelField? : string;
     valueField? : string;
 
-    renderer? : (td : Element, tableModel : TableModel) => TableCellRenderer;
+    renderer? : (td : { $el : Element,
+      tableModel : TableModel }) => TableCellRenderer;
   }
 
   interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {

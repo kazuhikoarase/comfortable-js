@@ -337,10 +337,11 @@
 
     opts = $c.util.extend($c.createDefaultCellRendererFactoryOpts(), opts || {});
 
-    return function(td, tableModel) {
+    return function(td) {
 
-      var labelRenderer = $c.createMultiLineLabelRenderer(td);
+      var labelRenderer = $c.createMultiLineLabelRenderer(td.$el);
 
+      var tableModel = td.tableModel;
       var filterButton = null;
       var dialog = null;
 
@@ -364,9 +365,9 @@
           filterContext.filters[dataField] = this.rejects;
           tableModel.trigger('filterchange');
         });
-        var off = $c.util.offset(td);
+        var off = $c.util.offset(td.$el);
         dialog.$el.style.left = off.left + 'px',
-        dialog.$el.style.top = (off.top + td.offsetHeight) + 'px';
+        dialog.$el.style.top = (off.top + td.$el.offsetHeight) + 'px';
         dialog.show();
         return dialog;
       };
@@ -398,8 +399,8 @@
                   }
                 }
               });
-              td.style.position = 'relative';
-              td.appendChild(filterButton.$el);
+              td.$el.style.position = 'relative';
+              td.$el.appendChild(filterButton.$el);
             }
 
             filterButton.cell = cell;
