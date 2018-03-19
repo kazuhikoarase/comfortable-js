@@ -96,6 +96,9 @@
         this.$el.focus();
         this.$el.select();
       },
+      blur : function() {
+        this.$el.blur();
+      },
       setValue : function(value) {
         this.$el.value = value;
       },
@@ -124,6 +127,9 @@
       },
       focus : function() {
         this.$el.focus();
+      },
+      blur : function() {
+        this.$el.blur();
       },
       setValue : function(value) {
         this.$el.checked = value;
@@ -173,6 +179,9 @@
       },
       focus : function() {
         this.$el.focus();
+      },
+      blur : function() {
+        this.$el.blur();
       },
       setValue : function(value) {
         this.$el.value = value;
@@ -299,7 +308,7 @@
                 labelRenderer.setVisible(true);
                 editor.$el.style.display = 'none';
               } else {
-                editor.$el.blur();
+                editor.blur();
               }
               return { oldValue : oldValue,
                 newValue : opts.isValid(editor)?

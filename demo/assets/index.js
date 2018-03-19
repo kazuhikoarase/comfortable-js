@@ -390,6 +390,7 @@ window.addEventListener('load', function(event) {
                       button.focus();
                     },
                     endEdit : function() {
+                      button.blur();
                       return { oldValue : oldValue, newValue : newValue };
                     }
                   };
