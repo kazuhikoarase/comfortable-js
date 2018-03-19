@@ -141,6 +141,7 @@
       }
     });
     filterItemList.$el.style.width = '150px';
+    filterItemList.$el.style.height = '0px';
     filterItemList.invalidate();
 
     var dialog = $c.util.extend($c.ui.createDialog([
