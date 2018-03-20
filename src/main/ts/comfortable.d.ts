@@ -13,12 +13,12 @@ declare namespace comfortable {
 
   interface Event { type : string; }
 
+  type EventListener = (event : Event, detail? : any) => void;
+
   interface EventTarget {
     trigger : (type : string, detail : any) => EventTarget;
-    on : (type : string,
-      listener : (event : Event, detail? : any) => void) => EventTarget;
-    off : (type : string,
-      listener : (event : Event, detail? : any) => void) => EventTarget;
+    on : (type : string, listener : EventListener) => EventTarget;
+    off : (type : string, listener : EventListener) => EventTarget;
   }
 
   interface UIEventTarget extends EventTarget {
