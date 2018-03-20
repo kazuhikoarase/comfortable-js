@@ -189,4 +189,4 @@
 
   $c.util = util;
 
-}(window.comfortable || (window.comfortable = {}) );
+}(comfortable);

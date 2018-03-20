@@ -1,5 +1,5 @@
 //
-// comfortable - style
+// comfortable - root
 //
 // Copyright (c) 2017 Kazuhiko Arase
 //
@@ -9,10 +9,4 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
-
-  'use strict';
-
-  $c.classNamePrefix = 'ctj-';
-
-}(comfortable);
+var comfortable = {};

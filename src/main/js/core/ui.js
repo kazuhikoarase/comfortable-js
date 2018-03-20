@@ -106,4 +106,4 @@
     showMenu : showMenu
   };
 
-}(window.comfortable || (window.comfortable = {}) );
+}(comfortable);

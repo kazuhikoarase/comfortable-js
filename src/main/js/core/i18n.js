@@ -27,4 +27,4 @@
   $c.i18n.getInstance = getInstance;
   $c.i18n.getMessages = getMessages;
 
-}(window.comfortable || (window.comfortable = {}) );
+}(comfortable);

@@ -72,4 +72,4 @@
 
   $c.numUtil = numUtil;
 
-}(window.comfortable || (window.comfortable = {}) );
+}(comfortable);

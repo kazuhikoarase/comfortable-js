@@ -1028,4 +1028,4 @@
     }
   }($c);
 
-}(window.comfortable || (window.comfortable = {}) );
+}(comfortable);

@@ -481,4 +481,4 @@
 
   $c.fromTemplate = fromTemplate;
 
-}(window.comfortable || (window.comfortable = {}) );
+}(comfortable);
