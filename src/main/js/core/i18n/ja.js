@@ -29,4 +29,4 @@
     }
   };
 
-}(comfortable);
+}(window.comfortable || (window.comfortable = {}) );

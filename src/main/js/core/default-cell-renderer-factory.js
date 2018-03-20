@@ -309,4 +309,4 @@
   $c.createDefaultCellRendererFactory = createDefaultCellRendererFactory;
   $c.createMultiLineLabelRenderer = createMultiLineLabelRenderer;
 
-}(comfortable);
+}(window.comfortable || (window.comfortable = {}) );

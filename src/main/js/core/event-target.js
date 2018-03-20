@@ -57,4 +57,4 @@
   $c.createEventTarget = createEventTarget;
   $c.createUIEventTarget = createUIEventTarget;
 
-}(comfortable);
+}(window.comfortable || (window.comfortable = {}) );

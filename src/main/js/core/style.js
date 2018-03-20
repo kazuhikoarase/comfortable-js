@@ -15,4 +15,4 @@
 
   $c.classNamePrefix = 'ctj-';
 
-}(comfortable);
+}(window.comfortable || (window.comfortable = {}) );

@@ -127,4 +127,4 @@
 
   $c.createList = createList;
 
-}(comfortable);
+}(window.comfortable || (window.comfortable = {}) );

@@ -421,4 +421,4 @@
 
   $c.createDefaultHeaderCellRendererFactory = createDefaultHeaderCellRendererFactory;
 
-}(comfortable);
+}(window.comfortable || (window.comfortable = {}) );
