@@ -118,7 +118,7 @@
           elm.setAttribute('class', classes);
           return this;
         },
-        removeClass : function(className, remove) {
+        removeClass : function(className) {
           return this.addClass(className, true);
         }
       };

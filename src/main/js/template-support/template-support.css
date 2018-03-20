@@ -62,7 +62,41 @@
 }
 
 .ctj-column-edit-bar {
-  border-top : 3px solid #000000;
+  border-top : 3px solid rgba(0,0,0,0.8);
+}
+
+.ctj-selector-body,
+.ctj-checkbox-body {
+  border : 1px solid rgba(0,0,0,0.8);
+}
+
+.ctj-selector-selected {
+  background-color : rgba(0,0,0,0.3);
+}
+
+.ctj-checkbox-check {
+	stroke-width : 2;
+	fill : none;
+  stroke : rgba(0,0,0,0.8);
+}
+
+.ctj-checkbox-incomplete-check {
+  stroke : rgba(0,0,0,0.3);
+}
+
+.ctj-filter-body {
+  stroke : none;
+  fill : rgba(0,0,0,0.1);
+}
+
+.ctj-filter-fill {
+  stroke : none;
+  fill : rgba(0,0,0,0.8);
+}
+
+.ctj-filter-stroke {
+  stroke : rgba(0,0,0,0.8);
+	fill : none;
 }
 
 .ctj-header {

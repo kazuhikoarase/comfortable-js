@@ -15,16 +15,17 @@
 
   // selector of sort order
   var createSelector = function() {
-    var rect = $c.util.createElement('span', { style : {
-        display:'inline-block',
-        width:'12px', height : '12px', border : '1px solid #333333'
-      } });
+    var rect = $c.util.createElement('span', {
+      attrs : { 'class' : $c.classNamePrefix + 'selector-body' }, 
+      style : { display:'inline-block', width:'12px', height : '12px' }
+    });
     return {
       $el : rect,
       selected : false,
       setSelected : function(selected) {
         this.selected = selected;
-        rect.style.backgroundColor = this.selected? '#999999' : '';
+        $c.util.$(rect).addClass(
+            $c.classNamePrefix + 'selector-selected', !selected);
       },
       isSelected : function() {
         return this.selected;
@@ -34,22 +35,22 @@
 
   // filter checkbox
   var createCheckbox = function() {
-    var defaultColor = '#333333';
     var path = $c.util.createSVGElement('path', { attrs : {
-        d : 'M 2 5 L 5 9 L 10 3', 'stroke-width' : 2,
-        stroke : defaultColor, fill : 'none'
+        'class' : $c.classNamePrefix + 'checkbox-check',
+        d : 'M 2 5 L 5 9 L 10 3'
       } });
     return {
       $el : $c.util.createElement('span', {
-        style : { display : 'inline-block',
-          width : '12px', height : '12px', border : '1px solid #333333' }
+        attrs : { 'class' : $c.classNamePrefix + 'checkbox-body' }, 
+        style : { display : 'inline-block', width : '12px', height : '12px' }
         }, [
           $c.util.createSVGElement('svg', {
             attrs : { width : 12, height : 12 } }, [ path ])
         ] ),
       checked : true,
-      setColor : function(color) {
-        path.setAttribute('stroke', color || defaultColor);
+      setIncomplete : function(incomplete) {
+        $c.util.$(path).addClass(
+            $c.classNamePrefix + 'checkbox-incomplete-check', !incomplete);
       },
       setChecked : function(checked) {
         this.checked = checked;
@@ -93,7 +94,7 @@
           label : (i > 0)? opts.labelFunction(value, cell) : value,
           value : value,
           checked : (i > 0)? !opts.rejects[value] : true,
-          color : null
+          color : false
         };
       });
 
@@ -127,7 +128,7 @@
         cell.index = item.index;
         cell.setLabel(item.label);
         cell.checkbox.setChecked(item.checked);
-        cell.checkbox.setColor(item.color);
+        cell.checkbox.setIncomplete(item.incomplete);
       },
       height : 0,
       maxHeight : 150
@@ -233,7 +234,7 @@
 
       // update 'select all' checkbox
       filterItems[0].checked = rejectCount != filterItems.length - 1;
-      filterItems[0].color = rejectCount == 0? null : '#999999';
+      filterItems[0].incomplete = rejectCount != 0;
 
       filterItemList.invalidate();
 
@@ -243,7 +244,6 @@
   };
 
   var createFilterButton = function() {
-    var defaultColor = '#333333';
     return {
       $el : $c.util.createSVGElement('svg',
           { attrs : { width : 15, height : 15 } }),
@@ -264,40 +264,35 @@
         }
         // outer rect
         this.$el.appendChild($c.util.createSVGElement('rect', {
-          attrs : { x : 0, y : 0,
-            width: 15, height : 15, rx: 3, ry : 3 },
-          style : { fill : '#000000', stroke : 'none', opacity : '0.1' } }) );
+          attrs : { 'class' : $c.classNamePrefix + 'filter-body',
+            x : 0, y : 0, width: 15, height : 15, rx: 3, ry : 3 } }) );
         // and others.
+        var fillClass = $c.classNamePrefix + 'filter-fill';
+        var strokeClass = $c.classNamePrefix + 'filter-stroke';
         if (this.filtered) {
           this.$el.appendChild($c.util.createSVGElement('path', {
-            attrs : { stroke : 'none', fill : defaultColor,
+            attrs : { 'class' : fillClass,
               d : 'M 5 4 L 8 7 L 8 12 L 11 12 L 11 7 L 14 4 Z' } }) );
           if (this.sortOrder == null) {
             this.$el.appendChild($c.util.createSVGElement('path', {
-              attrs : { stroke : 'none', fill : defaultColor,
-                d: 'M 0 8 L 3 12 L 6 8 Z' } }) );
+              attrs : { 'class' : fillClass, d: 'M 0 8 L 3 12 L 6 8 Z' } }) );
           }
         } else if (this.sortOrder == null) {
           this.$el.appendChild($c.util.createSVGElement('path', {
-            attrs : { stroke : 'none', fill : defaultColor,
-              d: 'M 1 4 L 7 11 L 13 4 Z' } }) );
+            attrs : { 'class' : fillClass, d: 'M 1 4 L 7 11 L 13 4 Z' } }) );
         } else {
           this.$el.appendChild($c.util.createSVGElement('path', {
-            attrs : { stroke : 'none', fill : defaultColor,
-              d: 'M 4 5 L 9 11 L 14 5 Z' } }) );
+            attrs : { 'class' : fillClass, d: 'M 4 5 L 9 11 L 14 5 Z' } }) );
         }
         if (this.sortOrder != null) {
           this.$el.appendChild($c.util.createSVGElement('path', {
-            attrs : { stroke : defaultColor, fill : 'none',
-              d: 'M 3 2 L 3 12'} } ) );
+            attrs : { 'class' : strokeClass, d: 'M 3 2 L 3 12'} } ) );
           if (this.sortOrder == $c.SortOrder.ASC) {
             this.$el.appendChild($c.util.createSVGElement('path', {
-              attrs : { stroke : defaultColor, fill : 'none',
-                d: 'M 1 5 L 3 2 L 5 5'} }) );
+              attrs : { 'class' : strokeClass, d: 'M 1 5 L 3 2 L 5 5'} }) );
           } else {
             this.$el.appendChild($c.util.createSVGElement('path', {
-              attrs : { stroke : defaultColor, fill : 'none',
-                d : 'M 1 9 L 3 12 L 5 9' } }) );
+              attrs : { 'class' : strokeClass, d : 'M 1 9 L 3 12 L 5 9' } }) );
           }
         }
         return this;
@@ -312,10 +307,10 @@
     for (var i = 0; i < items.length; i += 1) {
       var value = items[i][dataField];
       if (typeof value == 'undefined') {
-        value = '';
+        continue;
       }
       if (!exists[value]) {
-        if (value != '') {
+        if (value !== '') {
           filterValues.push(value);
         }
         exists[value] = true;

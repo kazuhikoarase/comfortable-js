@@ -149,7 +149,11 @@
     return {
       // value to label
       labelFunction : function(value, cell) {
-        if (this.dataType == 'select-one') {
+        if (value === null || typeof value == 'undefined') {
+          return '';
+        } else if (this.dataType == 'number') {
+          return $c.numUtil.format(value, this.decimalDigits);
+        } else if (this.dataType == 'select-one') {
           var options = getOptions(cell);
           if (typeof options.splice != 'function') {
             return options[value] || '';
@@ -163,11 +167,9 @@
             }
           }
           return '';
+        } else {
+          return '' + value;
         }
-        if (this.dataType == 'number') {
-          return $c.numUtil.format(value, this.decimalDigits);
-        }
-        return value;
       },
       // create a editor
       createEditor : function() {
