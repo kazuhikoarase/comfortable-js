@@ -62,7 +62,7 @@ declare namespace comfortable {
     getLineRowCountAt : (row : number) => number;
     getValueAt : (row : number, col : number) => any;
     getCellStyleAt : (row : number, col : number) => TableCellStyle;
-    getCellRendererAt : (row : number, col : number) => TableCellRenderer;
+    getCellRendererFactoryAt : (row : number, col : number) => TableCellRendererFactory;
     getCellWidthAt : (col : number) => number;
     getCellHeightAt : (row : number) => number;
     getCellAt : (row : number, col : number) => TableCell;
@@ -113,6 +113,9 @@ declare namespace comfortable {
     };
   }
 
+  type TableCellRendererFactory =
+    (td : { $el : Element, tableModel : TableModel }) => TableCellRenderer;
+
   interface TableTemplateCellStyle extends TableCellStyle {
 
     width? : number;
@@ -131,8 +134,7 @@ declare namespace comfortable {
     labelField? : string;
     valueField? : string;
 
-    renderer? : (td : { $el : Element,
-      tableModel : TableModel }) => TableCellRenderer;
+    factory? : TableCellRendererFactory;
   }
 
   interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
