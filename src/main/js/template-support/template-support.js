@@ -52,7 +52,8 @@
 
     var columnItems = columns.map(function(column) {
       return $c.util.createElement('div', {
-          attrs : { 'class' : $c.classNamePrefix + 'listitem' },
+          attrs : { 'class' : $c.classNamePrefix + 'listitem ' +
+            $c.classNamePrefix + 'clickable' },
           style : { color : column.type == 'lockColumn'? 'blue' : '' },
           on : { mousedown : function(event) {
             event.preventDefault();
@@ -102,9 +103,9 @@
             var dragPoint = { x : event.pageX, y : event.pageY };
             dialog.$el.appendChild(bar);
             if (lastTarget != null) {
-              $c.util.$(lastTarget).removeClass($c.classNamePrefix + 'listitem-selected');
+              $c.util.$(lastTarget).removeClass($c.classNamePrefix + 'selected');
             }
-            $c.util.$(target).addClass($c.classNamePrefix + 'listitem-selected');
+            $c.util.$(target).addClass($c.classNamePrefix + 'selected');
           }}
         },[
         $c.util.createElement('input',{

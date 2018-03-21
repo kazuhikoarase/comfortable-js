@@ -25,7 +25,7 @@
       setSelected : function(selected) {
         this.selected = selected;
         $c.util.$(rect).addClass(
-            $c.classNamePrefix + 'selector-selected', !selected);
+            $c.classNamePrefix + 'selected', !selected);
       },
       isSelected : function() {
         return this.selected;

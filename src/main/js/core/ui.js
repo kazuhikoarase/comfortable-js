@@ -17,7 +17,8 @@
     return $c.util.createElement('div',{
       style : { display : 'inline-block' },
       props : { textContent : label },
-      attrs : { 'class' : $c.classNamePrefix + 'button' },
+      attrs : { 'class' : $c.classNamePrefix + 'button ' +
+        $c.classNamePrefix + 'clickable' },
       on : { mousedown : function(event) {
         event.preventDefault();
       }, click : function(event) { action(event); } } });
@@ -61,7 +62,8 @@
       style : { position : 'absolute', left : left + 'px', top : top + 'px' } },
       menuItems.map(function(menuItem) {
         return $c.util.createElement('div', {
-            attrs : { 'class' : $c.classNamePrefix + 'menuitem' },
+            attrs : { 'class' : $c.classNamePrefix + 'menuitem ' +
+              $c.classNamePrefix + 'clickable' },
             props : { textContent : menuItem.label },
             style : { position : 'relative', whiteSpace : 'nowrap' },
             on : {

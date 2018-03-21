@@ -20,7 +20,9 @@
   };
 
   var getMessages = function() {
-    return this.getInstance().messages;
+    return $c.util.extend(
+        this.getInstance('en').messages,
+        this.getInstance().messages);
   };
 
   $c.i18n = $c.i18n || {};

@@ -58,31 +58,27 @@
   padding : 4px 12px;
 }
 
-.ctj-menuitem:hover {
-  background-color : rgba(0,0,0,0.1);
-}
-
 .ctj-button {
-  border : 1px solid rgba(0,0,0,0.1);
-  padding : 4px;
+  border : 1px solid rgba(0,0,0,0.5);
+  padding : 4px 8px;
   margin : 0px 4px;
+}
+
+.ctj-clickable:hover {
   background-color : rgba(0,0,0,0.1);
 }
 
-.ctj-button:hover {
-  background-color : rgba(0,0,0,0.15);
+.ctj-clickable:active {
+  background-color : rgba(0,0,0,0.2);
 }
 
-.ctj-button:active {
+.ctj-selected
+.ctj-selected:hover {
   background-color : rgba(0,0,0,0.2);
 }
 
 .ctj-listitem {
   padding : 4px;
-}
-
-.ctj-listitem-selected {
-  background-color : rgba(0,0,0,0.2);
 }
 
 .ctj-column-edit-bar {
@@ -92,10 +88,6 @@
 .ctj-selector-body,
 .ctj-checkbox-body {
   border : 1px solid rgba(0,0,0,0.8);
-}
-
-.ctj-selector-selected {
-  background-color : rgba(0,0,0,0.3);
 }
 
 .ctj-checkbox-check {

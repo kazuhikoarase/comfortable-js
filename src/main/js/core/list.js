@@ -46,7 +46,6 @@
         return cells[index];
       }
       var cell = $public.createCell();
-      cell.$el.setAttribute('class', 'list-cell');
       listContent.appendChild(cell.$el);
       cells.push(cell);
       return cell;
