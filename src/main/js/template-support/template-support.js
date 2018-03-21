@@ -417,7 +417,7 @@
       var filteredItems = this.items.filter(function(item) {
         var filtered = false;
         for (var dataField in filters) {
-          if (filters[dataField][item[dataField] || '']) {
+          if (filters[dataField][item[dataField]]) {
             filtered = true;
             break;
           }

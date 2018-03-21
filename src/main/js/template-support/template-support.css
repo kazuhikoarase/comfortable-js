@@ -48,6 +48,10 @@
   background-color : rgba(0,0,0,0.2);
 }
 
+.ctj-clickable-op:hover {
+  opacity : 0.6;
+}
+
 .ctj-selected,
 .ctj-selected:hover {
   background-color : rgba(0,0,0,0.2);
@@ -59,11 +63,6 @@
 
 .ctj-column-edit-bar {
   border-top : 3px solid rgba(0,0,0,0.8);
-}
-
-.ctj-sort-selector:hover,
-.ctj-filter-item:hover {
-  opacity : 0.6;
 }
 
 .ctj-selector-body,

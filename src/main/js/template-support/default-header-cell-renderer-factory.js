@@ -77,7 +77,7 @@
           selector.$el,
           $c.util.createElement('span', {
             style : labelStyle, props : { textContent : label } })
-        ], { attrs : { 'class' : $c.classNamePrefix + 'sort-selector' }, on : {
+        ], { attrs : { 'class' : $c.classNamePrefix + 'clickable-op' }, on : {
           mousedown : function(event) { event.preventDefault(); },
           click : function() { dialog.trigger('sortclick',
               { label : label }); }
@@ -115,7 +115,7 @@
             label.textContent = text || messages.SELECT_BLANK;
           },
           $el : $c.util.createElement('div', {
-            attrs : { 'class' : $c.classNamePrefix + 'filter-item' },
+            attrs : { 'class' : $c.classNamePrefix + 'clickable-op' },
             on : {
               mousedown : function(event) { event.preventDefault(); },
               click : function() {
@@ -248,7 +248,8 @@
   var createFilterButton = function() {
     return {
       $el : $c.util.createSVGElement('svg',
-          { attrs : { width : 15, height : 15 } }),
+          { attrs : { width : 15, height : 15,
+            'class' : $c.classNamePrefix + 'clickable-op' } }),
       filtered : false,
       sortOrder : null,
       setFiltered : function(filtered) {
