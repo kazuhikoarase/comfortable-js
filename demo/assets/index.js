@@ -322,6 +322,10 @@ window.addEventListener('load', function(event) {
             for (var row in data.rows) {
               model.data[row] = data.rows[row];
             }
+            // remove if successfully get.
+            model.requestedRows = model.requestedRows.filter(function(row) {
+              return typeof data.rows[row] == 'undefined';
+            });
             // request rendering.
             table.invalidate();
           });

@@ -125,7 +125,7 @@
     },
 
     closest : function(elm, opts) {
-      while (elm != null && elm != opts.root) {
+      while (elm != null && elm.nodeType == 1 && elm != opts.root) {
         if (typeof opts.tagName == 'string' && elm.tagName == opts.tagName) {
           return elm;
         } else if (typeof opts.$el == 'object' && elm == opts.$el) {
