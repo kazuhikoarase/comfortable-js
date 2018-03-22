@@ -99,7 +99,6 @@
                 var parent = target.parentNode;
                 var ref = columnItems[indexTo];
                 columns = $c.util.moveSublist(columns, indexFrom, 1, indexTo);
-                console.log(columns);
                 parent.removeChild(target);
                 if (ref) {
                   parent.insertBefore(target, ref);
@@ -175,7 +174,7 @@
                 hiddenColumns[tableModel.getOrderedColumnIndexAt(column.col)] = true;
               }
             } else if (column.type == 'lockColumn') {
-              lockColumn = col;
+              lockColumn = col < columns.length - 1? col : 0;
               enableLockColumn = !column.hidden;
             }
           });
