@@ -70,12 +70,13 @@ window.addEventListener('load', function(event) {
       title : 'Styles',
       template : { thead : [
         [
-          { rowSpan : 2, color : 'white', backgroundColor : '#999999' },
-          { label : 'Right-Click Me!', colSpan : 3, backgroundColor : '#ffc' }
+          { rowSpan : 2, backgroundColor : '#999999' },
+          { label : 'Right-Click\nMe!', colSpan : 3,
+            backgroundColor : '#ff6', height : 50 }
         ],[
-          { label : 'A', textAlign : 'center', width : 80, backgroundColor : '#fcc' },
-          { label : 'B', textAlign : 'center', width : 80, backgroundColor : '#cfc' },
-          { label : 'C', textAlign : 'center', width : 80, backgroundColor : '#ccf' }
+          { label : 'A', textAlign : 'center', width : 50, backgroundColor : '#f66' },
+          { label : 'B', textAlign : 'center', width : 50, backgroundColor : '#6f6' },
+          { label : 'C', textAlign : 'center', width : 50, backgroundColor : '#66f' }
         ]
       ] },
       code : function(table) {
