@@ -167,11 +167,6 @@
         off.top -= e.scrollTop;
       }
       return off;
-    },
-
-    translate : function(val1, min1, max1, min2, max2) {
-      var val2 = (val1 - min1) * (max2 - min2) / (max1 - min1) + min2;
-      return Math.max(min2, Math.min(Math.round(val2), max2) );
     }
   };
 
@@ -184,6 +179,10 @@
     },
     getCellId : function(row, col) {
       return row + ':' + col;
+    },
+    translate : function(val1, min1, max1, min2, max2) {
+      var val2 = (val1 - min1) * (max2 - min2) / (max1 - min1) + min2;
+      return Math.max(min2, Math.min(Math.round(val2), max2) );
     }
   });
 

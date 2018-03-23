@@ -124,18 +124,23 @@
             fontWeight : cs.fontWeight
           }
         });
-        while (select.firstChild) {
-          select.removeChild(select.firstChild);
-        }
         var options = getOptions(cell);
+        while (select.childNodes.length < options.length) {
+          select.appendChild(util.createElement('option') );
+        }
         var labelField = cell.labelField || 'label';
         var valueField = cell.valueField || 'value';
-        for (var i = 0; i < options.length; i += 1) {
+        var i = 0;
+        for (; i < options.length; i += 1) {
           var option = options[i];
-          select.appendChild(util.createElement('option', {
+          util.set(select.childNodes[i], {
+            style : { display : '' },
             props : { textContent : option[labelField],
               value : option[valueField] }
-          }));
+          });
+        }
+        for (;i < select.childNodes.length; i += 1) {
+          select.childNodes[i].style.display = 'none';
         }
       },
       focus : function() {
