@@ -115,6 +115,7 @@
           return this;
         },
         addClass : function(className, remove) {
+          className = util.replaceClassNamePrefix(className);
           var classes = '';
           (elm.getAttribute('class') || '').split(/\s+/g).forEach(function(c) {
             if (c != className) {
@@ -125,7 +126,7 @@
           if (!remove) {
             classes += ' ' + className;
           }
-          elm.setAttribute('class', util.replaceClassNamePrefix(classes) );
+          elm.setAttribute('class', classes);
           return this;
         },
         removeClass : function(className) {

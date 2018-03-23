@@ -387,7 +387,8 @@
               return;
             }
             if (td.row < $public.getLockRow() &&
-                $public.model.isColumnDraggableAt(td.col) ) {
+                $public.model.isColumnDraggableAt(td.col) &&
+                !event.defaultPrevented) {
               event.preventDefault();
               var mousemoveHandler = function(event) {
                 updateMarker(event.pageX - dragPoint.x);

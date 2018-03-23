@@ -98,6 +98,7 @@
                 var parent = target.parentNode;
                 var ref = columnItems[indexTo];
                 columns = $c.util.moveSublist(columns, indexFrom, 1, indexTo);
+                columnItems = $c.util.moveSublist(columnItems, indexFrom, 1, indexTo);
                 parent.removeChild(target);
                 if (ref) {
                   parent.insertBefore(target, ref);
