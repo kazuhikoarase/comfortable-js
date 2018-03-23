@@ -375,7 +375,7 @@ window.addEventListener('load', function(event) {
                 button.textContent = 'Clicked: ' + newValue;
               };
               var button = comfortable.util.createElement('button', {
-                  style : { width: '100%', height : '100%', padding:'0px' },
+                  style : { width: '100%', height: '100%', padding: '0px' },
                   on : { click : function(event) {
                       console.log(currentCell);
                       newValue += 1;
@@ -431,13 +431,12 @@ window.addEventListener('load', function(event) {
   var $c = comfortable;
 
   // toc
-  document.getElementById('samples').appendChild($c.util.createElement('ul',
-    samples.map(function(sample, i) {
-      return $c.util.createElement('li', [
-        $c.util.createElement('a', {
-          attrs : { href : '#sample' + (i + 1) },
-          props : { textContent : sample.title } })] );
-    }) ) );
+  samples.forEach(function(sample, i) {
+    document.getElementById('samples-toc').appendChild($c.util.createElement('li', [
+      $c.util.createElement('a', {
+        attrs : { href : '#sample' + (i + 1) },
+        props : { textContent : sample.title } })] ) );
+  });
 
   // contents
   samples.forEach(function(sample, i) {
