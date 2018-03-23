@@ -135,6 +135,9 @@
     },
 
     closest : function(elm, opts) {
+      if (typeof opts.className == 'string') {
+        opts.className = this.replaceClassNamePrefix(opts.className);
+      }
       while (elm != null && elm.nodeType == 1 && elm != opts.root) {
         if (typeof opts.tagName == 'string' && elm.tagName == opts.tagName) {
           return elm;
