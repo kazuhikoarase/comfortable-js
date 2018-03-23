@@ -1,7 +1,7 @@
 //
 // comfortable - i18n
 //
-// Copyright (c) 2017 Kazuhiko Arase
+// Copyright (c) 2018 Kazuhiko Arase
 //
 // URL: https://github.com/kazuhikoarase/comfortable/
 //
