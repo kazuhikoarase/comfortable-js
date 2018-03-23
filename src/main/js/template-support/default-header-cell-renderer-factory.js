@@ -360,6 +360,7 @@
               { dataField : dataField, sortOrder : this.sortOrder } :null;
           tableModel.trigger('filterchange');
         }).on('applyfilter', function() {
+          filterContext['.comparator'] = filterButton.cell.comparator;
           filterContext.filters[dataField] = this.rejects;
           tableModel.trigger('filterchange');
         });
