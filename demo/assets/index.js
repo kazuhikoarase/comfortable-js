@@ -50,7 +50,7 @@ window.addEventListener('load', function(event) {
       s.substring(start + pat.length + 1, end).replace(/\\t/g, '\t').replace(/\\n/g, '\n') +
         s.substring(end + pat.length + 1);
     }
-    return s;
+    return s.replace(/(\s)"(\w+)"\s*:/g, '$1$2:').replace(/"/g, '\'');
   };
 
   var samples = [
