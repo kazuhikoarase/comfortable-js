@@ -16,7 +16,7 @@
   // selector of sort order
   var createSelector = function() {
     var rect = $c.util.createElement('span', {
-      attrs : { 'class' : $c.classNamePrefix + 'selector-body' }, 
+      attrs : { 'class' : '${prefix}selector-body' }, 
       style : { display:'inline-block', width:'12px', height : '12px' }
     });
     return {
@@ -25,7 +25,7 @@
       setSelected : function(selected) {
         this.selected = selected;
         $c.util.$(rect).addClass(
-            $c.classNamePrefix + 'selected', !selected);
+            '${prefix}selected', !selected);
       },
       isSelected : function() {
         return this.selected;
@@ -36,12 +36,12 @@
   // filter checkbox
   var createCheckbox = function() {
     var path = $c.util.createSVGElement('path', { attrs : {
-        'class' : $c.classNamePrefix + 'checkbox-check',
+        'class' : '${prefix}checkbox-check',
         d : 'M 2 5 L 5 9 L 10 3'
       } });
     return {
       $el : $c.util.createElement('span', {
-        attrs : { 'class' : $c.classNamePrefix + 'checkbox-body' }, 
+        attrs : { 'class' : '${prefix}checkbox-body' }, 
         style : { display : 'inline-block', width : '12px', height : '12px' }
         }, [
           $c.util.createSVGElement('svg', {
@@ -50,7 +50,7 @@
       checked : true,
       setIncomplete : function(incomplete) {
         $c.util.$(path).addClass(
-            $c.classNamePrefix + 'checkbox-incomplete-check', !incomplete);
+            '${prefix}checkbox-incomplete-check', !incomplete);
       },
       setChecked : function(checked) {
         this.checked = checked;
@@ -77,7 +77,7 @@
           selector.$el,
           $c.util.createElement('span', {
             style : labelStyle, props : { textContent : label } })
-        ], { attrs : { 'class' : $c.classNamePrefix + 'clickable-op' }, on : {
+        ], { attrs : { 'class' : '${prefix}clickable-op' }, on : {
           mousedown : function(event) { event.preventDefault(); },
           click : function() { dialog.trigger('sortclick',
               { label : label }); }
@@ -115,7 +115,7 @@
             label.textContent = text || messages.SELECT_BLANK;
           },
           $el : $c.util.createElement('div', {
-            attrs : { 'class' : $c.classNamePrefix + 'clickable-op' },
+            attrs : { 'class' : '${prefix}clickable-op' },
             on : {
               mousedown : function(event) { event.preventDefault(); },
               click : function() {
@@ -249,7 +249,7 @@
     return {
       $el : $c.util.createSVGElement('svg',
           { attrs : { width : 15, height : 15,
-            'class' : $c.classNamePrefix + 'clickable-op' } }),
+            'class' : '${prefix}clickable-op' } }),
       filtered : false,
       sortOrder : null,
       setFiltered : function(filtered) {
@@ -267,11 +267,11 @@
         }
         // outer rect
         this.$el.appendChild($c.util.createSVGElement('rect', {
-          attrs : { 'class' : $c.classNamePrefix + 'filter-body',
+          attrs : { 'class' : '${prefix}filter-body',
             x : 0, y : 0, width: 15, height : 15, rx: 3, ry : 3 } }) );
         // and others.
-        var fillClass = $c.classNamePrefix + 'filter-fill';
-        var strokeClass = $c.classNamePrefix + 'filter-stroke';
+        var fillClass = '${prefix}filter-fill';
+        var strokeClass = '${prefix}filter-stroke';
         if (this.filtered) {
           this.$el.appendChild($c.util.createSVGElement('path', {
             attrs : { 'class' : fillClass,

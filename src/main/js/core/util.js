@@ -30,6 +30,13 @@
       window.setTimeout(cb, 0);
     },
 
+    replaceClassNamePrefix : function() {
+      var classNamePrefixRe = /\$\{prefix\}/g;
+      return function(className) {
+        return className.replace(classNamePrefixRe, $c.classNamePrefix);
+      };
+    }(),
+
     set : function(elm, opts) {
       if (opts.attrs) {
         for (var k in opts.attrs) {
@@ -42,6 +49,9 @@
           }
           if (typeof v != 'string') {
             throw 'bad attr type for ' + k + ':' + (typeof v);
+          }
+          if (k == 'class') {
+            v = this.replaceClassNamePrefix(v);
           }
           elm.setAttribute(k, v);
         }
@@ -115,7 +125,7 @@
           if (!remove) {
             classes += ' ' + className;
           }
-          elm.setAttribute('class', classes);
+          elm.setAttribute('class', util.replaceClassNamePrefix(classes) );
           return this;
         },
         removeClass : function(className) {
