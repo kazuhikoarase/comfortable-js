@@ -70,8 +70,8 @@ window.addEventListener('load', function(event) {
       title : 'Styles',
       template : { thead : [
         [
-          { rowSpan : 2, backgroundColor : '#999999' },
-          { label : 'Right-Click\nMe!', colSpan : 3,
+          { rowSpan : 2, backgroundColor : '#ff00cc' },
+          { label : 'Right-Click\nMe!', colSpan : 3, color : 'blue',
             backgroundColor : '#ff6', height : 50 }
         ],[
           { label : 'A', textAlign : 'center', width : 50, backgroundColor : '#f66' },
