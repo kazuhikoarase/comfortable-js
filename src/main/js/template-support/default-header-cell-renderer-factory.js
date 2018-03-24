@@ -24,8 +24,7 @@
       selected : false,
       setSelected : function(selected) {
         this.selected = selected;
-        $c.util.$(rect).addClass(
-            '${prefix}selected', !selected);
+        $c.util.$(rect).addClass('${prefix}selected', !selected);
       },
       isSelected : function() {
         return this.selected;

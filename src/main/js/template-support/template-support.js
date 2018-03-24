@@ -57,8 +57,9 @@
 
     var columnItems = columns.map(function(column) {
       return $c.util.createElement('div', {
-          attrs : { 'class' : '${prefix}listitem ${prefix}clickable' },
-          style : { color : column.type == 'lockColumn'? 'blue' : '' },
+          attrs : { 'class' : '${prefix}listitem ${prefix}clickable' +
+            (column.type == 'lockColumn'?
+                ' ${prefix}column-edit-lock-column' : '') },
           on : { mousedown : function(event) {
             event.preventDefault();
             columnItems.forEach(function(elm) {

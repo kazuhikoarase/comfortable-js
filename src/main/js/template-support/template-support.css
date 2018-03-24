@@ -65,6 +65,10 @@
   border-top : 3px solid rgba(0,0,0,0.8);
 }
 
+.ctj-column-edit-lock-column {
+  color : #0000ff;
+}
+
 .ctj-selector-body,
 .ctj-checkbox-body {
   border : 1px solid rgba(0,0,0,0.8);
