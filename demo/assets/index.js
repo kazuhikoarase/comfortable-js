@@ -70,11 +70,11 @@ window.addEventListener('load', function(event) {
       title : 'Styles',
       template : { thead : [
         [
-          { rowSpan : 2, backgroundColor : '#ff00cc' },
-          { label : 'Right-Click\nMe!', colSpan : 3, color : 'blue',
+          { rowSpan : 2, backgroundColor : '#ff6666' },
+          { label : 'Right-Click\nMe!', colSpan : 3, color : '#f09',
             backgroundColor : '#ff6', height : 50 }
         ],[
-          { label : 'A', textAlign : 'center', width : 50, backgroundColor : '#f66' },
+          { label : 'A', textAlign : 'center', width : 50, backgroundColor : '#fc6' },
           { label : 'B', textAlign : 'center', width : 50, backgroundColor : '#6f6' },
           { label : 'C', textAlign : 'center', width : 50, backgroundColor : '#66f' }
         ]
