@@ -6,13 +6,16 @@ var tableCustomized = function(targetId) {
 
   var $c = comfortable;
 
+  var numCells = 10000;
   var headers = [ {},{} ];
   var columns = [];
   var items = [];
-  for (var i = 0; i < 10000; i += 1) {
+  for (var i = 0; i < numCells; i += 1) {
     columns.push({});
     items.push({});
   }
+
+  headers[0][0] = { label : numCells + ' x ' + numCells + ' cells' };
   headers[0][4] = { label : 'Number' };
   columns[4].factory = $c.createDefaultCellRendererFactory({ dataType : 'number' });
 
