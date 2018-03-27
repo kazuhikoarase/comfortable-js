@@ -81,6 +81,8 @@ declare namespace comfortable {
     lockColumn : number;
     getLockRow : () => number;
     getLockColumn : () => number;
+    forEachCells : (callback : (cell : {
+      $el : Element, row : number, col : number }) => void) => void;
     model : TableModel;
     editor : Editor;
   }
