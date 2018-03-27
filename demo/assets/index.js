@@ -72,6 +72,7 @@ window.addEventListener('load', function(event) {
         [
           { rowSpan : 2, backgroundColor : '#ff6666' },
           { label : 'Right-Click\nMe!', colSpan : 3, color : '#f09',
+            textAlign : 'right', verticalAlign : 'bottom',
             backgroundColor : '#ff6', height : 50 }
         ],[
           { label : 'A', textAlign : 'center', width : 50,

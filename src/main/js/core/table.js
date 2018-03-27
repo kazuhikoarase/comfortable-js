@@ -105,6 +105,7 @@
         attrs : { 'class' : cell.className },
         style : {
           textAlign : cell.textAlign,
+          verticalAlign : cell.verticalAlign,
           color : cell.color,
           backgroundColor : cell.backgroundColor,
           fontWeight : cell.fontWeight,

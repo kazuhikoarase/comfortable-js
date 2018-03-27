@@ -91,6 +91,7 @@ declare namespace comfortable {
     editable? : boolean;
     className? : string;
     textAlign : string;
+    verticalAlign : string;
     color? : string;
     backgroundColor? : string;
     borderLeft? : string;

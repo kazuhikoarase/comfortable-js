@@ -29,6 +29,7 @@
         util.set(this.$el, {
           style : {
             textAlign : cs.textAlign,
+            verticalAlign : cs.verticalAlign,
             color : cs.color,
             backgroundColor : cs.backgroundColor,
             fontFamily : cs.fontFamily,
@@ -117,6 +118,7 @@
         util.set(this.$el, {
           style : {
             textAlign : cs.textAlign,
+            verticalAlign : cs.verticalAlign,
             color : cs.color,
             backgroundColor : cs.backgroundColor,
             fontFamily : cs.fontFamily,

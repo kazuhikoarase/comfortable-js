@@ -287,7 +287,21 @@
       defaultLockColumn : 0,
       getLockColumn : function() {
         return !this.enableLockColumn? 0 : this.lockColumn;
-      }
+      },
+      getContextMenuItems : function() {
+        var messages = $c.i18n.getMessages();
+        var tableModel = table.model;
+        return [
+          { label : messages.RESET_FILTER, action : function() {
+              tableModel.filterContext = createFilterContext();
+              tableModel.filteredItems = null;
+              table.invalidate();
+          }},
+          { label : messages.EDIT_COLUMNS, action : function() {
+              showColumnEditDialog(table);
+          }}
+        ];
+      },
     }).on('mousedown', function(event, detail) {
       if (detail.row < this.getLockRow() ) {
         // on header.
@@ -299,24 +313,11 @@
       if (!(detail.row < table.getLockRow() ) ) {
         return;
       }
-/*
-      var tableModel = table.model;
-      var col = detail.col;
-      var orderedCol = tableModel.orderedColumnIndices[col];
-*/
-      var messages = $c.i18n.getMessages();
-      var tableModel = table.model;
 
-      var menuItems = [
-        { label : messages.RESET_FILTER, action : function() {
-            tableModel.filterContext = createFilterContext();
-            tableModel.filteredItems = null;
-            table.invalidate();
-        }},
-        { label : messages.EDIT_COLUMNS, action : function() {
-            showColumnEditDialog(table);
-        }}
-      ];
+      var menuItems = this.getContextMenuItems();
+      if (!menuItems || menuItems.length == 0) {
+        return;
+      }
 
       detail.originalEvent.preventDefault();
       $c.util.callLater(function() {
