@@ -121,6 +121,9 @@ declare namespace comfortable {
     width? : number;
     height? : number;
 
+    draggable? : boolean;
+    resizable? : boolean;
+
     dataField? : string;
 
     // one of 'number', 'boolean', 'select-one'

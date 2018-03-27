@@ -74,9 +74,12 @@ window.addEventListener('load', function(event) {
           { label : 'Right-Click\nMe!', colSpan : 3, color : '#f09',
             backgroundColor : '#ff6', height : 50 }
         ],[
-          { label : 'A', textAlign : 'center', width : 50, backgroundColor : '#fc6' },
-          { label : 'B', textAlign : 'center', width : 50, backgroundColor : '#6f6' },
-          { label : 'C', textAlign : 'center', width : 50, backgroundColor : '#66f' }
+          { label : 'A', textAlign : 'center', width : 50,
+            backgroundColor : '#fc6', draggable : false },
+          { label : 'B', textAlign : 'center', width : 50,
+            backgroundColor : '#6f6', resizable : false },
+          { label : 'C', textAlign : 'center', width : 50,
+            backgroundColor : '#66f' }
         ]
       ] },
       code : function(table) {
