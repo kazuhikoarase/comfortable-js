@@ -121,8 +121,8 @@ declare namespace comfortable {
     width? : number;
     height? : number;
 
-    draggable? : boolean;
-    resizable? : boolean;
+    columnDraggable? : boolean;
+    columnResizable? : boolean;
 
     dataField? : string;
 

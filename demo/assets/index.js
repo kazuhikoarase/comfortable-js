@@ -75,9 +75,9 @@ window.addEventListener('load', function(event) {
             backgroundColor : '#ff6', height : 50 }
         ],[
           { label : 'A', textAlign : 'center', width : 50,
-            backgroundColor : '#fc6', draggable : false },
+            backgroundColor : '#fc6', columnDraggable : false },
           { label : 'B', textAlign : 'center', width : 50,
-            backgroundColor : '#6f6', resizable : false },
+            backgroundColor : '#6f6', columnResizable : false },
           { label : 'C', textAlign : 'center', width : 50,
             backgroundColor : '#66f' }
         ]
