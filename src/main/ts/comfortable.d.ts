@@ -52,7 +52,7 @@ declare namespace comfortable {
     defaultCellWidth : number;
     defaultCellHeight : number;
     defaultCellStyle : TableCellStyle;
-    defaultCellRenderer : TableCellRenderer;
+    defaultCellRendererFactory : TableCellRendererFactory;
     maxRowSpan : number;
     maxColSpan : number;
     minCellWidth : number;
@@ -150,6 +150,7 @@ declare namespace comfortable {
   }
 
   interface TemplateTableModel extends TableModel {
+    defaultHeaderCellRendererFactory : TableCellRendererFactory;
     items : any[];
     getItemAt : (row : number) => any;
     getItemCount : () => number;
