@@ -413,7 +413,7 @@
         var style = $c.util.extend({}, getCellStyleAt(row, orderedCol) );
         style.className = style.className || '';
         if (row < headLength) {
-          style.className += ' ' + '${prefix}header';
+          style.className += ' ${prefix}header';
           style.editable = false;
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
@@ -421,7 +421,7 @@
           style.className += ' ${prefix}' +
             (itemIndex.row % 2 == 0? 'even' : 'odd');
           if (style.editable === false) {
-            style.className += ' ' + '${prefix}disabled';
+            style.className += ' ${prefix}disabled';
           }
         }
         return style;

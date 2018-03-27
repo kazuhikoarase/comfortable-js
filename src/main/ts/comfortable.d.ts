@@ -155,12 +155,18 @@ declare namespace comfortable {
     tbody : TableTemplateCellStyle[][];
   }
 
+  interface ItemIndex {
+    row : number;
+    // col will be string if dataField is defined.
+    col : (number | string);
+  }
+
   interface TemplateTableModel extends TableModel {
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
     items : any[];
     getItemAt : (row : number) => any;
     getItemCount : () => number;
-    getItemIndexAt : (row : number, col : number) => number;
+    getItemIndexAt : (row : number, col : number) => ItemIndex;
   }
 
   interface TemplateTable extends Table {

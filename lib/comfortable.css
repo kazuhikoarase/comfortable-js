@@ -33,6 +33,38 @@
  *  http://www.opensource.org/licenses/mit-license.php
  */
 
+.ctj-header {
+  font-weight : bold;
+}
+
+.ctj-even {
+  background-color : rgba(0,0,0,0.05);
+}
+
+.ctj-odd {
+}
+
+.ctj-disabled {
+  color : rgba(0,0,0,0.2);
+}
+
+.ctj-clickable:hover {
+  background-color : rgba(0,0,0,0.1);
+}
+
+.ctj-clickable:active {
+  background-color : rgba(0,0,0,0.2);
+}
+
+.ctj-clickable-op:hover {
+  opacity : 0.6;
+}
+
+.ctj-selected,
+.ctj-selected:hover {
+  background-color : rgba(0,0,0,0.2);
+}
+
 .ctj-dialog {
   font-family : 'ms pgothic', sans-serif;
   font-size : 14px;
@@ -62,23 +94,6 @@
   border : 1px solid rgba(0,0,0,0.5);
   padding : 4px 8px;
   margin : 0px 4px;
-}
-
-.ctj-clickable:hover {
-  background-color : rgba(0,0,0,0.1);
-}
-
-.ctj-clickable:active {
-  background-color : rgba(0,0,0,0.2);
-}
-
-.ctj-clickable-op:hover {
-  opacity : 0.6;
-}
-
-.ctj-selected,
-.ctj-selected:hover {
-  background-color : rgba(0,0,0,0.2);
 }
 
 .ctj-listitem {
@@ -121,19 +136,4 @@
 .ctj-filter-stroke {
   stroke : rgba(0,0,0,0.8);
 	fill : none;
-}
-
-.ctj-header {
-  font-weight : bold;
-}
-
-.ctj-even {
-  background-color : rgba(0,0,0,0.05);
-}
-
-.ctj-odd {
-}
-
-.ctj-disabled {
-  color : rgba(0,0,0,0.2);
 }
