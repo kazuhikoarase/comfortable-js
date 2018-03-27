@@ -1008,6 +1008,15 @@
       lockColumn : 0,
       getLockRow : function() { return this.lockRow; },
       getLockColumn : function() { return this.lockColumn; },
+      forEachCells : function(callback) {
+        tables.forEach(function(table) {
+          table.tbody.children.forEach(function(tr) {
+            tr.children.forEach(function(cell) {
+              callback(cell);
+            });
+          });
+        });
+      },
       editor : editor,
       model : createDefaultTableModel(),
       render : function(visibleCell) {

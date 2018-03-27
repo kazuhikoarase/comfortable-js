@@ -35,10 +35,12 @@
     var frame = util.createElement('div', {
         style : { position : 'relative', overflow : 'hidden',
           width : '100px', height : '100px' },
+        on : {
           wheel : function(event) {
             viewPane.scrollLeft += event.deltaX;
             viewPane.scrollTop += event.deltaY;
-          } },[ viewPane, list.$el ]);
+          }
+        } },[ viewPane, list.$el ]);
 
     var cells = [];
     var getOrCrt = function(index) {
