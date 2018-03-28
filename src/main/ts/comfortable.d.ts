@@ -129,8 +129,11 @@ declare namespace comfortable {
 
     dataField? : string;
 
-    // one of 'number', 'boolean', 'select-one'
+    // one of 'string(default)', 'number', 'boolean', 'select-one'
     dataType? : string;
+
+    // dataType : 'string', 'number'
+    maxLength? : number;
 
     // dataType : 'number'
     decimalDigits? : number;
@@ -151,8 +154,8 @@ declare namespace comfortable {
 
   interface TableTemplate {
     lockColumn? : number;
-    thead : TableTemplateHeaderCellStyle[][];
-    tbody : TableTemplateCellStyle[][];
+    thead? : TableTemplateHeaderCellStyle[][];
+    tbody? : TableTemplateCellStyle[][];
   }
 
   interface ItemIndex {

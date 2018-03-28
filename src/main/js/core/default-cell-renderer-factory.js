@@ -26,17 +26,22 @@
       }),
       beginEdit : function(td, cell) {
         var cs = window.getComputedStyle(td.$el, null);
-        util.set(this.$el, {
-          style : {
-            textAlign : cs.textAlign,
-            verticalAlign : cs.verticalAlign,
-            color : cs.color,
-            backgroundColor : cs.backgroundColor,
-            fontFamily : cs.fontFamily,
-            fontSize : cs.fontSize,
-            fontWeight : cs.fontWeight
-          }
-        });
+        var opts = {
+            props : {},
+            style : {
+              textAlign : cs.textAlign,
+              verticalAlign : cs.verticalAlign,
+              color : cs.color,
+              backgroundColor : cs.backgroundColor,
+              fontFamily : cs.fontFamily,
+              fontSize : cs.fontSize,
+              fontWeight : cs.fontWeight
+            }
+          };
+        if (typeof cell.maxLength == 'number') {
+          opts.props.maxLength = cell.maxLength;
+        }
+        util.set(this.$el, opts);
       },
       focus : function() {
         this.$el.focus();

@@ -420,9 +420,9 @@
           row -= headLength;
           style.className += ' ${prefix}' +
             (itemIndex.row % 2 == 0? 'even' : 'odd');
-          if (style.editable === false) {
-            style.className += ' ${prefix}disabled';
-          }
+        }
+        if (style.editable === false) {
+          style.className += ' ${prefix}readonly';
         }
         return style;
       },

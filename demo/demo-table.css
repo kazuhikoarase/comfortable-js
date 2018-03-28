@@ -22,6 +22,5 @@ BODY {
   background-color : rgba(0,0,0,0.1)
 }
 
-.my-table .disabled {
-  color : #666;
+.my-table .readonly {
 }

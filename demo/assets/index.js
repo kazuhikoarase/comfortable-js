@@ -213,7 +213,7 @@ window.addEventListener('load', function(event) {
         ]
       ], tbody : [
         [
-          { dataType : 'string', dataField : 'val1' },
+          { dataType : 'string', dataField : 'val1', maxLength : 5 },
           { dataType : 'number', dataField : 'val2' },
           { dataType : 'boolean', dataField : 'val3' },
           { dataType : 'select-one', dataField : 'val4',

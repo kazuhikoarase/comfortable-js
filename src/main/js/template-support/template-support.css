@@ -20,8 +20,7 @@
 .ctj-odd {
 }
 
-.ctj-disabled {
-  color : rgba(0,0,0,0.2);
+.ctj-readonly {
 }
 
 .ctj-clickable:hover {

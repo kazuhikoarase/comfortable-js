@@ -85,9 +85,9 @@ var tableCustomized = function(targetId) {
           style.colSpan = 2,
           style.editable = false;
         }
-        if (style.editable === false ) {
-          style.className += ' disabled';
-        }
+      }
+      if (style.editable === false) {
+        style.className += ' readonly';
       }
       return style;
     },
