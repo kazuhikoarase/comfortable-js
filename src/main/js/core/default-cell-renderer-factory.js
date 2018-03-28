@@ -146,9 +146,15 @@
               value : option[valueField] }
           });
         }
+        while (select.childNodes.length > options.length) {
+          select.removeChild(select.lastChild);
+        }
+        // IE9 does not support style.display=none.
+        /*
         for (;i < select.childNodes.length; i += 1) {
           select.childNodes[i].style.display = 'none';
         }
+        */
       },
       focus : function() {
         this.$el.focus();
