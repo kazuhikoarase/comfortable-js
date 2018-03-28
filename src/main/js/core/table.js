@@ -1010,8 +1010,8 @@
       getLockColumn : function() { return this.lockColumn; },
       forEachCells : function(callback) {
         tables.forEach(function(table) {
-          table.tbody.children.forEach(function(tr) {
-            tr.children.forEach(function(cell) {
+          (table.tbody.children || []).forEach(function(tr) {
+            (tr.children || []).forEach(function(cell) {
               callback(cell);
             });
           });
