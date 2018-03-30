@@ -465,18 +465,17 @@
               };
               var dragPoint = { x : event.pageX, y : event.pageY };
               var dragProxy = util.createElement('div', {
+                attrs : { 'class' : '${prefix}column-drag-proxy' },
                 style : { position : 'absolute', top : '0px',
-                  width : colWidth + 'px', height : rect.height + 'px',
-                  backgroundColor : 'rgba(0,0,0,0.1)' }
+                  width : colWidth + 'px',
+                  height : rect.height + 'px' }
               });
-              var markerStyle = {
-                gap : 2
-              };
+              var markerStyle = { gap : 2 };
               var marker = util.createElement('div', {
+                attrs : { 'class' : '${prefix}column-drag-marker' },
                 style : { position : 'absolute', top : '0px',
                   width : (markerStyle.gap * 2 + 1) + 'px',
-                  height : rect.height + 'px',
-                  backgroundColor : 'rgba(0,0,0,0.5)' }
+                  height : rect.height + 'px' }
               });
               updateMarker(0);
               frame.appendChild(dragProxy);

@@ -21,3 +21,33 @@
 .ctj-v-lock-line {
   border-left : 1px solid rgba(0,0,0,0.5);
 }
+
+.ctj-column-drag-proxy {
+  background-color : rgba(0,0,0,0.1);
+}
+
+.ctj-column-drag-marker {
+  background-color : rgba(0,0,0,0.5);
+}
+
+INPUT[type="text"].ctj-editor {
+  width : 100%;
+  height : 100%;
+  padding : 0px;
+  margin : 0px;
+  border : none;
+}
+
+INPUT[type="checkbox"].ctj-editor {
+  padding : 0px;
+  margin : 0px;
+  border : none;
+}
+
+SELECT.ctj-editor {
+  width : 100%;
+  height : 100%;
+  padding : 0px;
+  margin : 0px;
+  border : none;
+}

@@ -17,12 +17,7 @@
     var util = $c.util;
     return {
       $el : util.createElement('input', {
-        attrs : { type : 'text' },
-        style : {
-          width : '100%', height : '100%',
-          padding : '0px', margin : '0px',
-          border : 'none'
-        }
+        attrs : { type : 'text', 'class' : '${prefix}editor' }
       }),
       beginEdit : function(td, cell) {
         var cs = window.getComputedStyle(td.$el, null);
@@ -76,11 +71,7 @@
     var util = $c.util;
     return {
       $el : util.createElement('input', {
-        attrs : { type : 'checkbox' },
-        style : {
-          padding : '0px', margin : '0px',
-          border : 'none'
-        }
+        attrs : { type : 'checkbox', 'class' : '${prefix}editor' }
       }),
       beginEdit : function(td, cell) {
         var cs = window.getComputedStyle(td.$el, null);
@@ -110,11 +101,7 @@
   var createSelectBox = function(opts) {
     var util = $c.util;
     var select = util.createElement('select', {
-      style : {
-        width : '100%', height : '100%',
-        padding : '0px', margin : '0px',
-        border : 'none'
-      }
+      attrs : { 'class' : '${prefix}editor' }
     });
     return {
       $el : select,
