@@ -262,6 +262,8 @@
                 newValue : editor.isValid()? editor.getValue() : oldValue };
             }
           };
+        },
+        dispose : function() {
         }
       };
     };

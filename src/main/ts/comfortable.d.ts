@@ -114,6 +114,7 @@ declare namespace comfortable {
       focus() : void;
       endEdit : () => ({ newValue : any; oldValue? : any; } | void);
     };
+    dispose : () => void;
   }
 
   type TableCellRendererFactory =

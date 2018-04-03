@@ -417,6 +417,8 @@
         },
         beginEdit : function(cell) {
           return { focus : function() {}, endEdit : function() {} };
+        },
+        dispose : function() {
         }
       };
     };

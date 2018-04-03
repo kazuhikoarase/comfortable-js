@@ -321,6 +321,9 @@
             var factory = tableModel.getCellRendererFactoryAt(row, col);
             if (td.factory != factory) {
               td.factory = factory;
+              if (td.renderer) {
+                td.renderer.dispose();
+              }
               td.$el.innerHTML = '';
               td.renderer = td.factory(td);
             }

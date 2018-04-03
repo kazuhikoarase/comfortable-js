@@ -404,6 +404,8 @@ window.addEventListener('load', function(event) {
                       return { oldValue : oldValue, newValue : newValue };
                     }
                   };
+                },
+                dispose : function() {
                 }
               };
             }
