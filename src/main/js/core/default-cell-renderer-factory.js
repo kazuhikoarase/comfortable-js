@@ -235,7 +235,7 @@
       }
 
       return {
-        render : function(cell, tableModel) {
+        render : function(cell) {
           if (!renderIsEditor) {
             labelRenderer.setLabel(opts.labelFunction(cell.value, cell) );
             if (opts.dataType == 'number') {
