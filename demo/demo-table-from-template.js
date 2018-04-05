@@ -97,15 +97,6 @@ var tableFromTemplate = function(targetId) {
   table.$el.style.height  = '400px';
   table.$el.setAttribute('class', 'my-table');
   table.invalidate();
-$g = $c;
-
-  table.$el.style.display = 'none';
-  $g.util.$(document.body).on('click', function() {
-    // 表示されない
-    table.$el.style.display = '';
-  });
-
-  table.invalidate();
 
   document.getElementById(targetId).appendChild(table.$el);
 
