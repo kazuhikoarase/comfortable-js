@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<link rel="stylesheet" href="../lib/comfortable.css" type="text/css" />
+<link rel="stylesheet" href="assets/demo-table.css" type="text/css" />
+<script src="../lib/comfortable.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue"></script>
+<script src="../lib/vue-comfortable.js"></script>
+<script src="assets/demo-common.js"></script>
+</head>
+<body>
+
+<div id="app">
+  <comfortable ref="myTable" class="my-table"
+    :template="{
+      thead : [[
+        { label : 'No', dataField : 'no' },
+        { label : 'First Name', dataField : 'firstName' },
+        { label : 'Last Name', dataField : 'lastName' },
+        { label : 'Email', dataField : 'email' },
+        { label : 'Phone', dataField : 'phone' },
+        { label : 'Note', dataField : 'note' }
+      ]]
+    }"></comfortable>
+</div>
+
+<script>
+
+new Vue({
+  el : '#app',
+  mounted : function() {
+    
+    var items = [];
+    for (var i = 0; i < 1000; i += 1) {
+      var no = '' + (i + 1);
+      items.push({
+        no : no,
+        firstName : 'firstName' + no,
+        lastName : 'lastName' + no,
+        email : 'email' + no,
+        phone : 'phone' + no,
+        note : 'note' + no
+      });
+    }
+    this.$refs.myTable.setItems(items);
+  }
+});
+
+</script>
+
+</body>
+</html>
