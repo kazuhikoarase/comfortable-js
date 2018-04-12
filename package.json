@@ -1,6 +1,6 @@
 {
   "name": "comfortable-js",
-  "version": "0.1.29",
+  "version": "0.1.30",
   "description": "Simple, Fast, Customizable Table Library in JavaScript.",
   "author": "Kazuhiko Arase",
   "main": "lib/comfortable.js",
@@ -12,8 +12,7 @@
   "bugs": {
     "url": "https://github.com/kazuhikoarase/comfortable-js/issues"
   },
-  "keywords": [ "simple", "fast", "customizable", "table", "library",
-    "performance", "grid" ],
+  "keywords": [ "table", "grid", "vue" ],
   "license": "MIT",
   "devDependencies": {
     "gulp": "^3.0.0",
