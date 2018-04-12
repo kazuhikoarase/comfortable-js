@@ -12,16 +12,30 @@
 </head>
 <body>
 
+<h1>With Vue.js</h1>
+
 <div id="app">
+
   <comfortable ref="myTable" class="my-table"
+    style="width : 800px; height : 400px;"
     :template="{
       thead : [[
-        { label : 'No', dataField : 'no' },
-        { label : 'First Name', dataField : 'firstName' },
-        { label : 'Last Name', dataField : 'lastName' },
-        { label : 'Email', dataField : 'email' },
-        { label : 'Phone', dataField : 'phone' },
-        { label : 'Note', dataField : 'note' }
+        { label : 'No', width : 50 },
+        { label : 'Group', dataField : 'group', width : 70 },
+        { label : 'First Name' },
+        { label : 'Last Name' },
+        { label : 'Email', width : 150 },
+        { label : 'Phone' },
+        { label : 'Note', dataField : 'note', width : 200 }
+      ]],
+      tbody : [[
+        { dataField : 'no', dataType : 'number', editable : false },
+        { dataField : 'group' },
+        { dataField : 'firstName' },
+        { dataField : 'lastName' },
+        { dataField : 'email' },
+        { dataField : 'phone' },
+        { dataField : 'note' }
       ]]
     }"></comfortable>
 </div>
@@ -29,22 +43,30 @@
 <script>
 
 new Vue({
+
   el : '#app',
+
   mounted : function() {
-    
+
     var items = [];
-    for (var i = 0; i < 1000; i += 1) {
+    for (var i = 0; i < 10000; i += 1) {
       var no = '' + (i + 1);
       items.push({
         no : no,
+        group : 'group' + (i % 3 + 1),
         firstName : 'firstName' + no,
         lastName : 'lastName' + no,
-        email : 'email' + no,
+        email : 'email' + no + '@example.com',
         phone : 'phone' + no,
-        note : 'note' + no
+        note : 'note' + (i % 5 + 1)
       });
     }
     this.$refs.myTable.setItems(items);
+
+    this.$refs.myTable.$on('valuechange', function(event, detail) {
+      console.log(event, detail);
+    });
+
   }
 });
 

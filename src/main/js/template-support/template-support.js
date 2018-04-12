@@ -203,6 +203,23 @@
 
   var fromTemplate = function(template) {
 
+    if (template.thead && !template.tbody) {
+      // set default tbody if not exists.
+      var cloneIfExists = function(src, props) {
+        var dst = {};
+        props.forEach(function(prop) {
+          !src[prop] || (dst[prop] = src[prop]);
+        });
+        return dst;
+      };
+      var props = [ 'colSpan', 'rowSpan', 'dataField' ];
+      template.tbody = template.thead.map(function(tr) {
+        return tr.map(function(headCell) {
+          return cloneIfExists(headCell, props);
+        });
+      });
+    }
+
     template.thead = template.thead || [[]];
     template.tbody = template.tbody || [[]];
 
