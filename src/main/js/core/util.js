@@ -100,7 +100,7 @@
       },
 
       createSVGElement : function(tagName) {
-        var args = this.parseArguments(arguments);
+        var args = parseArguments(arguments);
         var elm = document.createElementNS('http://www.w3.org/2000/svg', tagName);
         args.children.forEach(function(child) { elm.appendChild(child); });
         return this.set(elm, args.opts);
