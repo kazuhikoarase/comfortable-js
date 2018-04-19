@@ -453,8 +453,9 @@ window.addEventListener('load', function(event) {
     var table = $c.fromTemplate(sample.template);
     sample.code(table);
     document.getElementById('samples').appendChild($c.util.createElement('div',[
-      $c.util.createElement('a', { attrs : { name : 'sample' + (i + 1) } }),
-      $c.util.createElement('h3', { props : { textContent : sample.title} }),
+      $c.util.createElement('h3', {
+          attrs : { id : 'sample' + (i + 1) },
+          props : { textContent : sample.title} }),
       $c.util.createElement('pre', { attrs : { 'class': 'sample-code' } },
           ('var table = comfortable.fromTemplate(' +
             template + ');\n' +
