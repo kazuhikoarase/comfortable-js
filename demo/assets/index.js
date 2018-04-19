@@ -452,19 +452,19 @@ window.addEventListener('load', function(event) {
     //
     var table = $c.fromTemplate(sample.template);
     sample.code(table);
+
+    var code = $c.util.createElement('pre', { attrs : { 'class': 'sample-code' } },
+        { props : { textContent : 'var table = comfortable.fromTemplate(' +
+          template + ');\n' +
+          extractCode(sample.code) +
+          '\n\ndocument.body.appendChild(table.$el);'} });
+    hljs.highlightBlock(code);
+
     document.getElementById('samples').appendChild($c.util.createElement('div',[
       $c.util.createElement('h3', {
           attrs : { id : 'sample' + (i + 1) },
-          props : { textContent : sample.title} }),
-      $c.util.createElement('pre', { attrs : { 'class': 'sample-code' } },
-          ('var table = comfortable.fromTemplate(' +
-            template + ');\n' +
-            extractCode(sample.code) +
-            '\n\ndocument.body.appendChild(table.$el);').split(/\n/g).map(function(line) {
-              return line.length == 0? $c.util.createElement('br') :
-                $c.util.createElement('div', { props : { textContent : line },
-                  attrs : { 'class' : line.match(/^\s*\/\//) ? 'comment' : '' } });
-            }) ),
+          props : { textContent : sample.title } }),
+      code,
       table.$el
     ]));
   });
