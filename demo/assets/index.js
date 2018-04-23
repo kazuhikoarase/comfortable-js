@@ -1,8 +1,8 @@
 
 window.addEventListener('load', function(event) {
 
-  tableCustomized('customized');
-  tableFromTemplate('fromTemplate');
+  tableCustomized('customizedSample');
+  tableFromTemplate('fromTemplateSample');
 
   var extractCode = function(fn) {
     var lines = fn.toString().split(/\n/g);

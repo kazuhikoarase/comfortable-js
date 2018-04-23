@@ -36,6 +36,7 @@ INPUT[type="text"].ctj-editor {
   padding : 0px;
   margin : 0px;
   border : none;
+  background-color : transparent;
 }
 
 INPUT[type="checkbox"].ctj-editor {
@@ -50,4 +51,5 @@ SELECT.ctj-editor {
   padding : 0px;
   margin : 0px;
   border : none;
+  background-color : transparent;
 }

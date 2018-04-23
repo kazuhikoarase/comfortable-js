@@ -23,6 +23,14 @@
 .ctj-readonly {
 }
 
+.ctj-item-hover {
+  background-color : rgba(255,255,0,0.1);
+}
+
+.ctj-item-selected {
+  background-color : rgba(255,127,0,0.1);
+}
+
 .ctj-clickable:hover {
   background-color : rgba(0,0,0,0.1);
 }
