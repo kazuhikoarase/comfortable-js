@@ -7,7 +7,6 @@
 <link rel="stylesheet" href="assets/demo-table.css" />
 <script src="../lib/comfortable.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-<script src="../lib/vue-comfortable.js"></script>
 <script src="assets/demo-common.js"></script>
 </head>
 <body>
@@ -41,6 +40,8 @@
 </div>
 
 <script>
+
+Vue.component('comfortable', comfortable.vueComponents.table);
 
 new Vue({
 
