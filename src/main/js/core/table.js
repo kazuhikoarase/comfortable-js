@@ -468,14 +468,14 @@
               };
               var dragPoint = { x : event.pageX, y : event.pageY };
               var dragProxy = util.createElement('div', {
-                attrs : { 'class' : '${prefix}column-drag-proxy' },
+                attrs : { 'class' : '${prefix}-column-drag-proxy' },
                 style : { position : 'absolute', top : '0px',
                   width : colWidth + 'px',
                   height : rect.height + 'px' }
               });
               var markerStyle = { gap : 2 };
               var marker = util.createElement('div', {
-                attrs : { 'class' : '${prefix}column-drag-marker' },
+                attrs : { 'class' : '${prefix}-column-drag-marker' },
                 style : { position : 'absolute', top : '0px',
                   width : (markerStyle.gap * 2 + 1) + 'px',
                   height : rect.height + 'px' }
@@ -809,7 +809,7 @@
             },
             on : { mousedown : mousedownHandler }
           }, [util.createElement('div',{
-            attrs : { 'class' : '${prefix}v-resize-line' },
+            attrs : { 'class' : '${prefix}-v-resize-line' },
             style : {
               position : 'absolute',
               left : handleStyle.offset + 'px', top : '0px', width : '0px',
@@ -942,14 +942,14 @@
           });
           // horizontal
           util.set(lockLines[0], {
-            attrs :{ 'class' : '${prefix}h-lock-line' },
+            attrs :{ 'class' : '${prefix}-h-lock-line' },
             style : {
               display : $public.getLockRow() == 0? 'none' : '', left : '0px',
               top : (cornerRect.height - 1) + 'px', width : width + 'px'
             } });
           // vertical
           util.set(lockLines[1], {
-            attrs :{ 'class' : '${prefix}v-lock-line' },
+            attrs :{ 'class' : '${prefix}-v-lock-line' },
             style : {
               display : $public.getLockColumn() == 0? 'none' : '', top : '0px',
               left : (cornerRect.width - 1) + 'px', height : height + 'px'

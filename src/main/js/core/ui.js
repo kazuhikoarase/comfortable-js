@@ -16,7 +16,7 @@
   var createButton = function(label, action) {
     return $c.util.createElement('button',{
       props : { textContent : label },
-      attrs : { 'class' : '${prefix}button' },
+      attrs : { 'class' : '${prefix}-button' },
       on : { mousedown : function(event) {
         event.preventDefault();
       }, click : function(event) { action(event); } } });
@@ -25,7 +25,7 @@
   var createDialog = function(children) {
     var dialog = $c.util.extend($c.createEventTarget(), {
       $el : $c.util.createElement('div', {
-          attrs : { 'class' : '${prefix}dialog' },
+          attrs : { 'class' : '${prefix}-dialog' },
           style : { position : 'absolute' }
       }, children),
       show : function() {
@@ -56,11 +56,11 @@
   var showMenu = function(left, top, menuItems) {
     var subMenu = null;
     var menu = $c.util.createElement('div', {
-      attrs : { 'class' : '${prefix}contextmenu' },
+      attrs : { 'class' : '${prefix}-contextmenu' },
       style : { position : 'absolute', left : left + 'px', top : top + 'px' } },
       menuItems.map(function(menuItem) {
         return $c.util.createElement('div', {
-            attrs : { 'class' : '${prefix}menuitem ${prefix}clickable' },
+            attrs : { 'class' : '${prefix}-menuitem ${prefix}-clickable' },
             props : { textContent : menuItem.label },
             style : { position : 'relative', whiteSpace : 'nowrap' },
             on : {
