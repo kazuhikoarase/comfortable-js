@@ -162,6 +162,10 @@ SELECT.ctj-editor {
   stroke : rgba(0,0,0,0.3);
 }
 
+.ctj-filter-button {
+  right : 4px;
+}
+
 .ctj-filter-body {
   stroke : none;
   fill : rgba(0,0,0,0.1);
