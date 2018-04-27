@@ -13,6 +13,6 @@
 
   'use strict';
 
-  $c.classNamePrefix = 'ctj';
+  $c.classNamePrefix = 'ctj-';
 
 }(window.comfortable || (window.comfortable = {}) );

@@ -16,7 +16,7 @@
   // selector of sort order
   var createSelector = function() {
     var rect = $c.util.createElement('span', {
-      attrs : { 'class' : '${prefix}-selector-body' }, 
+      attrs : { 'class' : '${prefix}selector-body' }, 
       style : { display:'inline-block', width:'12px', height : '12px' }
     });
     return {
@@ -24,7 +24,7 @@
       selected : false,
       setSelected : function(selected) {
         this.selected = selected;
-        $c.util.$(rect).addClass('${prefix}-selected', !selected);
+        $c.util.$(rect).addClass('${prefix}selected', !selected);
       },
       isSelected : function() {
         return this.selected;
@@ -35,12 +35,12 @@
   // filter checkbox
   var createCheckbox = function() {
     var path = $c.util.createSVGElement('path', { attrs : {
-        'class' : '${prefix}-checkbox-check',
+        'class' : '${prefix}checkbox-check',
         d : 'M 2 5 L 5 9 L 10 3'
       } });
     return {
       $el : $c.util.createElement('span', {
-        attrs : { 'class' : '${prefix}-checkbox-body' }, 
+        attrs : { 'class' : '${prefix}checkbox-body' }, 
         style : { display : 'inline-block', width : '12px', height : '12px' }
         }, [
           $c.util.createSVGElement('svg', {
@@ -49,7 +49,7 @@
       checked : true,
       setIncomplete : function(incomplete) {
         $c.util.$(path).addClass(
-            '${prefix}-checkbox-incomplete-check', !incomplete);
+            '${prefix}checkbox-incomplete-check', !incomplete);
       },
       setChecked : function(checked) {
         this.checked = checked;
@@ -76,7 +76,7 @@
           selector.$el,
           $c.util.createElement('span', {
             style : labelStyle, props : { textContent : label } })
-        ], { attrs : { 'class' : '${prefix}-clickable-op' }, on : {
+        ], { attrs : { 'class' : '${prefix}clickable-op' }, on : {
           mousedown : function(event) { event.preventDefault(); },
           click : function() { dialog.trigger('sortclick',
               { label : label }); }
@@ -114,7 +114,7 @@
             label.textContent = text || messages.SELECT_BLANK;
           },
           $el : $c.util.createElement('div', {
-            attrs : { 'class' : '${prefix}-clickable-op' },
+            attrs : { 'class' : '${prefix}clickable-op' },
             on : {
               mousedown : function(event) { event.preventDefault(); },
               click : function() {
@@ -247,9 +247,8 @@
   var createFilterButton = function() {
     return {
       $el : $c.util.createSVGElement('svg',
-          { style : { position : 'absolute' },
-            attrs : { width : 15, height : 15,
-            'class' : '${prefix}-filter-button ${prefix}-clickable-op' } }),
+          { attrs : { width : 15, height : 15,
+            'class' : '${prefix}clickable-op' } }),
       filtered : false,
       sortOrder : null,
       setFiltered : function(filtered) {
@@ -267,11 +266,11 @@
         }
         // outer rect
         this.$el.appendChild($c.util.createSVGElement('rect', {
-          attrs : { 'class' : '${prefix}-filter-body',
+          attrs : { 'class' : '${prefix}filter-body',
             x : 0, y : 0, width: 15, height : 15, rx: 3, ry : 3 } }) );
         // and others.
-        var fillClass = '${prefix}-filter-fill';
-        var strokeClass = '${prefix}-filter-stroke';
+        var fillClass = '${prefix}filter-fill';
+        var strokeClass = '${prefix}filter-stroke';
         if (this.filtered) {
           this.$el.appendChild($c.util.createSVGElement('path', {
             attrs : { 'class' : fillClass,
@@ -381,6 +380,7 @@
             if (!filterButton) {
               filterButton = createFilterButton();
               $c.util.set(filterButton.$el, {
+                style : { position : 'absolute', right : '4px' },
                 on : { mousedown : function(event) {
                     event.preventDefault();
                     if (dialog == null) {

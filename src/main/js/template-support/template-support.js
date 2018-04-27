@@ -57,13 +57,13 @@
 
     var columnItems = columns.map(function(column) {
       return $c.util.createElement('div', {
-          attrs : { 'class' : '${prefix}-listitem ${prefix}-clickable' +
+          attrs : { 'class' : '${prefix}listitem ${prefix}clickable' +
             (column.type == 'lockColumn'?
-                ' ${prefix}-column-edit-lock-column' : '') },
+                ' ${prefix}column-edit-lock-column' : '') },
           on : { mousedown : function(event) {
             event.preventDefault();
             columnItems.forEach(function(elm) {
-              $c.util.$(elm).removeClass('${prefix}-clickable');
+              $c.util.$(elm).removeClass('${prefix}clickable');
             });
             var mousemoveHandler = function(event) {
               if (!started && Math.abs(event.pageY - dragPoint.y) > 4) {
@@ -73,7 +73,7 @@
                 return;
               }
               var listitem = $c.util.closest(event.target,
-                  { className : '${prefix}-listitem', root : dialog.$el });
+                  { className : '${prefix}listitem', root : dialog.$el });
               if (!listitem) {
                 return;
               }
@@ -91,7 +91,7 @@
               $c.util.$(document).off('mousemove', mousemoveHandler).
                 off('mouseup', mouseupHandler);
               columnItems.forEach(function(elm) {
-                $c.util.$(elm).addClass('${prefix}-clickable');
+                $c.util.$(elm).addClass('${prefix}clickable');
               });
               lastTarget = target;
               dialog.$el.removeChild(bar);
@@ -112,7 +112,7 @@
               on('mouseup', mouseupHandler);
             var target = event.currentTarget;
             var bar = $c.util.createElement('div', {
-              attrs : { 'class' : '${prefix}-column-edit-bar' },
+              attrs : { 'class' : '${prefix}column-edit-bar' },
               style : { position : 'absolute', left : '0px',
                 display : 'none', width : target.offsetWidth + 'px' }
             });
@@ -122,9 +122,9 @@
             var dragPoint = { x : event.pageX, y : event.pageY };
             dialog.$el.appendChild(bar);
             if (lastTarget != null) {
-              $c.util.$(lastTarget).removeClass('${prefix}-selected');
+              $c.util.$(lastTarget).removeClass('${prefix}selected');
             }
-            $c.util.$(target).addClass('${prefix}-selected');
+            $c.util.$(target).addClass('${prefix}selected');
           }}
         },[
         $c.util.createElement('input', {
@@ -210,7 +210,7 @@
           // skip
           return;
         }
-        $c.util.$(td.$el).addClass('${prefix}-item-hover', !hover);
+        $c.util.$(td.$el).addClass('${prefix}item-hover', !hover);
         var cs = null;
         for (var i = 0; i < td.$el.childNodes.length; i += 1) {
           var child = td.$el.childNodes[i];
@@ -499,19 +499,19 @@
         var style = $c.util.extend({}, getCellStyleAt(row, orderedCol) );
         style.className = style.className || '';
         if (row < headLength) {
-          style.className += ' ${prefix}-header';
+          style.className += ' ${prefix}header';
           style.editable = false;
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
           row -= headLength;
-          style.className += ' ${prefix}-' +
+          style.className += ' ${prefix}' +
             (itemIndex.row % 2 == 0? 'even' : 'odd');
           if (this.selectedRows[itemIndex.row]) {
-            style.className += ' ${prefix}-item-selected';
+            style.className += ' ${prefix}item-selected';
           }
         }
         if (style.editable === false) {
-          style.className += ' ${prefix}-readonly';
+          style.className += ' ${prefix}readonly';
         }
         return style;
       },
