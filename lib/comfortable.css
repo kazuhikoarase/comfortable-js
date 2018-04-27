@@ -130,9 +130,8 @@ SELECT.ctj-editor {
 }
 
 .ctj-button {
-  border : 1px solid rgba(0,0,0,0.5);
-  padding : 4px 8px;
-  margin : 0px 4px;
+  margin-top : 4px;
+  margin-left : 4px;
 }
 
 .ctj-listitem {
