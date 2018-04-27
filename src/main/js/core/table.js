@@ -489,7 +489,7 @@
             if (editor.cell != null &&
                 editor.cell.row == td.row &&
                 editor.cell.col == td.col) {
-            } else {
+            } else if ($private.isEditableAt(td.row, td.col) ) {
               event.preventDefault();
               editor.beginEdit(td.row, td.col, true);
             }
@@ -972,9 +972,6 @@
     var editor = {
       beginEdit : function(row, col, makeVisible) {
         this.endEdit();
-        if (!$private.isEditableAt(row, col) ) {
-          return;
-        }
         if (makeVisible) {
           $public.render({ row : row, col : col });
         }
