@@ -247,8 +247,9 @@
   var createFilterButton = function() {
     return {
       $el : $c.util.createSVGElement('svg',
-          { attrs : { width : 15, height : 15,
-            'class' : '${prefix}-clickable-op' } }),
+          { style : { position : 'absolute' },
+            attrs : { width : 15, height : 15,
+            'class' : '${prefix}-filter-button ${prefix}-clickable-op' } }),
       filtered : false,
       sortOrder : null,
       setFiltered : function(filtered) {
@@ -380,7 +381,6 @@
             if (!filterButton) {
               filterButton = createFilterButton();
               $c.util.set(filterButton.$el, {
-                style : { position : 'absolute', right : '4px' },
                 on : { mousedown : function(event) {
                     event.preventDefault();
                     if (dialog == null) {
