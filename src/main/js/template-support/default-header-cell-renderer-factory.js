@@ -112,6 +112,7 @@
           checkbox : checkbox,
           setLabel : function(text) {
             label.textContent = text || messages.SELECT_BLANK;
+            this.$el.setAttribute('title', label.textContent);
           },
           $el : $c.util.createElement('div', {
             attrs : { 'class' : '${prefix}-clickable-op' },
