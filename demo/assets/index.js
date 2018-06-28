@@ -4,6 +4,8 @@ window.addEventListener('load', function(event) {
   tableCustomized('customizedSample');
   tableFromTemplate('fromTemplateSample');
 
+  hljs.highlightBlock(document.getElementById('gs') );
+
   var extractCode = function(fn) {
     var lines = fn.toString().split(/\n/g);
     lines = lines.filter(function (line, i) { return 0 < i && i < lines.length - 1; });
