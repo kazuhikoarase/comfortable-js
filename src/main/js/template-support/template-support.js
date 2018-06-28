@@ -247,8 +247,12 @@
   };
 
   var enableRowSelect = function(table) {
-    return table.on('mousedown', function(event, detail) {
+    return table.on('click', function(event, detail) {
       if (detail.itemIndex.row != -1) {
+        var lastSelectedRows = {};
+        for (var k in this.model.selectedRows) {
+          lastSelectedRows[k] = true;
+        }
         if (this.model.multipleRowsSelectable && detail.originalEvent.ctrlKey) {
           // ctrl + click : toggle selection
           if (!this.model.selectedRows[detail.itemIndex.row]) {
@@ -260,9 +264,27 @@
           this.model.selectedRows = {};
           this.model.selectedRows[detail.itemIndex.row] = true;
         }
-        this.invalidate();
-        this.model.trigger('rowselectionchange',
-            { selectedRows : this.model.selectedRows });
+
+        // check changed.
+        var changed = false;
+        for (var k in this.model.selectedRows) {
+          if (lastSelectedRows[k]) {
+            delete lastSelectedRows[k];
+          } else {
+            changed = true;
+            break;
+          }
+        }
+        for (var k in lastSelectedRows) {
+          changed = true;
+          break;
+        }
+
+        if (changed) {
+          this.invalidate();
+          this.model.trigger('rowselectionchange',
+              { selectedRows : this.model.selectedRows });
+        }
       }
     });
   };
