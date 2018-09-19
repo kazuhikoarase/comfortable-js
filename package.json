@@ -12,17 +12,20 @@
   "bugs": {
     "url": "https://github.com/kazuhikoarase/comfortable-js/issues"
   },
-  "keywords": [ "table", "grid", "vue" ],
+  "keywords": [
+    "table",
+    "grid",
+    "vue"
+  ],
   "license": "MIT",
   "devDependencies": {
-    "gulp": "^3.0.0",
     "del": "^3.0.0",
-    "run-sequence": "^2.0.0",
-    "gulp-order": "^1.0.0",
+    "gulp": "^4.0.0",
     "gulp-concat": "^2.0.0",
-    "gulp-rename": "^1.0.0",
     "gulp-jasmine": "^2.0.0",
+    "gulp-order": "^1.0.0",
+    "gulp-rename": "^1.0.0",
     "gulp-uglify": "^3.0.0",
-    "uglify": "^0.1.5"
+    "run-sequence": "^2.0.0"
   }
 }
