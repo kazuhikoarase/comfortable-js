@@ -21,8 +21,8 @@ gulp.task('clean', function() {
 });
 
 gulp.task('watch', function(){
-  gulp.watch(jsSrc, ['concat-main']).on('change', function(event) {
-    console.log(event.path + ' [' + event.type + ']');
+  gulp.watch(jsSrc, gulp.series('concat-main') ).on('change', function(path) {
+    console.log(path);
   });
 });
 
@@ -33,12 +33,12 @@ gulp.task('concat-main-css', function() {
     .pipe(gulp.dest('lib/') );
 });
 
-gulp.task('concat-main', ['concat-main-css'], function() {
+gulp.task('concat-main', gulp.series('concat-main-css', function() {
   return gulp.src([ 'src/main/js/**/*.js' ])
     .pipe(order([ '**/*.js']) )
     .pipe(concat(targetName + '.js') )
     .pipe(gulp.dest('lib/') );
-});
+}) );
 
 gulp.task('concat-test', function() {
   return gulp.src([ 'src/test/js/**/*.spec.js' ])
@@ -47,16 +47,17 @@ gulp.task('concat-test', function() {
     .pipe(gulp.dest('lib/') );
 });
 
-gulp.task('compress', ['concat-main'], function () {
+gulp.task('compress', gulp.series('concat-main', function () {
   return gulp.src('lib/' + targetName + '.js')
     .pipe(uglify({ output : { ascii_only : true } }) )
     .pipe(rename({ suffix: '.min' }) )
     .pipe(gulp.dest('lib/') );
-});
+}) );
 
-gulp.task('jasmine', ['concat-main','concat-test'], function() {
+gulp.task('jasmine', gulp.series('concat-main','concat-test', function() {
   return gulp.src('lib/' + targetName + '.spec.js')
   .pipe(jasmine() );
-});
+}) );
 
-gulp.task('default', ['compress', 'jasmine']);
+//gulp.task('default', gulp.series('compress', 'jasmine') );
+gulp.task('default', gulp.series('compress') );
