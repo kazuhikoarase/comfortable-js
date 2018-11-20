@@ -1,7 +1,9 @@
 
 const gulp = require('gulp');
 const del = require('del');
-const runSequence = require('run-sequence');
+const sourcemaps = require('gulp-sourcemaps');
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
 const rename = require('gulp-rename');
 const order = require('gulp-order');
 const concat = require('gulp-concat');
@@ -35,8 +37,16 @@ gulp.task('concat-main-css', function() {
 
 gulp.task('concat-main', gulp.series('concat-main-css', function() {
   return gulp.src([ 'src/main/js/**/*.js' ])
+    .pipe(plumber({
+      errorHandler : notify.onError({
+        title : 'error in <%= error.plugin %>',
+        message : '<%= error.message %>'
+      })
+    }))
+    .pipe(sourcemaps.init())
     .pipe(order([ '**/*.js']) )
     .pipe(concat(targetName + '.js') )
+    .pipe(sourcemaps.write('.') )
     .pipe(gulp.dest('lib/') );
 }) );
 
@@ -60,4 +70,4 @@ gulp.task('jasmine', gulp.series('concat-main','concat-test', function() {
 }) );
 
 //gulp.task('default', gulp.series('compress', 'jasmine') );
-gulp.task('default', gulp.series('compress') );
+gulp.task('default', gulp.series('clean', 'compress') );
