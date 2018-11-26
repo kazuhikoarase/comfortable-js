@@ -44,7 +44,8 @@
         style : { display : 'inline-block', width : '12px', height : '12px' }
         }, [
           $c.util.createSVGElement('svg', {
-            attrs : { width : 12, height : 12 } }, [ path ])
+            attrs : { width : 12, height : 12 },
+            style : { verticalAlign :'baseline', boxSizing : 'content-box' } }, [ path ])
         ] ),
       checked : true,
       setIncomplete : function(incomplete) {
