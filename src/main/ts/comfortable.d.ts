@@ -130,26 +130,33 @@ declare namespace comfortable {
 
     dataField? : string;
 
-    // one of 'string(default)', 'number', 'boolean', 'select-one'
+    /** one of 'string(default)', 'number', 'boolean', 'select-one' */
     dataType? : string;
 
-    // dataType : 'string', 'number'
+    /** dataType : 'string', 'number' */
     maxLength? : number;
 
-    // dataType : 'number'
+    /** dataType : 'number' */
     decimalDigits? : number;
 
-    // dataType : 'select-one'
+    /** dataType : 'boolean',
+      2 elements array like [falseValue, trueValue].
+     */
+    booleanValues? : any[];
+
+    /** dataType : 'select-one' */
     options? : (any[] | ((row : number, col : number) => any[]) );
     labelField? : string;
     valueField? : string;
+
+    labelFunction? : (value : any) => string;
 
     factory? : TableCellRendererFactory;
   }
 
   interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
     label? : string;
-    // dataType : 'number'
+    /** dataType : 'number' */
     comparator? : (v1 : any, v2 : any) => number;
   }
 
@@ -161,7 +168,7 @@ declare namespace comfortable {
 
   interface ItemIndex {
     row : number;
-    // col will be string if dataField is defined.
+    /** col will be string if dataField is defined. */
     col : (number | string);
   }
 

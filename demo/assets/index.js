@@ -207,7 +207,8 @@ window.addEventListener('load', function(event) {
         [
           { label : 'string', dataField : 'val1' },
           { label : 'number', dataField : 'val2' },
-          { label : 'boolean', dataField : 'val3' },
+          { label : 'boolean', dataField : 'val3', labelFunction :
+            function(value) { return value == '1'? 'On' :  'Off'; } },
           { label : 'select-one', dataField : 'val4',
             options : [ { label : 'One', value : '1' },
                         { label : 'Two', value : '2' },
@@ -217,7 +218,8 @@ window.addEventListener('load', function(event) {
         [
           { dataType : 'string', dataField : 'val1', maxLength : 5 },
           { dataType : 'number', dataField : 'val2' },
-          { dataType : 'boolean', dataField : 'val3' },
+          { dataType : 'boolean', dataField : 'val3',
+              booleanValues : [ '0', '1' ] },
           { dataType : 'select-one', dataField : 'val4',
             options : [ { label : 'One', value : '1' },
                         { label : 'Two', value : '2' },
@@ -236,7 +238,7 @@ window.addEventListener('load', function(event) {
           items.push({
             val1 : '' + i,
             val2 : i,
-            val3 : i % 2 == 0,
+            val3 : '' + (i % 2),
             val4 : '' + (i % 3 + 1) });
         }
         table.model.items = items;
