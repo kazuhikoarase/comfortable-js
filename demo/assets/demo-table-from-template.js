@@ -66,7 +66,7 @@ var tableFromTemplate = function(targetId) {
         { dataField : 'myData5', dataType : 'number', decimalDigits : 2 },
         { dataField : 'myData6', dataType : 'boolean', textAlign : 'center' }
       ],
-      [ {} ]
+      [ { dataField : 'myData7', editable : false } ]
     ]
   });
   table.model.items = function() {
@@ -78,7 +78,8 @@ var tableFromTemplate = function(targetId) {
         myData3 : '',
         myData4 : '' + i,
         myData5 : '' + i,
-        myData6 : i % 2 == 0
+        myData6 : i % 2 == 0,
+        myData7 : 'Not Editable'
       });
     }
     return items;
