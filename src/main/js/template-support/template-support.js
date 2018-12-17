@@ -477,7 +477,9 @@
         if (row < headLength) {
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
-          this.getItemAt(itemIndex.row)[itemIndex.col] = value;
+          if (this.getItemAt(itemIndex.row) ) {
+            this.getItemAt(itemIndex.row)[itemIndex.col] = value;
+          }
         }
       },
       // overrides
