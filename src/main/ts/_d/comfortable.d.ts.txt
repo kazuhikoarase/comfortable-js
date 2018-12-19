@@ -1,0 +1,95 @@
+//
+// comfortable - TypeScript Declaration File
+//
+// Copyright (c) 2018 Kazuhiko Arase
+//
+// URL: https://github.com/kazuhikoarase/comfortable-js/
+//
+// Licensed under the MIT license:
+//  http://www.opensource.org/licenses/mit-license.php
+//
+
+declare namespace comfortable {
+
+
+
+
+
+
+
+
+
+  interface TableTemplateCellStyle extends TableCellStyle {
+
+    width? : number;
+    height? : number;
+
+    columnDraggable? : boolean;
+    columnResizable? : boolean;
+
+    dataField? : string;
+
+    /** one of 'string(default)', 'number', 'boolean', 'select-one' */
+    dataType? : string;
+
+    /** dataType : 'string', 'number' */
+    maxLength? : number;
+
+    /** dataType : 'number' */
+    decimalDigits? : number;
+
+    /** dataType : 'boolean',
+      2 elements array like [falseValue, trueValue].
+     */
+    booleanValues? : any[];
+
+    /** dataType : 'select-one' */
+    options? : (any[] | ((row : number, col : number) => any[]) );
+    labelField? : string;
+    valueField? : string;
+
+    labelFunction? : (value : any) => string;
+
+    factory? : TableCellRendererFactory;
+  }
+
+  interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
+    label? : string;
+    /** dataType : 'number' */
+    comparator? : (v1 : any, v2 : any) => number;
+  }
+
+  interface TableTemplate {
+    lockColumn? : number;
+    thead? : TableTemplateHeaderCellStyle[][];
+    tbody? : TableTemplateCellStyle[][];
+  }
+
+  interface ItemIndex {
+    row : number;
+    /** col will be string if dataField is defined. */
+    col : (number | string);
+  }
+
+  interface TemplateTableModel extends TableModel {
+    defaultHeaderCellRendererFactory : TableCellRendererFactory;
+    items : any[];
+    getItemAt : (row : number) => any;
+    getItemCount : () => number;
+    getItemIndexAt : (row : number, col : number) => ItemIndex;
+  }
+
+  interface TemplateTable extends Table {
+    model : TemplateTableModel;
+  }
+
+  interface TableFactory {
+    classNamePrefix : string;
+    util : Util;
+    createList : () => List;
+    createTable : () => Table;
+    fromTemplate : (template : TableTemplate) => TemplateTable;
+  }
+}
+
+//declare var comfortable : comfortable.TableFactory;

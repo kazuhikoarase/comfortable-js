@@ -9,19 +9,21 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
-  var createTextEditor = function(opts) {
+  var $c = comfortable;
+
+  var createTextEditor = function(opts : TextEditorOptions) : CellEditor {
     var util = $c.util;
     return {
       $el : util.createElement('input', {
         attrs : { type : 'text', 'class' : '${prefix}-editor' }
       }),
-      beginEdit : function(td, cell) {
+      beginEdit : function(td : TdWrapper, cell : TextEditorCell) {
         var cs = window.getComputedStyle(td.$el, null);
-        var opts = {
+        var opts : util.ElementOptions = {
             props : {},
             style : {
               textAlign : cs.textAlign,
@@ -34,7 +36,7 @@
             }
           };
         if (typeof cell.maxLength == 'number') {
-          opts.props.maxLength = cell.maxLength;
+          (<any>opts.props).maxLength = cell.maxLength;
         }
         util.set(this.$el, opts);
       },
@@ -58,7 +60,7 @@
         }
         return this.$el.value;
       },
-      isValid : function(editor) {
+      isValid : function() {
         if (opts.dataType == 'number') {
           return !!$c.numUtil.toNarrow(this.getValue() ).match($c.numUtil.re);
         }
@@ -67,14 +69,14 @@
     };
   };
 
-  var createCheckBox = function(opts) {
+  var createCheckBox = function(opts : CheckBoxOptions) : CellEditor {
     var util = $c.util;
-    var booleanValues = null;
+    var booleanValues : any[] = null;
     return {
       $el : util.createElement('input', {
         attrs : { type : 'checkbox', 'class' : '${prefix}-editor' }
       }),
-      beginEdit : function(td, cell) {
+      beginEdit : function(td : TdWrapper, cell : CheckBoxCell) {
         var cs = window.getComputedStyle(td.$el, null);
         util.set(this.$el, {
           style : {
@@ -94,20 +96,20 @@
       getValue : function() {
         return booleanValues[this.$el.checked? 1 : 0];
       },
-      isValid : function(editor) {
+      isValid : function() {
         return true;
       }
     };
   };
 
-  var createSelectBox = function(opts) {
+  var createSelectBox = function(opts : SelectBoxOptions) : CellEditor {
     var util = $c.util;
     var select = util.createElement('select', {
       attrs : { 'class' : '${prefix}-editor' }
     });
     return {
       $el : select,
-      beginEdit : function(td, cell) {
+      beginEdit : function(td : TdWrapper, cell : SelectBoxCell) {
         var cs = window.getComputedStyle(td.$el, null);
         util.set(this.$el, {
           style : {
@@ -157,21 +159,21 @@
       getValue : function() {
         return this.$el.value;
       },
-      isValid : function(editor) {
+      isValid : function() {
         return true;
       }
     };
   };
 
-  var getOptions = function(cell) {
-    var options = cell.options;
+  var getOptions = function(cell : SelectBoxCell) : any[] {
+    var options : any = cell.options;
     if (typeof options == 'function') {
       options = options(cell.row, cell.col);
     }
     return options || [];
   };
 
-  var createDefaultCellRendererFactoryOpts = function() {
+  export var createDefaultCellRendererFactoryOpts = function() : CellRendererFactoryOpts {
     return {
       // value to label
       labelFunction : function(value, cell) {
@@ -186,8 +188,8 @@
           if (typeof options.splice != 'function') {
             return options[value] || '';
           }
-          var labelField = cell.labelField || 'label';
-          var valueField = cell.valueField || 'value';
+          var labelField = (<SelectBoxCell>cell).labelField || 'label';
+          var valueField = (<SelectBoxCell>cell).valueField || 'value';
           for (var i = 0; i < options.length; i += 1) {
             var option = options[i];
             if (option[valueField] == value) {
@@ -211,17 +213,19 @@
     };
   };
 
-  var createDefaultCellRendererFactory = function(opts) {
+  export var createDefaultCellRendererFactory =
+      function(opts? : CellRendererFactoryOpts) :
+        TableCellRendererFactory {
 
     opts = $c.util.extend($c.createDefaultCellRendererFactoryOpts(), opts || {});
 
-    return function(td) {
+    return function(td : TdWrapper) : TableCellRenderer {
 
       var labelRenderer = createMultiLineLabelRenderer(td.$el);
-      var editor = null;
-      var oldValue = null;
+      var editor : CellEditor = null;
+      var oldValue : any = null;
 
-      var beginEdit = function(cell) {
+      var beginEdit = function(cell : EditorCell) {
         if (editor == null) {
           editor = opts.createEditor();
           td.$el.appendChild(editor.$el);
@@ -274,10 +278,10 @@
   };
 
   var linesRe = /\r?\n/g;
-  var createMultiLineLabelRenderer = function(parent) {
-    var elms = null;
+  export var createMultiLineLabelRenderer = function(parent : HTMLElement) {
+    var elms : HTMLElement[] = null;
     return {
-      setLabel : function(label) {
+      setLabel : function(label : string) {
         if (elms == null) {
           elms = [ document.createElement('span') ];
           parent.appendChild(elms[0]);
@@ -301,7 +305,7 @@
           elms[elmIndex].style.display = 'none';
         }
       },
-      setVisible : function(visible) {
+      setVisible : function(visible : boolean) {
         if (elms != null) {
           for (var i = 0; i < elms.length; i += 1) {
             elms[i].style.display = visible? '' : 'none';
@@ -310,9 +314,4 @@
       }
     };
   };
-
-  $c.createDefaultCellRendererFactoryOpts = createDefaultCellRendererFactoryOpts;
-  $c.createDefaultCellRendererFactory = createDefaultCellRendererFactory;
-  $c.createMultiLineLabelRenderer = createMultiLineLabelRenderer;
-
-}(window.comfortable || (window.comfortable = {}) );
+}

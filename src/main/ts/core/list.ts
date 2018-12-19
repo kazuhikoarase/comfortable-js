@@ -9,11 +9,26 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
-  var createList = function() {
+  var $c = comfortable;
+
+  export interface List extends UIEventTarget {
+    $el : Element;
+    getItemAt : (index : number) => any;
+    getItemCount : () => number;
+    createCell : () => { $el : Element };
+    renderCell : (cell : ListCell, item :any) => void;
+    cellHeight : number;
+  }
+
+  export interface ListCell {
+    $el : HTMLElement;
+  }
+
+  export var createList = function() : List {
 
     var util = $c.util;
 
@@ -42,8 +57,8 @@
           }
         } },[ viewPane, list.$el ]);
 
-    var cells = [];
-    var getOrCrt = function(index) {
+    var cells : ListCell[] = [];
+    var getOrCrt = function(index : number) {
       if (index < cells.length) {
         return cells[index];
       }
@@ -55,7 +70,7 @@
 
     var $public = util.extend($c.createUIEventTarget(), {
       $el : frame,
-      getItemAt : function(index) { return 'item' + index; },
+      getItemAt : function(index : number) { return 'item' + index; },
       getItemCount : function() { return 100000; },
       createCell : function() {
         return { $el : $c.util.createElement('div', {
@@ -63,7 +78,7 @@
           style : { borderBottom : '1px solid silver' }
         }) };
       },
-      renderCell : function(cell, item) {
+      renderCell : function(cell : ListCell, item : string) {
         cell.$el.textContent = item;
       },
       cellHeight : -1,
@@ -125,7 +140,4 @@
 
     return $public;
   };
-
-  $c.createList = createList;
-
-}(window.comfortable || (window.comfortable = {}) );
+}

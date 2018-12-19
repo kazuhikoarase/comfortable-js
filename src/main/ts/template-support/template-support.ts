@@ -9,18 +9,18 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
-  $c.SortOrder = { ASC : 'asc', DESC : 'desc' };
+  var $c = comfortable;
 
-  var createFilterContext = function() {
+  var createFilterContext = function() : FilterContext {
     return { sort : null, filters : {} };
   };
 
-  var createDefaultOrderedColumnIndices = function(tableModel) {
-    var orderedColumnIndices = [];
+  var createDefaultOrderedColumnIndices = function(tableModel : TableModel) {
+    var orderedColumnIndices : number[] = [];
     var columnCount = tableModel.getColumnCount();
     for (var i = 0; i < columnCount; i += 1) {
       orderedColumnIndices.push(i);
@@ -28,13 +28,21 @@
     return orderedColumnIndices;
   };
 
-  var showColumnEditDialog = function(table) {
+  var showColumnEditDialog = function(table : TemplateTable) {
 
     var messages = $c.i18n.getMessages();
-    var tableModel = table.model;
+    var tableModel = <TemplateTableModel>table.model;
+
+    interface ColumnItem {
+      type : string;
+      label : string;
+      hidden : boolean;
+      col? : number;
+      colSpan? : number;
+    }
 
     var columns = function() {
-      var columns = [];
+      var columns : ColumnItem[] = [];
       var columnCount = tableModel.getColumnCount();
       for (var col = 0; col <= columnCount;) {
         if (col == table.lockColumn) {
@@ -65,7 +73,7 @@
             columnItems.forEach(function(elm) {
               $c.util.$(elm).removeClass('${prefix}-clickable');
             });
-            var mousemoveHandler = function(event) {
+            var mousemoveHandler = function(event : Event) {
               if (!started && Math.abs(event.pageY - dragPoint.y) > 4) {
                 started = true;
               }
@@ -79,7 +87,7 @@
               }
               indexTo = columnItems.indexOf(listitem);
               var off = $c.util.offset(listitem);
-              var top = listitem.offsetTop - 2 - listitem.parentNode.scrollTop;
+              var top = listitem.offsetTop - 2 - (<HTMLElement>listitem.parentNode).scrollTop;
               if (off.top + listitem.offsetHeight / 2 < event.pageY) {
                 indexTo += 1;
                 top += listitem.offsetHeight;
@@ -87,7 +95,7 @@
               bar.style.display = '';
               bar.style.top = top + 'px';
             };
-            var mouseupHandler = function(event) {
+            var mouseupHandler = function(event : Event) {
               $c.util.$(document).off('mousemove', mousemoveHandler).
                 off('mouseup', mouseupHandler);
               columnItems.forEach(function(elm) {
@@ -143,7 +151,7 @@
         }) ]);
     });
 
-    var lastTarget = null;
+    var lastTarget : HTMLElement = null;
 
     var dialog =  $c.util.extend($c.ui.createDialog([
       // columns
@@ -162,8 +170,8 @@
         }),
         $c.ui.createButton(messages.APPLY, function() {
           dialog.dispose();
-          var orderedColumnIndices = [];
-          var hiddenColumns = {};
+          var orderedColumnIndices : number[] = [];
+          var hiddenColumns : { [ orderedCol : number ] : boolean } = {};
           var lockColumn = 0;
           var enableLockColumn = true;
           columns.forEach(function(column, col) {
@@ -201,17 +209,17 @@
     dialog.show();
   };
 
-  var enableHover = function(table) {
-
-    var setHoverRowImpl = function(row, hover) {
+  var enableHover = function(table : Table) {
+    var tableModel = <TemplateTableModel>table.model;
+    var setHoverRowImpl = function(row : number, hover : boolean) {
       table.forEachCells(function(td) {
-        var itemIndex = table.model.getItemIndexAt(td.row, td.col);
+        var itemIndex = tableModel.getItemIndexAt(td.row, td.col);
         if (itemIndex.row != row) {
           // skip
           return;
         }
         $c.util.$(td.$el).addClass('${prefix}-item-hover', !hover);
-        var cs = null;
+        //var cs = null;
         for (var i = 0; i < td.$el.childNodes.length; i += 1) {
           var child = td.$el.childNodes[i];
           /*
@@ -226,14 +234,14 @@
       });
     };
 
-    var setHoverRow = function(hoverRow) {
-      if (table.model.hoverRow != hoverRow) {
-        if (table.model.hoverRow != -1) {
-          setHoverRowImpl(table.model.hoverRow, false);
+    var setHoverRow = function(hoverRow : number) {
+      if (tableModel.hoverRow != hoverRow) {
+        if (tableModel.hoverRow != -1) {
+          setHoverRowImpl(tableModel.hoverRow, false);
         }
-        table.model.hoverRow = hoverRow;
-        if (table.model.hoverRow != -1) {
-          setHoverRowImpl(table.model.hoverRow, true);
+        tableModel.hoverRow = hoverRow;
+        if (tableModel.hoverRow != -1) {
+          setHoverRowImpl(tableModel.hoverRow, true);
         }
       }
     };
@@ -246,10 +254,10 @@
       });
   };
 
-  var enableRowSelect = function(table) {
+  var enableRowSelect = function(table : Table) {
     return table.on('click', function(event, detail) {
       if (detail.itemIndex.row != -1) {
-        var lastSelectedRows = {};
+        var lastSelectedRows : { [row : string] : boolean } = {};
         for (var k in this.model.selectedRows) {
           lastSelectedRows[k] = true;
         }
@@ -289,12 +297,12 @@
     });
   };
 
-  var fromTemplate = function(template) {
+  export var fromTemplate = function(template : TableTemplate) {
 
     if (template.thead && !template.tbody) {
       // set default tbody if not exists.
-      var cloneIfExists = function(src, props) {
-        var dst = {};
+      var cloneIfExists = function(src : any, props : string[]) {
+        var dst : any = {};
         props.forEach(function(prop) {
           !src[prop] || (dst[prop] = src[prop]);
         });
@@ -314,26 +322,26 @@
     template.thead.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
-          cell.factory = $c.createDefaultHeaderCellRendererFactory(cell);
+          cell.factory = $c.createDefaultHeaderCellRendererFactory(<any>cell);
         }
       });
     });
     template.tbody.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
-          cell.factory = $c.createDefaultCellRendererFactory(cell);
+          cell.factory = $c.createDefaultCellRendererFactory(<any>cell);
         }
       });
     });
 
     var columnCount = 0;
-    var cellWidth = {};
-    var cellHeight = {};
-    var columnDraggable = {};
-    var columnResizable = {};
+    var cellWidth : { [k : number] : number } = {};
+    var cellHeight : { [k : number] : number } = {};
+    var columnDraggable : { [k : number] : boolean } = {};
+    var columnResizable : { [k : number] : boolean } = {};
     var styles = function() {
-      var spaned = {};
-      var setSpaned = function(row, col, cell) {
+      var spaned : { [ id : string ] : boolean } = {};
+      var setSpaned = function(row : number, col : number, cell : TableCell) {
         for (var r = 0; r < cell.rowSpan; r += 1) {
           for (var c = 0; c < cell.colSpan; c += 1) {
             spaned[$c.util.getCellId(row + r, col + c)] = true;
@@ -341,7 +349,7 @@
         }
       };
       return template.thead.concat(template.tbody).map(function(tr, row) {
-        var style = {};
+        var style : { [ col : number ] : TableTemplateHeaderCellStyle } = {};
         var col = 0;
         var c = 0;
         while (c < tr.length) {
@@ -374,7 +382,7 @@
       });
     }();
 
-    var getCellStyleAt = function(row, col) {
+    var getCellStyleAt = function(row : number, col : number) {
       if (row < headLength) {
         return styles[row][col] || {};
       } else {
@@ -407,13 +415,13 @@
           }}
         ];
       },
-    }).on('mousedown', function(event, detail) {
+    }).on('mousedown', function(event : Event, detail : any) {
       if (detail.row < this.getLockRow() ) {
         // on header.
         this.editor.endEdit();
         this.invalidate();
       }
-    }).on('contextmenu', function(event, detail) {
+    }).on('contextmenu', function(event : Event, detail : any) {
 
       if (!(detail.row < table.getLockRow() ) ) {
         return;
@@ -452,14 +460,14 @@
       multipleRowsSelectable : false,
       selectedRows : {},
       getItemCount : function() { return (this.filteredItems || this.items).length; },
-      getItemAt : function(row) { return (this.filteredItems || this.items)[row]; },
-      getOrderedColumnIndexAt : function(col) {
+      getItemAt : function(row : number) { return (this.filteredItems || this.items)[row]; },
+      getOrderedColumnIndexAt : function(col : number) {
         if (this.orderedColumnIndices == null) {
           this.orderedColumnIndices = createDefaultOrderedColumnIndices(this);
         }
         return this.orderedColumnIndices[col];
       },
-      getItemIndexAt : function(row, col) {
+      getItemIndexAt : function(row : number, col : number) {
         if (row < headLength) {
           return { row : -1, col : -1 };
         } else {
@@ -473,7 +481,7 @@
           };
         }
       },
-      setValueAt : function(row, col, value) {
+      setValueAt : function(row : number, col : number, value : any) {
         if (row < headLength) {
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
@@ -484,11 +492,11 @@
       getRowCount : function() { return headLength +
         bodyLength * this.getItemCount(); },
       getColumnCount : function() { return columnCount; },
-      getLineRowCountAt : function(row) {
+      getLineRowCountAt : function(row : number) {
         return row < headLength? headLength : bodyLength; },
-      getLineRowAt : function(row) {
+      getLineRowAt : function(row : number) {
         return row < headLength? row : (row - headLength) % bodyLength; },
-      getCellWidthAt : function(col) {
+      getCellWidthAt : function(col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (this.hiddenColumns[orderedCol]) {
           return 0;
@@ -496,27 +504,27 @@
         var v = this.cellWidth[orderedCol];
         return typeof v == 'number'? v : this.defaultCellWidth;
       },
-      getCellHeightAt : function(row) {
+      getCellHeightAt : function(row : number) {
         var v = this.cellHeight[row];
         return typeof v == 'number'? v : this.defaultCellHeight;
       },
-      isColumnDraggableAt : function(col) {
+      isColumnDraggableAt : function(col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         var v = this.columnDraggable[orderedCol];
         return typeof v == 'boolean'? v : true;
       },
-      isColumnResizableAt : function(col) {
+      isColumnResizableAt : function(col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         var v = this.columnResizable[orderedCol];
         return typeof v == 'boolean'? v : true;
       },
-      getCellRendererFactoryAt : function(row, col) {
+      getCellRendererFactoryAt : function(row : number, col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         return getCellStyleAt(row, orderedCol).factory || (row < headLength?
             this.defaultHeaderCellRendererFactory :
             this.defaultCellRendererFactory);
       },
-      getCellStyleAt : function(row, col) {
+      getCellStyleAt : function(row : number, col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         var style = $c.util.extend({}, getCellStyleAt(row, orderedCol) );
         style.className = style.className || '';
@@ -537,7 +545,7 @@
         }
         return style;
       },
-      getValueAt : function(row, col) {
+      getValueAt : function(row : number, col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (row < headLength) {
           return getCellStyleAt(row, orderedCol).label || '';
@@ -547,14 +555,14 @@
           return typeof value != 'undefined'? value : '';
         }
       }
-    }).on('valuechange', function(event, detail) {
+    }).on('valuechange', function(event : Event, detail : any) {
       this.setValueAt(detail.row, detail.col, detail.newValue);
-    }).on('cellsizechange', function(event, detail) {
+    }).on('cellsizechange', function(event : Event, detail : any) {
       if (typeof detail.col == 'number') {
         var orderedCol = this.getOrderedColumnIndexAt(detail.col);
         this.cellWidth[orderedCol] = detail.cellWidth;
       }
-    }).on('columndragged', function(event, detail) {
+    }).on('columndragged', function(event : Event, detail : any) {
       this.orderedColumnIndices = $c.util.moveSublist(
           this.orderedColumnIndices, detail.colFrom, detail.colSpan, detail.colTo);
       if (detail.colFrom < table.lockColumn && table.lockColumn <= detail.colTo) {
@@ -567,7 +575,7 @@
       // apply filter
 
       var filters = this.filterContext.filters;
-      var filteredItems = this.items.filter(function(item) {
+      var filteredItems : any[] = this.items.filter(function(item : any) {
         var filtered = false;
         for (var dataField in filters) {
           if (filters[dataField][item[dataField]]) {
@@ -620,12 +628,12 @@
     // append itemIndex to events.
     [ 'valuechange' ].
     forEach(function(type) {
-      table.model.on(type, function(event, detail) {
+      table.model.on(type, function(event : Event, detail : any) {
         detail.itemIndex = this.getItemIndexAt(detail.row, detail.col);
       });
     });
     $c.tableEventTypes.forEach(function(type) {
-      table.on(type, function(event, detail) {
+      table.on(type, function(event : Event, detail : any) {
         detail.itemIndex = this.model.getItemIndexAt(detail.row, detail.col);
       });
     });
@@ -636,6 +644,5 @@
     return table;
   };
 
-  $c.fromTemplate = fromTemplate;
 
-}(window.comfortable || (window.comfortable = {}) );
+}

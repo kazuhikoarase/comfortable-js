@@ -9,12 +9,51 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
+  var $c = comfortable;
+
+  interface Selector {
+    $el : HTMLElement,
+    selected : boolean,
+    setSelected : (selected : boolean) => void;
+    isSelected : () => boolean;
+  }
+
+  interface CheckBox {
+    $el : HTMLElement;
+    checked : boolean;
+    setIncomplete : (incomplete : boolean) => void;
+    setChecked : (checked : boolean) => void;
+    isChecked : () => boolean;
+  }
+
+  interface FilterButton {
+    $el : HTMLElement;
+    cell : TemplateTableCell;
+    filtered : boolean;
+    sortOrder : string;
+    setFiltered : (filtered : boolean) => void;
+    setSortOrder : (sortOrder : string) => void;
+    update : () => void;
+  }
+
+  interface FilterDialogOptions extends CellRendererFactoryOpts {
+    sortOrder : string;
+    filterValues : any[];
+    rejects : Rejects;
+  }
+
+  interface FilterDialog extends EventTarget {
+    render : (cell : TableCell) => void;
+    beginEdit : (cell : TableCell) => { focus : () => void; endEdit : () => void; };
+    dispose : () => void;
+  }
+
   // selector of sort order
-  var createSelector = function() {
+  var createSelector = function() : Selector {
     var rect = $c.util.createElement('span', {
       attrs : { 'class' : '${prefix}-selector-body' }, 
       style : { display:'inline-block', width:'12px', height : '12px' }
@@ -33,10 +72,10 @@
   };
 
   // filter checkbox
-  var createCheckbox = function() {
+  var createCheckbox = function() : CheckBox {
 
     // fix for layout collapse by bootstrap.
-    var antiBsGlobals = {
+    var antiBsGlobals : { [k : string] : string } = {
         verticalAlign :'baseline',
         boxSizing : 'content-box',
         lineHeight : '1' };
@@ -53,7 +92,7 @@
           width : '12px', height : '12px' }
         )}, [
           $c.util.createSVGElement('svg', {
-            attrs : { width : 12, height : 12 },
+            attrs : { width : '12', height : '12' },
             style : antiBsGlobals }, [ path ])
         ] ),
       checked : true,
@@ -71,13 +110,14 @@
     };
   };
 
-  var createFilterDialog = function(opts, cell) {
+  var createFilterDialog = function(opts : FilterDialogOptions, cell : TemplateTableCell) {
 
     var messages = $c.i18n.getMessages();
     var SortOrder = $c.SortOrder;
-    var labelStyle = { marginLeft : '4px', verticalAlign : 'middle' };
+    var labelStyle : { [ k : string ] : string } =
+      { marginLeft : '4px', verticalAlign : 'middle' };
 
-    var createSortButton = function(label) {
+    var createSortButton = function(label : string) {
       var selector = createSelector();
       selector.$el.style.verticalAlign = 'middle';
       return {
@@ -97,7 +137,16 @@
     var sortAscButton = createSortButton(messages.SORT_ASC);
     var sortDescButton = createSortButton(messages.SORT_DESC);
 
-    var filterItems = [ messages.SELECT_ALL ].concat(opts.filterValues).
+    interface FilterItem {
+      index: number;
+      label: any;
+      value: string;
+      checked: boolean;
+      color: boolean;
+      incomplete? : boolean;
+    }
+
+    var filterItems : FilterItem[] = [ messages.SELECT_ALL ].concat(opts.filterValues).
       map(function(value, i) {
         return {
           index : i,
@@ -110,7 +159,7 @@
 
     var filterItemList = $c.util.extend($c.createList(), {
       items : filterItems,
-      getItemAt : function(row) { return this.items[row]; },
+      getItemAt : function(row : number) { return this.items[row]; },
       getItemCount : function() { return this.items.length; },
       createCell : function() {
         var checkbox = createCheckbox();
@@ -118,9 +167,10 @@
           props : { textContent : 'M' } });
         checkbox.$el.style.verticalAlign = 'middle';
         var $public = {
+          index : 0 as number,
           row : 0,
           checkbox : checkbox,
-          setLabel : function(text) {
+          setLabel : function(text : string) {
             label.textContent = text || messages.SELECT_BLANK;
             this.$el.setAttribute('title', label.textContent);
           },
@@ -136,7 +186,7 @@
         };
         return $public;
       },
-      renderCell : function(cell, item) {
+      renderCell : function(cell : any, item : any) {
         cell.index = item.index;
         cell.setLabel(item.label);
         cell.checkbox.setChecked(item.checked);
@@ -144,7 +194,7 @@
       },
       height : 0,
       maxHeight : 150
-    }).on('rendered', function(event, detail) {
+    }).on('rendered', function(event : Event, detail : any) {
       var height = Math.min(this.maxHeight,
           this.cellHeight * this.getItemCount() );
       if (this.height != height) {
@@ -187,7 +237,7 @@
         ])
     ]), {
       sortOrder : opts.sortOrder, rejects : opts.rejects
-    } ).on('sortclick', function(event, detail) {
+    } ).on('sortclick', function(event : Event, detail : any) {
 
       if (detail.label == messages.SORT_ASC) {
         this.sortOrder = this.sortOrder == SortOrder.ASC? null : SortOrder.ASC;
@@ -206,7 +256,7 @@
       sortAscButton.selector.setSelected(this.sortOrder == SortOrder.ASC);
       sortDescButton.selector.setSelected(this.sortOrder == SortOrder.DESC);
 
-    } ).on('filterclick', function(event, detail) {
+    } ).on('filterclick', function(event : Event, detail : any) {
 
       if (detail.index == 0) {
         // select all
@@ -227,7 +277,7 @@
         filterItem.checked = !filterItem.checked;
       }
 
-      var rejects = {};
+      var rejects : Rejects = {};
       filterItems.forEach(function(filterItem, i) {
         if (i > 0 && !filterItem.checked) {
           rejects[filterItem.value] = true;
@@ -255,19 +305,19 @@
     return dialog;
   };
 
-  var createFilterButton = function() {
+  var createFilterButton = function() : FilterButton {
     return {
       $el : $c.util.createSVGElement('svg',
           { style : { position : 'absolute' },
-            attrs : { width : 15, height : 15,
+            attrs : { width : '15', height : '15',
             'class' : '${prefix}-filter-button ${prefix}-clickable-op' } }),
       filtered : false,
       sortOrder : null,
-      setFiltered : function(filtered) {
+      setFiltered : function(filtered : boolean) {
         this.filtered = filtered;
         this.update();
       },
-      setSortOrder : function(sortOrder) {
+      setSortOrder : function(sortOrder : string) {
         this.sortOrder = sortOrder;
         this.update();
       },
@@ -279,7 +329,8 @@
         // outer rect
         this.$el.appendChild($c.util.createSVGElement('rect', {
           attrs : { 'class' : '${prefix}-filter-body',
-            x : 0, y : 0, width: 15, height : 15, rx: 3, ry : 3 } }) );
+            x : '0', y : '0', width: '15', height : '15',
+            rx: '3', ry : '3' } }) );
         // and others.
         var fillClass = '${prefix}-filter-fill';
         var strokeClass = '${prefix}-filter-stroke';
@@ -314,9 +365,10 @@
     }.update();
   };
 
-  var getFilterValues = function(tableModel, dataField, comparator) {
-    var exists = {};
-    var filterValues = [];
+  var getFilterValues = function(tableModel : TemplateTableModel,
+      dataField : string, comparator : (a: any, b: any) => number) {
+    var exists : { [ value : string ] : boolean } = {};
+    var filterValues : any[] = [];
     var items = tableModel.items;
     for (var i = 0; i < items.length; i += 1) {
       var value = items[i][dataField];
@@ -342,19 +394,21 @@
     return filterValues;
   };
 
-  var createDefaultHeaderCellRendererFactory = function(opts) {
+  export var createDefaultHeaderCellRendererFactory =
+      function(opts? : CellRendererFactoryOpts) :
+        TableCellRendererFactory {
 
     opts = $c.util.extend($c.createDefaultCellRendererFactoryOpts(), opts || {});
 
-    return function(td) {
+    return function(td) : TableCellRenderer {
 
       var labelRenderer = $c.createMultiLineLabelRenderer(td.$el);
 
-      var tableModel = td.tableModel;
-      var filterButton = null;
-      var dialog = null;
+      var tableModel : TemplateTableModel = <any>td.tableModel;
+      var filterButton : FilterButton = null;
+      var dialog : FilterDialog = null;
 
-      var showFilterDialog = function() {
+      var showFilterDialog = function() : FilterDialog {
         var filterContext = tableModel.filterContext;
         var dataField = filterButton.cell.dataField;
         var filterValues = getFilterValues(tableModel, dataField,
@@ -366,12 +420,12 @@
           rejects : filterContext.filters[dataField] || {},
           filterValues : filterValues
         }, opts), filterButton.cell).on('applysort', function() {
-          filterContext['.comparator'] = filterButton.cell.comparator;
+          (<any>filterContext)['.comparator'] = filterButton.cell.comparator;
           filterContext.sort = this.sortOrder?
               { dataField : dataField, sortOrder : this.sortOrder } :null;
           tableModel.trigger('filterchange');
         }).on('applyfilter', function() {
-          filterContext['.comparator'] = filterButton.cell.comparator;
+          (<any>filterContext)['.comparator'] = filterButton.cell.comparator;
           filterContext.filters[dataField] = this.rejects;
           tableModel.trigger('filterchange');
         });
@@ -435,6 +489,6 @@
     };
   };
 
-  $c.createDefaultHeaderCellRendererFactory = createDefaultHeaderCellRendererFactory;
+  export var SortOrder = { ASC : 'asc', DESC : 'desc' };
 
-}(window.comfortable || (window.comfortable = {}) );
+}

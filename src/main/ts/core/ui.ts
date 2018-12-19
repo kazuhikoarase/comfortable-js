@@ -9,20 +9,23 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable.ui {
 
   'use strict';
 
-  var createButton = function(label, action) {
+  var $c = comfortable;
+
+  export var createButton = function(
+      label : string, action : (event : Event) => void) {
     return $c.util.createElement('button',{
       props : { textContent : label },
       attrs : { 'class' : '${prefix}-button' },
-      on : { mousedown : function(event) {
+      on : { mousedown : function(event : Event) {
         event.preventDefault();
-      }, click : function(event) { action(event); } } });
+      }, click : function(event : Event) { action(event); } } });
   };
 
-  var createDialog = function(children) {
+  export var createDialog = function(children : HTMLElement[]) {
     var dialog = $c.util.extend($c.createEventTarget(), {
       $el : $c.util.createElement('div', {
           attrs : { 'class' : '${prefix}-dialog' },
@@ -44,7 +47,7 @@
         }
       }
     } );
-    var mousedownHandler = function(event) {
+    var mousedownHandler = function(event : Event) {
       if (!$c.util.closest(event.target,
           { $el : dialog.$el, root : document.body }) ) {
         dialog.dispose();
@@ -53,18 +56,28 @@
     return dialog;
   };
 
-  var showMenu = function(left, top, menuItems) {
-    var subMenu = null;
+  export interface Menu {
+    dispose : () => void;
+  }
+
+  export interface MenuItem {
+    label : string;
+    action? : (event? : Event) => void;
+    children? : () => MenuItem[];
+  }
+
+  export var showMenu = function(left : number, top : number, menuItems : MenuItem[]) : Menu {
+    var subMenu : Menu = null;
     var menu = $c.util.createElement('div', {
       attrs : { 'class' : '${prefix}-contextmenu' },
       style : { position : 'absolute', left : left + 'px', top : top + 'px' } },
-      menuItems.map(function(menuItem) {
+      <HTMLElement[]>menuItems.map(function(menuItem) {
         return $c.util.createElement('div', {
             attrs : { 'class' : '${prefix}-menuitem ${prefix}-clickable' },
             props : { textContent : menuItem.label },
             style : { position : 'relative', whiteSpace : 'nowrap' },
             on : {
-              mouseover : function(event) {
+              mouseover : function(event : Event) {
                 if (subMenu != null) {
                   subMenu.dispose();
                   subMenu = null;
@@ -76,7 +89,7 @@
                       menuItem.children() );
                 }
               },
-              mousedown : function(event) {
+              mousedown : function(event : Event) {
                 if (menuItem.action) {
                   menuItem.action(event);
                 }
@@ -90,7 +103,7 @@
         menu = null;
       }
     };
-    var mousedownHandler = function(event) {
+    var mousedownHandler = function(event : Event) {
       $c.util.$(document).off('mousedown', mousedownHandler);
       dispose();
     };
@@ -99,10 +112,4 @@
     return { dispose : dispose };
   };
 
-  $c.ui = {
-    createButton : createButton,
-    createDialog : createDialog,
-    showMenu : showMenu
-  };
-
-}(window.comfortable || (window.comfortable = {}) );
+}

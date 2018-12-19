@@ -9,13 +9,92 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
-  var createDefaultTableModel = function() {
+  var $c = comfortable;
+
+  interface ElmCache {
+    $el : HTMLElement;
+    tableModel? : TableModel; 
+    row? : number;
+    col? : number;
+    children? : ElmCache[];
+    renderer? : TableCellRenderer;
+    factory? : TableCellRendererFactory;
+  }
+
+  interface InternalTable {
+    $el : HTMLElement;
+    left : number;
+    top : number;
+    colgroup : ElmCache;
+    tbody : ElmCache;
+    row? : number;
+    col? : number;
+    model : TableModel;
+    tableState : TableState;
+    beforeCellSizeChangeHandler : EventListener;
+    offsetCache : OffsetCache;
+    calcCellPosition : (left : number, top : number) => {
+      left : number, top : number, row : number, col : number};
+    preRender : () => TableState;
+    render : () => void;
+  }
+
+  interface TableState {
+    left : number;
+    top : number;
+    width : number;
+    height : number;
+    minRow : number;
+    maxRow : number;
+    minCol : number;
+    maxCol : number;
+    indexById : { [id : string] : { trIndex : number, tdIndex : number} };
+  }
+  interface CellRect {
+    left : number; top : number; width : number; height : number;
+  }
+  interface CellSizeCache {
+    viewWidth : number;
+    viewHeight : number;
+    rects : CellRect[];
+    rowCount : number; columnCount :number;
+    lockRow : number; lockColumn : number;
+    width : number; height : number;
+  }
+
+  interface RenderParams {
+            width : number;
+          height : number;
+          rects : CellRect[],
+          viewWidth : number;
+          viewHeight : number;
+          scrWidth : number;
+          scrHeight : number;
+  }
+
+  interface TargetColumn {
+    colFrom : number;
+    colTo : number;
+    i : number;
+    left : number;
+    distance : number;
+  }
+
+  interface OffsetCache {
+    left : { [i : number] : number },
+    top : { [i : number] : number }
+  }
+
+  interface TableModelImpl extends TableModelIntf {
+  }
+
+  var createDefaultTableModel = function() : TableModel {
     var util = $c.util;
-    return util.extend($c.createEventTarget(), {
+    return util.extend($c.createEventTarget(), <TableModelImpl>{
       defaultCellWidth : 100,
       defaultCellHeight : 28,
       defaultCellStyle : { rowSpan : 1, colSpan : 1, editable : true },
@@ -57,7 +136,7 @@
     } );
   };
 
-  var createInternalTable = function() {
+  var createInternalTable = function() : InternalTable {
 
     var util = $c.util;
 
@@ -67,23 +146,23 @@
     var table = util.createElement('table', {
         attrs : { cellspacing : '0' },
         style : {
-          tableLayout : 'fixed', position : 'absolute', lineHeight : 1
+          tableLayout : 'fixed', position : 'absolute', lineHeight : '1'
         }
-      }, [ colgroup, tbody ]);
+      }, <HTMLElement[]>[ colgroup, tbody ]);
     var view = util.createElement('div', {
       style : { overflow : 'hidden', position : 'relative' },
       on : { scroll : function(event) {
         view.scrollLeft = 0; view.scrollTop = 0; } }
     }, [ table ]);
 
-    var getOrCrt = function(tagName, index, parent, init) {
+    var getOrCrt = function(tagName : string, index : number, parent : ElmCache, init? : (elm : ElmCache) => void ) {
       if (parent.children && index < parent.children.length) {
         return parent.children[index];
       }
       if (!parent.children) {
         parent.children = [];
       }
-      var elm = { $el : document.createElement(tagName) };
+      var elm : ElmCache = { $el : document.createElement(tagName) };
       if (init) {
         init(elm);
       }
@@ -92,7 +171,7 @@
       return elm;
     };
 
-    var createTableState = function() {
+    var createTableState = function() : TableState {
       return {
         left : 0, top : 0, width : 0, height : 0,
         minRow : 0, maxRow : 0, minCol : 0, maxCol : 0,
@@ -100,7 +179,7 @@
       };
     };
 
-    var getCellStyle = function(cell) {
+    var getCellStyle = function(cell : TableCellStyle) : util.ElementOptions {
       return {
         attrs : { 'class' : cell.className },
         style : {
@@ -129,11 +208,11 @@
       beforeCellSizeChangeHandler : null,
       calcCellPosition : function(left, top) {
 
-        var tableModel = this.model;
+        var tableModel : TableModel = this.model;
 
         // offset cache
         if (this.beforeCellSizeChangeHandler == null) {
-          this.beforeCellSizeChangeHandler = function(event, detail) {
+          this.beforeCellSizeChangeHandler = function(event : Event, detail : any) {
             this.offsetCache = null;
           }.bind(this);
         }
@@ -141,8 +220,8 @@
         tableModel.on('beforecellsizechange', this.beforeCellSizeChangeHandler);
         this.offsetCache = this.offsetCache || { left : {}, top : {} };
         var prec = 1000;
-        var offsetLeftCache = this.offsetCache.left;
-        var offsetTopCache = this.offsetCache.top;
+        var offsetLeftCache : {[i : number] : number} = this.offsetCache.left;
+        var offsetTopCache : {[i : number] : number} = this.offsetCache.top;
         var offsetLeft = 0;
         var offsetTop = 0;
 
@@ -153,8 +232,8 @@
         var col = 0;
         var row = 0;
 
-        var leftCache = null;
-        var topCache = null;
+        var leftCache : { col : number, offset : number } = null;
+        var topCache : { row : number, offset : number } = null;
         for (var i = 0; typeof offsetLeftCache[i] == 'number'; i += prec) {
           if (left + offsetLeftCache[i] <= 0) {
             leftCache = { col : i, offset : offsetLeftCache[i] };
@@ -242,7 +321,7 @@
           trIndex += 1;
         }
         for (;trIndex < tbody.childNodes.length; trIndex += 1) {
-          tbody.childNodes[trIndex].style.height = '0px';
+          (<HTMLElement>tbody.childNodes[trIndex]).style.height = '0px';
         }
         tableState.maxRow = Math.min(rowCount, tableState.minRow +
             (this.tbody.children? this.tbody.children.length : 0) ) - 1;
@@ -260,7 +339,7 @@
           colIndex += 1;
         }
         for (;colIndex < colgroup.childNodes.length; colIndex += 1) {
-          colgroup.childNodes[colIndex].style.width = '0px';
+          (<HTMLElement>colgroup.childNodes[colIndex]).style.width = '0px';
         }
         tableState.maxCol = Math.min(columnCount, tableState.minCol +
             (this.colgroup.children? this.colgroup.children.length : 0) ) - 1;
@@ -271,9 +350,10 @@
       render : function() {
 
         var tableState = this.preRender();
-        var spaned = {};
+        var spaned : { [id : string] : boolean } = {};
 
-        var setSpaned = function(row, col, td, cell) {
+        var setSpaned = function(row : number, col : number,
+            td : HTMLTableDataCellElement, cell : TableCellStyle) {
           td.rowSpan = cell.rowSpan;
           td.colSpan = cell.colSpan;
           if (cell.rowSpan == 1 && cell.colSpan == 1) {
@@ -289,8 +369,8 @@
           }
         };
 
-        var tableModel = this.model;
-        var initCell = function(td) {
+        var tableModel : TableModel = this.model;
+        var initCell = function(td : ElmCache) {
           td.renderer = null;
           td.tableModel = tableModel;
           td.$el.style.overflow = 'hidden';
@@ -316,7 +396,7 @@
             td.col = col;
 
             var cell = tableModel.getCellAt(row, col);
-            setSpaned(row, col, td.$el, cell);
+            setSpaned(row, col, <HTMLTableDataCellElement>td.$el, cell);
 
             var factory = tableModel.getCellRendererFactoryAt(row, col);
             if (td.factory != factory) {
@@ -325,7 +405,7 @@
                 td.renderer.dispose();
               }
               td.$el.innerHTML = '';
-              td.renderer = td.factory(td);
+              td.renderer = td.factory(<TdWrapper>td);
             }
 
             util.set(td.$el, getCellStyle(cell) );
@@ -347,12 +427,12 @@
     };
   };
 
-  var createTable = function() {
+  export var createTable = function() {
 
     var util = $c.util;
 
     var tables = function() {
-      var tables = [];
+      var tables : InternalTable[] = [];
       for (var i = 0; i < 4; i += 1) {
         tables.push(createInternalTable() );
       }
@@ -362,7 +442,8 @@
     tables.forEach(function(table, i) {
       table.row = ~~(i / 2);
       table.col = i % 2;
-      var cellEventHandler = function(handler) {
+      var cellEventHandler = function(handler :
+          (event : Event, td : ElmCache) => void) : EventListener {
         return function(event) {
           var col = util.indexOf(util.closest(event.target,
               { tagName : 'TD', root : table.$el }) );
@@ -376,7 +457,7 @@
       var delegateHandler = cellEventHandler(function(event, td) {
         $public.trigger(event.type,
             { originalEvent : event, row : td.row, col : td.col }); });
-      var delegates = {};
+      var delegates : {[type : string] : EventListener} = {};
       $c.tableEventTypes.forEach(function(type) {
         delegates[type] = delegateHandler;
       });
@@ -394,10 +475,10 @@
                 $public.model.isColumnDraggableAt(td.col) &&
                 !event.defaultPrevented) {
               event.preventDefault();
-              var mousemoveHandler = function(event) {
+              var mousemoveHandler = function(event : Event) {
                 updateMarker(event.pageX - dragPoint.x);
               };
-              var mouseupHandler = function(event) {
+              var mouseupHandler = function(event : Event) {
                 util.$(document).off('mousemove', mousemoveHandler).
                   off('mouseup', mouseupHandler);
                 frame.removeChild(dragProxy);
@@ -412,8 +493,8 @@
               };
               util.$(document).on('mousemove', mousemoveHandler).
                 on('mouseup', mouseupHandler);
-              var getTargetColumn = function(centerX) {
-                var targetColumn = null;
+              var getTargetColumn = function(centerX : number) {
+                var targetColumn : TargetColumn = null;
                 tables.forEach(function(tbl, i) {
                   if (tbl.row == table.row) {
                     var tableState = tbl.tableState;
@@ -433,7 +514,7 @@
                 });
                 return targetColumn;
               };
-              var updateMarker = function(delta) {
+              var updateMarker = function(delta : number) {
                 var left = getLeft(delta);
                 targetColumn = getTargetColumn(left + colWidth / 2);
                 dragProxy.style.left = left + 'px';
@@ -441,7 +522,7 @@
               };
               var tableModel = $public.model;
               var tableState = table.tableState;
-              var targetColumn = null;
+              var targetColumn : TargetColumn = null;
               var rect = $private.getCellSizeCache().rects[i];
               var colFrom = td.col;
               var spaned = tableModel.checkSpaned(0, colFrom);
@@ -463,7 +544,7 @@
                 }
                 return width;
               }();
-              var getLeft = function(delta) {
+              var getLeft = function(delta : number) {
                 return tableState.left + rect.left + colLeft + delta;
               };
               var dragPoint = { x : event.pageX, y : event.pageY };
@@ -536,11 +617,17 @@
       }, [viewPane].concat(
           tables.map(function(table) { return table.$el; }) ) );
 
-    var lockLines = [];
-    var colResizeHandles = [];
+    interface ColResizeHandle {
+      $el : HTMLElement;
+      col? : number;
+      left? : number;
+    }
+
+    var lockLines : HTMLElement[] = [];
+    var colResizeHandles : ColResizeHandle[] = [];
 
     var $private = {
-      getCellRect : function(row, col) {
+      getCellRect : function(row : number, col : number) {
         var tableModel = tables[3].model;
         var left = 0;
         var top = 0;
@@ -554,7 +641,7 @@
           width : tableModel.getCellWidthAt(col),
           height : tableModel.getCellHeightAt(row) };
       },
-      makeVisible : function(renderParams, row, col) {
+      makeVisible : function(renderParams : RenderParams, row : number, col : number) {
         var cornerRect = renderParams.rects[0];
         var scrollRect = renderParams.rects[3];
         var delta = { left : 0, top : 0 };
@@ -590,12 +677,12 @@
           viewPane.scrollLeft = scroll.left;
         }
       },
-      cellSizeCache : null,
+      cellSizeCache : null as CellSizeCache,
       beforeCellSizeChangeHandler : function(event, detail) {
         // note: 'this' is tableModel!
         $private.cellSizeCache = null;
-      },
-      getCellSizeCache : function() {
+      } as EventListener,
+      getCellSizeCache : function() : CellSizeCache {
         var width = $public.$el.clientWidth;
         var height = $public.$el.clientHeight;
         var tableModel = $public.model;
@@ -618,7 +705,7 @@
           var colPos = [ 0, lockColumn, columnCount ];
           var cw = colPos.slice(1).map(function() { return 0; });
           var ch = rowPos.slice(1).map(function() { return 0; });;
-          var idx, count;
+          var idx : number, count : number;
           idx = colPos.shift();
           cw.forEach(function(_, i) {
             for (count = colPos.shift(); idx < count; idx += 1) {
@@ -634,10 +721,10 @@
           var rects = tables.map(function(table) {
             var rect = { left : 0, top : 0, width : 0, height : 0 };
             for (var row = 0; row <= table.row; row += 1) {
-              rect[row < table.row ? 'top' : 'height'] += ch[row];
+              (<any>rect)[row < table.row ? 'top' : 'height'] += ch[row];
             }
             for (var col = 0; col <= table.col; col += 1) {
-              rect[col < table.col? 'left' : 'width'] += cw[col];
+              (<any>rect)[col < table.col? 'left' : 'width'] += cw[col];
             }
             rect.width = Math.max(0, Math.min(rect.width, width - rect.left) );
             rect.height = Math.max(0, Math.min(rect.height, height - rect.top) );
@@ -673,16 +760,16 @@
           scrHeight : scrHeight
         };
       },
-      getTargetTable : function(row, col) {
+      getTargetTable : function(row : number, col : number) {
         return tables.filter(function(table) {
           return table.row == (row < $public.getLockRow()? 0 : 1) &&
             table.col == (col < $public.getLockColumn()? 0 : 1);
         })[0];
       },
-      isEditableAt : function(row, col) {
+      isEditableAt : function(row : number, col : number) {
         return $public.model.getCellAt(row, col).editable;
       },
-      move : function(offset) {
+      move : function(offset : { row : number, col : number }) {
 
         if (editor.cell == null) {
           return;
@@ -750,9 +837,9 @@
           } while (!beginEditIfEditable() );
         }
       },
-      renderColumnResizeHandlers : function(renderParams) {
-        var mousedownHandler = function(event) {
-          var mouseupHandler = function(event) {
+      renderColumnResizeHandlers : function(renderParams : RenderParams) {
+        var mousedownHandler = function(event : Event) {
+          var mouseupHandler = function(event : Event) {
             util.$(document).off('mousemove', mousemoveHandler).
               off('mouseup', mouseupHandler);
             frame.removeChild(block);
@@ -766,7 +853,7 @@
               cellWidth : Math.max(tableModel.minCellWidth, cellWidth + deltaX) });
             $public.invalidate();
           };
-          var mousemoveHandler = function(event) {
+          var mousemoveHandler = function(event : Event) {
             var deltaX = event.pageX - dragPoint.x;
             var cellWidth = tableModel.getCellWidthAt(handle.col);
             deltaX = Math.max(tableModel.minCellWidth, cellWidth + deltaX) - cellWidth;
@@ -795,7 +882,7 @@
           util.$(document).on('mousemove', mousemoveHandler).
             on('mouseup', mouseupHandler);
         };
-        var getOrCrt = function() {
+        var getOrCrt = function() : ColResizeHandle {
           if (handleIndex < colResizeHandles.length) {
             return colResizeHandles[handleIndex];
           }
@@ -861,7 +948,7 @@
             style : { display : 'none', left : '0px', height : '0px' } });
         }
       },
-      render : function(visibleCell) {
+      render : function(visibleCell? : TableCell) {
 
         var renderParams = this.getRenderParams();
         var cornerRect = renderParams.rects[0];
@@ -969,7 +1056,13 @@
       }
     };
 
-    var editor = {
+    interface InternalEditor {
+      cell? : { row : number, col : number };
+      beginEdit : (row : number, col : number, makeVisible? : boolean) => void;
+      endEdit : () => void;
+    }
+
+    var editor : InternalEditor = {
       beginEdit : function(row, col, makeVisible) {
         this.endEdit();
         if (makeVisible) {
@@ -1001,7 +1094,7 @@
       }
     };
 
-    var $public = util.extend($c.createUIEventTarget(), {
+    var $public = util.extend($c.createUIEventTarget(), <TableIntf>{
       $el : frame,
       lockRow : 0,
       lockColumn : 0,
@@ -1011,14 +1104,14 @@
         tables.forEach(function(table) {
           (table.tbody.children || []).forEach(function(tr) {
             (tr.children || []).forEach(function(cell) {
-              callback(cell);
+              callback(<any>cell);
             });
           });
         });
       },
       editor : editor,
       model : createDefaultTableModel(),
-      render : function(visibleCell) {
+      render : function(visibleCell? : TableCell) {
         $private.render(visibleCell);
       }
     });
@@ -1026,16 +1119,13 @@
     return $public;
   };
 
-  $c.tableEventTypes = [
+  export var tableEventTypes = [
     'mousedown', 'mouseover', 'mouseout',
     'click', 'dblclick', 'contextmenu' ];
-  $c.createTable = createTable;
 
   // export
-  !function($c) {
-    if (typeof exports === 'object') {
-      module.exports = $c;
-    }
-  }($c);
-
-}(window.comfortable || (window.comfortable = {}) );
+  declare var exports : any, module : any;
+  if (typeof exports === 'object') {
+    module.exports = $c;
+  }
+}
