@@ -9,6 +9,8 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
+/// <reference path="EventTarget.ts" />
+
 namespace comfortable {
 
   'use strict';

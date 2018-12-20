@@ -396,6 +396,12 @@ namespace comfortable {
       lockColumn : template.lockColumn || 0,
       enableLockColumn : true,
       defaultLockColumn : 0,
+      resetFilter : function() {
+        var tableModel = this.model as TemplateTableModel;
+        tableModel.filterContext = createFilterContext();
+        tableModel.filteredItems = null;
+        this.invalidate();
+      },
       getLockColumn : function() {
         return !this.enableLockColumn? 0 : this.lockColumn;
       },
@@ -403,14 +409,18 @@ namespace comfortable {
         var messages = i18n.getMessages();
         var tableModel = table.model as TemplateTableModel;
         return [
-          { label : messages.RESET_FILTER, action : function() {
-              tableModel.filterContext = createFilterContext();
-              tableModel.filteredItems = null;
-              table.invalidate();
-          }},
-          { label : messages.EDIT_COLUMNS, action : function() {
+          {
+            label : messages.RESET_FILTER,
+            action : () => {
+              this.resetFilter();
+            }
+          },
+          {
+            label : messages.EDIT_COLUMNS,
+            action : function() {
               showColumnEditDialog(table);
-          }}
+            }
+          }
         ];
       },
     }).on('mousedown', function(event : Event, detail : any) {
@@ -457,8 +467,12 @@ namespace comfortable {
       hoverRow : -1,
       multipleRowsSelectable : false,
       selectedRows : {},
-      getItemCount : function() { return (this.filteredItems || this.items).length; },
-      getItemAt : function(row : number) { return (this.filteredItems || this.items)[row]; },
+      getItemCount : function() {
+        return (this.filteredItems || this.items).length;
+      },
+      getItemAt : function(row : number) {
+        return (this.filteredItems || this.items)[row];
+      },
       getOrderedColumnIndexAt : function(col : number) {
         if (this.orderedColumnIndices == null) {
           this.orderedColumnIndices = createDefaultOrderedColumnIndices(this);

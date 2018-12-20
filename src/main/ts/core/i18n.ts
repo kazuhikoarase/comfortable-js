@@ -32,15 +32,15 @@ namespace comfortable.i18n {
   }
 
   export var getInstance = function(lang : string) {
-    lang = lang || navigator.language || navigator.userLanguage;
+    lang = lang || navigator.language || (<any>navigator).userLanguage;
     var _i18n : any = i18n;
     return <I18N>(util.extend({}, _i18n.en, _i18n[lang] ||
         _i18n[lang.replace(/\-\w+$/, '')] || {}) );
-  };
+  }
 
   export var getMessages = function() : Messages {
     return util.extend(
         this.getInstance('en').messages,
         this.getInstance().messages);
-  };
+  }
 }

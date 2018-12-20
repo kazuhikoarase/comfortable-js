@@ -83,6 +83,7 @@ namespace comfortable {
   export interface TemplateTable extends Table {
     enableLockColumn : boolean;
     defaultLockColumn : number;
+    resetFilter : () => void;
   }
 
 }
