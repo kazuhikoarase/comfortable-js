@@ -1,5 +1,5 @@
 //
-// comfortable - default-header-cell-renderer-factory
+// comfortable - DefaultHeaderCellRendererFactory
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //
@@ -186,27 +186,6 @@ namespace comfortable {
       public getItemAt(row : number) { return this.items[row]; }
       public getItemCount() { return this.items.length; }
       public createCell() {
-        /*
-        var $public = {
-          index : 0 as number,
-          row : 0,
-          checkbox : checkbox,
-          setLabel : function(text : string) {
-            label.textContent = text || messages.SELECT_BLANK;
-            this.$el.setAttribute('title', label.textContent);
-          },
-          $el : util.createElement('div', {
-            attrs : { 'class' : '${prefix}-clickable-op' },
-            on : {
-              mousedown : function(event) { event.preventDefault(); },
-              click : function() {
-                dialog.trigger('filterclick', { index : $public.index });
-              }
-            }
-          }, [ checkbox.$el, label ])
-        };
-        return $public;
-        */
         return new FilterItemCell();
       }
       public renderCell(cell : FilterItemCell, item : FilterItem) {
@@ -220,55 +199,6 @@ namespace comfortable {
     }
 
     var filterItemList = new FilterItemList();
-
-/*
-    var filterItemList = util.extend($c.c_reateList(), {
-      items : filterItems,
-      getItemAt : function(row : number) { return this.items[row]; },
-      getItemCount : function() { return this.items.length; },
-      createCell : function() {
-        var checkbox = createCheckbox();
-        var label = util.createElement('span', { style : labelStyle,
-          props : { textContent : 'M' } });
-        checkbox.$el.style.verticalAlign = 'middle';
-        var $public = {
-          index : 0 as number,
-          row : 0,
-          checkbox : checkbox,
-          setLabel : function(text : string) {
-            label.textContent = text || messages.SELECT_BLANK;
-            this.$el.setAttribute('title', label.textContent);
-          },
-          $el : util.createElement('div', {
-            attrs : { 'class' : '${prefix}-clickable-op' },
-            on : {
-              mousedown : function(event) { event.preventDefault(); },
-              click : function() {
-                dialog.trigger('filterclick', { index : $public.index });
-              }
-            }
-          }, [ checkbox.$el, label ])
-        };
-        return $public;
-      },
-      renderCell : function(cell : any, item : any) {
-        cell.index = item.index;
-        cell.setLabel(item.label);
-        cell.checkbox.setChecked(item.checked);
-        cell.checkbox.setIncomplete(item.incomplete);
-      },
-      height : 0,
-      maxHeight : 150
-    }).on('rendered', function(event : Event, detail : any) {
-      var height = Math.min(this.maxHeight,
-          this.cellHeight * this.getItemCount() );
-      if (this.height != height) {
-        this.height = height;
-        this.$el.style.height = height + 'px';
-        this.invalidate();
-      }
-    });
-*/    
     filterItemList.on('rendered', function(event : Event, detail : any) {
       var height = Math.min(this.maxHeight,
           this.cellHeight * this.getItemCount() );

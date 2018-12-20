@@ -1,5 +1,5 @@
 //
-// comfortable - event-target
+// comfortable - EventTarget
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //

@@ -1,5 +1,5 @@
 //
-// comfortable - template-support
+// comfortable - TemplateSupport
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //
@@ -641,6 +641,5 @@ namespace comfortable {
 
     return table;
   };
-
 
 }

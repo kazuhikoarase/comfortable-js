@@ -1,5 +1,5 @@
 //
-// comfortable - default-table-model
+// comfortable - DefaultTableModel
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //

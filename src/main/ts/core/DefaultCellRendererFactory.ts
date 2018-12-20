@@ -1,5 +1,5 @@
 //
-// comfortable - default-cell-renderer-factory
+// comfortable - DefaultCellRendererFactory
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //

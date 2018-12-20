@@ -1,5 +1,5 @@
 //
-// comfortable - vue-support
+// comfortable - VueSupport
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //
