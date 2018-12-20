@@ -13,7 +13,7 @@ namespace comfortable {
 
   'use strict';
 
-  export var numUtil = {
+  export var NumUtil = {
     re : /^([\+\-]?)([0-9]*)(\.[0-9]*)?$/,
     format : function(value : string,
         digits? : number, s1? : string, s2? : string) {

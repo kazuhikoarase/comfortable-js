@@ -50,8 +50,8 @@ namespace comfortable {
       },
       getValue : function() {
         if (opts.dataType == 'number') {
-          var value = numUtil.format(
-              numUtil.toNarrow(this.$el.value),
+          var value = NumUtil.format(
+              NumUtil.toNarrow(this.$el.value),
               opts.decimalDigits, '');
           return this.valueType == 'number'? +value : value;
         }
@@ -59,7 +59,7 @@ namespace comfortable {
       },
       isValid : function() {
         if (opts.dataType == 'number') {
-          return !!numUtil.toNarrow(this.getValue() ).match(numUtil.re);
+          return !!NumUtil.toNarrow(this.getValue() ).match(NumUtil.re);
         }
         return true;
       }
@@ -177,7 +177,7 @@ namespace comfortable {
         } else if (value === null || typeof value == 'undefined') {
           return '';
         } else if (this.dataType == 'number') {
-          return numUtil.format(value, this.decimalDigits);
+          return NumUtil.format(value, this.decimalDigits);
         } else if (this.dataType == 'select-one') {
           var options = getOptions(cell);
           if (typeof options.splice != 'function') {
