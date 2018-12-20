@@ -9,13 +9,14 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
-  var numUtil = {
+  export var NumUtil = {
     re : /^([\+\-]?)([0-9]*)(\.[0-9]*)?$/,
-    format : function(value, digits, s1, s2) {
+    format : function(value : string,
+        digits? : number, s1? : string, s2? : string) {
       digits = digits || 0;
       s1 = typeof s1 == 'string'? s1 : ',';
       s2 = typeof s2 == 'string'? s2 : '.';
@@ -58,7 +59,7 @@
       if (wide.length != narrow.length) {
         throw wide + ',' + narrow;
       }
-      return function(value) {
+      return function(value : string) {
         var s = '';
         for (var i = 0; i < value.length; i += 1) {
           var c = value.charAt(i);
@@ -70,6 +71,4 @@
     }()
   };
 
-  $c.numUtil = numUtil;
-
-}(window.comfortable || (window.comfortable = {}) );
+}

@@ -9,11 +9,11 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable.i18n {
 
   'use strict';
 
-  ($c.i18n = $c.i18n || {}).en = {
+  export var en : I18N = {
     messages : {
       RESET_FILTER : 'Clear Sort and Filters',
       EDIT_COLUMNS : 'Column Visibility and Order',
@@ -29,4 +29,4 @@
     }
   };
 
-}(window.comfortable || (window.comfortable = {}) );
+}

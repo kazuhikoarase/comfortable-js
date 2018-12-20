@@ -1,5 +1,5 @@
 //
-// comfortable - vue-support
+// comfortable - VueSupport
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //
@@ -9,7 +9,7 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
@@ -27,7 +27,7 @@
         this.$options.table.invalidate();
         return this;
       },
-      setItems : function(items) {
+      setItems : function(items : any[]) {
         this.$options.table.model.items = items;
         this.invalidate();
         return this;
@@ -47,7 +47,7 @@
     },
     mounted : function() {
 
-      var table = $c.fromTemplate(this.template);
+      var table = fromTemplate(this.template);
 
       // set default values.
       table.$el.style.width = '100%';
@@ -56,7 +56,7 @@
       this.$el.style.height = this.$el.style.height || '200px';
 
       // emit events.
-      var emitEventHandler = function(event, detail) {
+      var emitEventHandler = function(event : Event, detail : any) {
         this.$emit(event.type, event, detail);
       }.bind(this);
       [
@@ -70,10 +70,11 @@
       this.$options.table = table;
       this.$el.appendChild(table.$el);
 
-      this.setItems(this.items? JSON.parse(this.items) : []);
+      var items : string = this.items;
+      this.setItems(items? JSON.parse(items) : []);
 
       // observe the size of table.
-      Vue.util.extend(this.$options, {
+      util.extend(this.$options, {
         observeInterval : 20, // ms(50fps)
         alive : true, lastSize : { width : 0, height : 0 }
       });
@@ -96,11 +97,11 @@
     beforeDestroy : function() {
       // stop observing
       this.$options.alive = false;
-    },
+    }
   };
 
-  $c.vueComponents = {
+  export var vueComponents = {
     table : table
   };
 
-}(window.comfortable || (window.comfortable = {}) );
+}

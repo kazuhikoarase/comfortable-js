@@ -9,10 +9,10 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
-  $c.classNamePrefix = 'ctj';
+  export var classNamePrefix = 'ctj';
 
-}(window.comfortable || (window.comfortable = {}) );
+}

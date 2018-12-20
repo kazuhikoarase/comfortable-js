@@ -1,10 +1,10 @@
 {
   "name": "comfortable-js",
-  "version": "0.1.36",
+  "version": "0.1.37",
   "description": "Simple, Fast, Customizable Table Component in JavaScript.",
   "author": "Kazuhiko Arase",
   "main": "lib/comfortable.js",
-  "types": "src/main/ts/comfortable.d.ts",
+  "types": "lib/comfortable.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/kazuhikoarase/comfortable-js.git"
@@ -21,13 +21,15 @@
   "devDependencies": {
     "del": "^3.0.0",
     "gulp": "^4.0.0",
-    "gulp-sourcemaps": "^2.0.0",
-    "gulp-plumber": "^1.2.0",
-    "gulp-notify": "^3.2.0",
     "gulp-concat": "^2.0.0",
     "gulp-jasmine": "^2.0.0",
+    "gulp-notify": "^3.2.0",
     "gulp-order": "^1.2.0",
+    "gulp-plumber": "^1.2.0",
     "gulp-rename": "^1.0.0",
-    "gulp-uglify": "^3.0.0"
+    "gulp-sourcemaps": "^2.0.0",
+    "gulp-typescript": "^5.0.0",
+    "gulp-uglify": "^3.0.0",
+    "typescript": "^3.2.2"
   }
 }

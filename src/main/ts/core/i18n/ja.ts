@@ -9,11 +9,11 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable.i18n {
 
   'use strict';
 
-  ($c.i18n = $c.i18n || {}).ja = {
+  export var ja : I18N = {
     messages : {
       RESET_FILTER : '並び替えとフィルタをクリア',
       EDIT_COLUMNS : '列の表示と順序',
@@ -29,4 +29,4 @@
     }
   };
 
-}(window.comfortable || (window.comfortable = {}) );
+}

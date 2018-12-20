@@ -1,5 +1,5 @@
 //
-// comfortable - template-support
+// comfortable - TemplateSupport
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //
@@ -9,18 +9,16 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable {
 
   'use strict';
 
-  $c.SortOrder = { ASC : 'asc', DESC : 'desc' };
-
-  var createFilterContext = function() {
+  var createFilterContext = function() : FilterContext {
     return { sort : null, filters : {} };
   };
 
-  var createDefaultOrderedColumnIndices = function(tableModel) {
-    var orderedColumnIndices = [];
+  var createDefaultOrderedColumnIndices = function(tableModel : TableModel) {
+    var orderedColumnIndices : number[] = [];
     var columnCount = tableModel.getColumnCount();
     for (var i = 0; i < columnCount; i += 1) {
       orderedColumnIndices.push(i);
@@ -28,13 +26,21 @@
     return orderedColumnIndices;
   };
 
-  var showColumnEditDialog = function(table) {
+  var showColumnEditDialog = function(table : TemplateTable) {
 
-    var messages = $c.i18n.getMessages();
-    var tableModel = table.model;
+    var messages = i18n.getMessages();
+    var tableModel = <TemplateTableModel>table.model;
+
+    interface ColumnItem {
+      type : string;
+      label : string;
+      hidden : boolean;
+      col? : number;
+      colSpan? : number;
+    }
 
     var columns = function() {
-      var columns = [];
+      var columns : ColumnItem[] = [];
       var columnCount = tableModel.getColumnCount();
       for (var col = 0; col <= columnCount;) {
         if (col == table.lockColumn) {
@@ -56,30 +62,30 @@
     }();
 
     var columnItems = columns.map(function(column) {
-      return $c.util.createElement('div', {
+      return util.createElement('div', {
           attrs : { 'class' : '${prefix}-listitem ${prefix}-clickable' +
             (column.type == 'lockColumn'?
                 ' ${prefix}-column-edit-lock-column' : '') },
           on : { mousedown : function(event) {
             event.preventDefault();
             columnItems.forEach(function(elm) {
-              $c.util.$(elm).removeClass('${prefix}-clickable');
+              util.$(elm).removeClass('${prefix}-clickable');
             });
-            var mousemoveHandler = function(event) {
+            var mousemoveHandler = function(event : Event) {
               if (!started && Math.abs(event.pageY - dragPoint.y) > 4) {
                 started = true;
               }
               if (!started) {
                 return;
               }
-              var listitem = $c.util.closest(event.target,
+              var listitem = util.closest(event.target,
                   { className : '${prefix}-listitem', root : dialog.$el });
               if (!listitem) {
                 return;
               }
               indexTo = columnItems.indexOf(listitem);
-              var off = $c.util.offset(listitem);
-              var top = listitem.offsetTop - 2 - listitem.parentNode.scrollTop;
+              var off = util.offset(listitem);
+              var top = listitem.offsetTop - 2 - (<HTMLElement>listitem.parentNode).scrollTop;
               if (off.top + listitem.offsetHeight / 2 < event.pageY) {
                 indexTo += 1;
                 top += listitem.offsetHeight;
@@ -87,19 +93,19 @@
               bar.style.display = '';
               bar.style.top = top + 'px';
             };
-            var mouseupHandler = function(event) {
-              $c.util.$(document).off('mousemove', mousemoveHandler).
+            var mouseupHandler = function(event : Event) {
+              util.$(document).off('mousemove', mousemoveHandler).
                 off('mouseup', mouseupHandler);
               columnItems.forEach(function(elm) {
-                $c.util.$(elm).addClass('${prefix}-clickable');
+                util.$(elm).addClass('${prefix}-clickable');
               });
               lastTarget = target;
               dialog.$el.removeChild(bar);
               if (indexTo != -1 && indexFrom != indexTo) {
                 var parent = target.parentNode;
                 var ref = columnItems[indexTo];
-                columns = $c.util.moveSublist(columns, indexFrom, 1, indexTo);
-                columnItems = $c.util.moveSublist(columnItems, indexFrom, 1, indexTo);
+                columns = util.moveSublist(columns, indexFrom, 1, indexTo);
+                columnItems = util.moveSublist(columnItems, indexFrom, 1, indexTo);
                 parent.removeChild(target);
                 if (ref) {
                   parent.insertBefore(target, ref);
@@ -108,10 +114,10 @@
                 }
               }
             };
-            $c.util.$(document).on('mousemove', mousemoveHandler).
+            util.$(document).on('mousemove', mousemoveHandler).
               on('mouseup', mouseupHandler);
             var target = event.currentTarget;
-            var bar = $c.util.createElement('div', {
+            var bar = util.createElement('div', {
               attrs : { 'class' : '${prefix}-column-edit-bar' },
               style : { position : 'absolute', left : '0px',
                 display : 'none', width : target.offsetWidth + 'px' }
@@ -122,36 +128,36 @@
             var dragPoint = { x : event.pageX, y : event.pageY };
             dialog.$el.appendChild(bar);
             if (lastTarget != null) {
-              $c.util.$(lastTarget).removeClass('${prefix}-selected');
+              util.$(lastTarget).removeClass('${prefix}-selected');
             }
-            $c.util.$(target).addClass('${prefix}-selected');
+            util.$(target).addClass('${prefix}-selected');
           }}
         },[
-        $c.util.createElement('input', {
+        util.createElement('input', {
           attrs : { type : 'checkbox' },
           props : { checked : !column.hidden },
           style : { verticalAlign : 'middle' },
           on:{ click : function(event) {
             var target = event.currentTarget;
-            var index = $c.util.indexOf(target.parentNode);
+            var index = util.indexOf(target.parentNode);
             columns[index].hidden = !target.checked;
           }}
         }),
-        $c.util.createElement('span', {
+        util.createElement('span', {
           style : { verticalAlign : 'middle' },
           props : { textContent : column.label }
         }) ]);
     });
 
-    var lastTarget = null;
+    var lastTarget : HTMLElement = null;
 
-    var dialog =  $c.util.extend($c.ui.createDialog([
+    var dialog =  util.extend(ui.createDialog([
       // columns
-      $c.util.createElement('div',
+      util.createElement('div',
         { style : { overflow : 'auto',  height : '200px' } }, columnItems),
       // buttons
-      $c.util.createElement('div', { style : { float : 'right'} }, [
-        $c.ui.createButton(messages.RESET, function() {
+      util.createElement('div', { style : { float : 'right'} }, [
+        ui.createButton(messages.RESET, function() {
           dialog.dispose();
           tableModel.orderedColumnIndices = null;
           tableModel.hiddenColumns = {};
@@ -160,10 +166,10 @@
           table.enableLockColumn = true;
           table.invalidate();
         }),
-        $c.ui.createButton(messages.APPLY, function() {
+        ui.createButton(messages.APPLY, function() {
           dialog.dispose();
-          var orderedColumnIndices = [];
-          var hiddenColumns = {};
+          var orderedColumnIndices : number[] = [];
+          var hiddenColumns : { [ orderedCol : number ] : boolean } = {};
           var lockColumn = 0;
           var enableLockColumn = true;
           columns.forEach(function(column, col) {
@@ -186,7 +192,7 @@
           table.enableLockColumn = enableLockColumn;
           table.invalidate();
         }),
-        $c.ui.createButton(messages.CANCEL, function() {
+        ui.createButton(messages.CANCEL, function() {
           dialog.dispose();
         })
       ])
@@ -201,17 +207,17 @@
     dialog.show();
   };
 
-  var enableHover = function(table) {
-
-    var setHoverRowImpl = function(row, hover) {
+  var enableHover = function(table : Table) {
+    var tableModel = <TemplateTableModel>table.model;
+    var setHoverRowImpl = function(row : number, hover : boolean) {
       table.forEachCells(function(td) {
-        var itemIndex = table.model.getItemIndexAt(td.row, td.col);
+        var itemIndex = tableModel.getItemIndexAt(td.row, td.col);
         if (itemIndex.row != row) {
           // skip
           return;
         }
-        $c.util.$(td.$el).addClass('${prefix}-item-hover', !hover);
-        var cs = null;
+        util.$(td.$el).addClass('${prefix}-item-hover', !hover);
+        //var cs = null;
         for (var i = 0; i < td.$el.childNodes.length; i += 1) {
           var child = td.$el.childNodes[i];
           /*
@@ -226,14 +232,14 @@
       });
     };
 
-    var setHoverRow = function(hoverRow) {
-      if (table.model.hoverRow != hoverRow) {
-        if (table.model.hoverRow != -1) {
-          setHoverRowImpl(table.model.hoverRow, false);
+    var setHoverRow = function(hoverRow : number) {
+      if (tableModel.hoverRow != hoverRow) {
+        if (tableModel.hoverRow != -1) {
+          setHoverRowImpl(tableModel.hoverRow, false);
         }
-        table.model.hoverRow = hoverRow;
-        if (table.model.hoverRow != -1) {
-          setHoverRowImpl(table.model.hoverRow, true);
+        tableModel.hoverRow = hoverRow;
+        if (tableModel.hoverRow != -1) {
+          setHoverRowImpl(tableModel.hoverRow, true);
         }
       }
     };
@@ -246,10 +252,10 @@
       });
   };
 
-  var enableRowSelect = function(table) {
+  var enableRowSelect = function(table : Table) {
     return table.on('click', function(event, detail) {
       if (detail.itemIndex.row != -1) {
-        var lastSelectedRows = {};
+        var lastSelectedRows : { [row : string] : boolean } = {};
         for (var k in this.model.selectedRows) {
           lastSelectedRows[k] = true;
         }
@@ -289,12 +295,12 @@
     });
   };
 
-  var fromTemplate = function(template) {
+  export var fromTemplate = function(template : TableTemplate) {
 
     if (template.thead && !template.tbody) {
       // set default tbody if not exists.
-      var cloneIfExists = function(src, props) {
-        var dst = {};
+      var cloneIfExists = function(src : any, props : string[]) {
+        var dst : any = {};
         props.forEach(function(prop) {
           !src[prop] || (dst[prop] = src[prop]);
         });
@@ -314,44 +320,44 @@
     template.thead.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
-          cell.factory = $c.createDefaultHeaderCellRendererFactory(cell);
+          cell.factory = createDefaultHeaderCellRendererFactory(cell);
         }
       });
     });
     template.tbody.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
-          cell.factory = $c.createDefaultCellRendererFactory(cell);
+          cell.factory = createDefaultCellRendererFactory(cell);
         }
       });
     });
 
     var columnCount = 0;
-    var cellWidth = {};
-    var cellHeight = {};
-    var columnDraggable = {};
-    var columnResizable = {};
+    var cellWidth : { [k : number] : number } = {};
+    var cellHeight : { [k : number] : number } = {};
+    var columnDraggable : { [k : number] : boolean } = {};
+    var columnResizable : { [k : number] : boolean } = {};
     var styles = function() {
-      var spaned = {};
-      var setSpaned = function(row, col, cell) {
+      var spaned : { [ id : string ] : boolean } = {};
+      var setSpaned = function(row : number, col : number, cell : TableCell) {
         for (var r = 0; r < cell.rowSpan; r += 1) {
           for (var c = 0; c < cell.colSpan; c += 1) {
-            spaned[$c.util.getCellId(row + r, col + c)] = true;
+            spaned[util.getCellId(row + r, col + c)] = true;
           }
         }
       };
       return template.thead.concat(template.tbody).map(function(tr, row) {
-        var style = {};
+        var style : { [ col : number ] : TableTemplateHeaderCellStyle } = {};
         var col = 0;
         var c = 0;
         while (c < tr.length) {
-          var id = $c.util.getCellId(row, col);
+          var id = util.getCellId(row, col);
           if (spaned[id]) {
             col += 1;
             continue;
           }
           var td = tr[c];
-          var cell = $c.util.extend({ rowSpan : 1, colSpan : 1 }, td);
+          var cell = util.extend({ rowSpan : 1, colSpan : 1 }, td);
           setSpaned(row, col, cell);
           if (typeof cell.width == 'number') {
             cellWidth[col] = cell.width;
@@ -374,7 +380,7 @@
       });
     }();
 
-    var getCellStyleAt = function(row, col) {
+    var getCellStyleAt = function(row : number, col : number) {
       if (row < headLength) {
         return styles[row][col] || {};
       } else {
@@ -385,35 +391,45 @@
     var headLength = template.thead.length;
     var bodyLength = template.tbody.length;
 
-    var table = $c.util.extend($c.createTable(), {
+    var table : TemplateTable = util.extend(createTable(), {
       lockRow : headLength,
       lockColumn : template.lockColumn || 0,
       enableLockColumn : true,
       defaultLockColumn : 0,
+      resetFilter : function() {
+        var tableModel = this.model as TemplateTableModel;
+        tableModel.filterContext = createFilterContext();
+        tableModel.filteredItems = null;
+        this.invalidate();
+      },
       getLockColumn : function() {
         return !this.enableLockColumn? 0 : this.lockColumn;
       },
       getContextMenuItems : function() {
-        var messages = $c.i18n.getMessages();
-        var tableModel = table.model;
+        var messages = i18n.getMessages();
+        var tableModel = table.model as TemplateTableModel;
         return [
-          { label : messages.RESET_FILTER, action : function() {
-              tableModel.filterContext = createFilterContext();
-              tableModel.filteredItems = null;
-              table.invalidate();
-          }},
-          { label : messages.EDIT_COLUMNS, action : function() {
+          {
+            label : messages.RESET_FILTER,
+            action : () => {
+              this.resetFilter();
+            }
+          },
+          {
+            label : messages.EDIT_COLUMNS,
+            action : function() {
               showColumnEditDialog(table);
-          }}
+            }
+          }
         ];
       },
-    }).on('mousedown', function(event, detail) {
+    }).on('mousedown', function(event : Event, detail : any) {
       if (detail.row < this.getLockRow() ) {
         // on header.
         this.editor.endEdit();
         this.invalidate();
       }
-    }).on('contextmenu', function(event, detail) {
+    }).on('contextmenu', function(event : Event, detail : any) {
 
       if (!(detail.row < table.getLockRow() ) ) {
         return;
@@ -425,8 +441,8 @@
       }
 
       detail.originalEvent.preventDefault();
-      $c.util.callLater(function() {
-        $c.ui.showMenu(
+      util.callLater(function() {
+        ui.showMenu(
             detail.originalEvent.pageX,
             detail.originalEvent.pageY,
             menuItems);
@@ -436,9 +452,9 @@
     // keep default value for restore.
     table.defaultLockColumn = table.lockColumn;
 
-    table.model = $c.util.extend(table.model, {
+    table.model = util.extend(table.model, {
       // user defines
-      defaultHeaderCellRendererFactory : $c.createDefaultHeaderCellRendererFactory(),
+      defaultHeaderCellRendererFactory : createDefaultHeaderCellRendererFactory(),
       cellWidth : cellWidth,
       cellHeight : cellHeight,
       columnDraggable : columnDraggable,
@@ -451,15 +467,19 @@
       hoverRow : -1,
       multipleRowsSelectable : false,
       selectedRows : {},
-      getItemCount : function() { return (this.filteredItems || this.items).length; },
-      getItemAt : function(row) { return (this.filteredItems || this.items)[row]; },
-      getOrderedColumnIndexAt : function(col) {
+      getItemCount : function() {
+        return (this.filteredItems || this.items).length;
+      },
+      getItemAt : function(row : number) {
+        return (this.filteredItems || this.items)[row];
+      },
+      getOrderedColumnIndexAt : function(col : number) {
         if (this.orderedColumnIndices == null) {
           this.orderedColumnIndices = createDefaultOrderedColumnIndices(this);
         }
         return this.orderedColumnIndices[col];
       },
-      getItemIndexAt : function(row, col) {
+      getItemIndexAt : function(row : number, col : number) {
         if (row < headLength) {
           return { row : -1, col : -1 };
         } else {
@@ -473,7 +493,7 @@
           };
         }
       },
-      setValueAt : function(row, col, value) {
+      setValueAt : function(row : number, col : number, value : any) {
         if (row < headLength) {
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
@@ -487,11 +507,11 @@
       getRowCount : function() { return headLength +
         bodyLength * this.getItemCount(); },
       getColumnCount : function() { return columnCount; },
-      getLineRowCountAt : function(row) {
+      getLineRowCountAt : function(row : number) {
         return row < headLength? headLength : bodyLength; },
-      getLineRowAt : function(row) {
+      getLineRowAt : function(row : number) {
         return row < headLength? row : (row - headLength) % bodyLength; },
-      getCellWidthAt : function(col) {
+      getCellWidthAt : function(col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (this.hiddenColumns[orderedCol]) {
           return 0;
@@ -499,29 +519,29 @@
         var v = this.cellWidth[orderedCol];
         return typeof v == 'number'? v : this.defaultCellWidth;
       },
-      getCellHeightAt : function(row) {
+      getCellHeightAt : function(row : number) {
         var v = this.cellHeight[row];
         return typeof v == 'number'? v : this.defaultCellHeight;
       },
-      isColumnDraggableAt : function(col) {
+      isColumnDraggableAt : function(col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         var v = this.columnDraggable[orderedCol];
         return typeof v == 'boolean'? v : true;
       },
-      isColumnResizableAt : function(col) {
+      isColumnResizableAt : function(col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         var v = this.columnResizable[orderedCol];
         return typeof v == 'boolean'? v : true;
       },
-      getCellRendererFactoryAt : function(row, col) {
+      getCellRendererFactoryAt : function(row : number, col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         return getCellStyleAt(row, orderedCol).factory || (row < headLength?
             this.defaultHeaderCellRendererFactory :
             this.defaultCellRendererFactory);
       },
-      getCellStyleAt : function(row, col) {
+      getCellStyleAt : function(row : number, col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
-        var style = $c.util.extend({}, getCellStyleAt(row, orderedCol) );
+        var style = util.extend({}, getCellStyleAt(row, orderedCol) );
         style.className = style.className || '';
         if (row < headLength) {
           style.className += ' ${prefix}-header';
@@ -540,7 +560,7 @@
         }
         return style;
       },
-      getValueAt : function(row, col) {
+      getValueAt : function(row : number, col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (row < headLength) {
           return getCellStyleAt(row, orderedCol).label || '';
@@ -550,15 +570,15 @@
           return typeof value != 'undefined'? value : '';
         }
       }
-    }).on('valuechange', function(event, detail) {
+    }).on('valuechange', function(event : Event, detail : any) {
       this.setValueAt(detail.row, detail.col, detail.newValue);
-    }).on('cellsizechange', function(event, detail) {
+    }).on('cellsizechange', function(event : Event, detail : any) {
       if (typeof detail.col == 'number') {
         var orderedCol = this.getOrderedColumnIndexAt(detail.col);
         this.cellWidth[orderedCol] = detail.cellWidth;
       }
-    }).on('columndragged', function(event, detail) {
-      this.orderedColumnIndices = $c.util.moveSublist(
+    }).on('columndragged', function(event : Event, detail : any) {
+      this.orderedColumnIndices = util.moveSublist(
           this.orderedColumnIndices, detail.colFrom, detail.colSpan, detail.colTo);
       if (detail.colFrom < table.lockColumn && table.lockColumn <= detail.colTo) {
         table.lockColumn -= detail.colSpan;
@@ -570,7 +590,7 @@
       // apply filter
 
       var filters = this.filterContext.filters;
-      var filteredItems = this.items.filter(function(item) {
+      var filteredItems : any[] = this.items.filter(function(item : any) {
         var filtered = false;
         for (var dataField in filters) {
           if (filters[dataField][item[dataField]]) {
@@ -583,7 +603,7 @@
 
       var sort = this.filterContext.sort;
       if (sort) {
-        var order = sort.sortOrder == $c.SortOrder.ASC? 1 : -1;
+        var order = sort.sortOrder == SortOrder.ASC? 1 : -1;
         var dataField = sort.dataField;
         var indexField = '.index';
         var sortKeyField = '.sortKey';
@@ -623,12 +643,12 @@
     // append itemIndex to events.
     [ 'valuechange' ].
     forEach(function(type) {
-      table.model.on(type, function(event, detail) {
+      table.model.on(type, function(event : Event, detail : any) {
         detail.itemIndex = this.getItemIndexAt(detail.row, detail.col);
       });
     });
-    $c.tableEventTypes.forEach(function(type) {
-      table.on(type, function(event, detail) {
+    tableEventTypes.forEach(function(type) {
+      table.on(type, function(event : Event, detail : any) {
         detail.itemIndex = this.model.getItemIndexAt(detail.row, detail.col);
       });
     });
@@ -639,6 +659,4 @@
     return table;
   };
 
-  $c.fromTemplate = fromTemplate;
-
-}(window.comfortable || (window.comfortable = {}) );
+}

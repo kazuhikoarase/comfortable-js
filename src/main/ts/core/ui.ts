@@ -9,43 +9,44 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-!function($c) {
+namespace comfortable.ui {
 
   'use strict';
 
-  var createButton = function(label, action) {
-    return $c.util.createElement('button',{
+  export var createButton = function(
+      label : string, action : (event : Event) => void) {
+    return util.createElement('button',{
       props : { textContent : label },
       attrs : { 'class' : '${prefix}-button' },
-      on : { mousedown : function(event) {
+      on : { mousedown : function(event : Event) {
         event.preventDefault();
-      }, click : function(event) { action(event); } } });
+      }, click : function(event : Event) { action(event); } } });
   };
 
-  var createDialog = function(children) {
-    var dialog = $c.util.extend($c.createEventTarget(), {
-      $el : $c.util.createElement('div', {
+  export var createDialog = function(children : HTMLElement[]) {
+    var dialog = util.extend(new EventTargetImpl(), {
+      $el : util.createElement('div', {
           attrs : { 'class' : '${prefix}-dialog' },
           style : { position : 'absolute' }
       }, children),
       show : function() {
         document.body.appendChild(this.$el);
         this.trigger('beforeshow');
-        $c.util.callLater(function() {
-          $c.util.$(document).on('mousedown', mousedownHandler);
+        util.callLater(function() {
+          util.$(document).on('mousedown', mousedownHandler);
         });
       },
       dispose : function() {
         if (this.$el) {
-          $c.util.$(document).off('mousedown', mousedownHandler);
+          util.$(document).off('mousedown', mousedownHandler);
           document.body.removeChild(this.$el);
           this.$el = null;
           this.trigger('dispose');
         }
       }
     } );
-    var mousedownHandler = function(event) {
-      if (!$c.util.closest(event.target,
+    var mousedownHandler = function(event : Event) {
+      if (!util.closest(event.target,
           { $el : dialog.$el, root : document.body }) ) {
         dialog.dispose();
       }
@@ -53,18 +54,28 @@
     return dialog;
   };
 
-  var showMenu = function(left, top, menuItems) {
-    var subMenu = null;
-    var menu = $c.util.createElement('div', {
+  export interface Menu {
+    dispose : () => void;
+  }
+
+  export interface MenuItem {
+    label : string;
+    action? : (event? : Event) => void;
+    children? : () => MenuItem[];
+  }
+
+  export var showMenu = function(left : number, top : number, menuItems : MenuItem[]) : Menu {
+    var subMenu : Menu = null;
+    var menu = util.createElement('div', {
       attrs : { 'class' : '${prefix}-contextmenu' },
       style : { position : 'absolute', left : left + 'px', top : top + 'px' } },
-      menuItems.map(function(menuItem) {
-        return $c.util.createElement('div', {
+      <HTMLElement[]>menuItems.map(function(menuItem) {
+        return util.createElement('div', {
             attrs : { 'class' : '${prefix}-menuitem ${prefix}-clickable' },
             props : { textContent : menuItem.label },
             style : { position : 'relative', whiteSpace : 'nowrap' },
             on : {
-              mouseover : function(event) {
+              mouseover : function(event : Event) {
                 if (subMenu != null) {
                   subMenu.dispose();
                   subMenu = null;
@@ -76,7 +87,7 @@
                       menuItem.children() );
                 }
               },
-              mousedown : function(event) {
+              mousedown : function(event : Event) {
                 if (menuItem.action) {
                   menuItem.action(event);
                 }
@@ -90,19 +101,13 @@
         menu = null;
       }
     };
-    var mousedownHandler = function(event) {
-      $c.util.$(document).off('mousedown', mousedownHandler);
+    var mousedownHandler = function(event : Event) {
+      util.$(document).off('mousedown', mousedownHandler);
       dispose();
     };
-    $c.util.$(document).on('mousedown', mousedownHandler);
+    util.$(document).on('mousedown', mousedownHandler);
     document.body.appendChild(menu);
     return { dispose : dispose };
   };
 
-  $c.ui = {
-    createButton : createButton,
-    createDialog : createDialog,
-    showMenu : showMenu
-  };
-
-}(window.comfortable || (window.comfortable = {}) );
+}
