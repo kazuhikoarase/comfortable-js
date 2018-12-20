@@ -8,7 +8,7 @@ namespace comfortable {
   }
 
   export interface Table extends UIEventTarget {
-    $el : Element;
+    $el : HTMLElement;
     lockRow : number;
     lockColumn : number;
     getLockRow : () => number;

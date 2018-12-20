@@ -391,7 +391,7 @@ namespace comfortable {
     var headLength = template.thead.length;
     var bodyLength = template.tbody.length;
 
-    var table = util.extend(createTable(), {
+    var table : TemplateTable = util.extend(createTable(), {
       lockRow : headLength,
       lockColumn : template.lockColumn || 0,
       enableLockColumn : true,
@@ -401,7 +401,7 @@ namespace comfortable {
       },
       getContextMenuItems : function() {
         var messages = i18n.getMessages();
-        var tableModel = table.model;
+        var tableModel = table.model as TemplateTableModel;
         return [
           { label : messages.RESET_FILTER, action : function() {
               tableModel.filterContext = createFilterContext();

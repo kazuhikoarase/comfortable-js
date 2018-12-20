@@ -58,7 +58,7 @@ namespace comfortable {
     left? : number;
   }
 
-  interface InternalEditor extends Editor {
+  export interface InternalEditor extends Editor {
     cell? : { row : number, col : number };
     beginEdit : (row : number, col : number, makeVisible? : boolean) => void;
     endEdit : () => void;
@@ -69,10 +69,15 @@ namespace comfortable {
     'click', 'dblclick', 'contextmenu' ];
 
   export var createTable = function() : Table {
-    return new TableImpl();
+    return new TableImpl(new DefaultTableModel() );
   }
 
-  class TableImpl extends UIEventTargetImpl implements Table {
+  export class TableImpl extends UIEventTargetImpl implements Table {
+
+    constructor(model : TableModel) {
+      super();
+      this.model = model;
+    }
 
     private tables = ( () => {
       var tables : InternalTable[] = [];
@@ -263,7 +268,6 @@ namespace comfortable {
 
     private lockLines : HTMLElement[] = [];
     private colResizeHandles : ColResizeHandle[] = [];
-
 
     private getCellRect(row : number, col : number) {
       var tableModel = this.tables[3].model;
@@ -728,7 +732,6 @@ namespace comfortable {
         }
       };
     }
-    public editor = this.createInternalEditor();
 
     public $el = this.frame;
     public lockRow = 0;
@@ -744,12 +747,7 @@ namespace comfortable {
         });
       });
     }
-//    public editor : editor,
-    public model = new DefaultTableModel();
-    /*
-    public render(visibleCell? : TableCell) {
-      $private.render(visibleCell);
-    }
-    */
+    public editor = this.createInternalEditor();
+    public model : TableModel = null;
   }
 }

@@ -58,6 +58,7 @@ namespace comfortable {
     filterContext : FilterContext;
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
     items : any[];
+    filteredItems : any[];
     getItemAt : (row : number) => any;
     getItemCount : () => number;
     getItemIndexAt : (row : number, col : number) => ItemIndex;
