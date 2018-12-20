@@ -9,7 +9,7 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
-/// <reference path="event-target.ts" />
+/// <reference path="UIEventTarget.ts" />
 
 namespace comfortable {
 

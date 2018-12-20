@@ -32,11 +32,6 @@ namespace comfortable {
     off : (type : string, listener : EventListener) => EventTarget;
   }
 
-  export interface UIEventTarget extends EventTarget {
-    invalidate : () => void;
-    render : () => void;
-  }
-
   export class EventTargetImpl implements EventTarget {
     private map : { [ type : string ] : EventListener[] } = {};
     private listeners(type : string) : EventListener[] {
@@ -58,21 +53,6 @@ namespace comfortable {
         return listener != l;
       });
       return this;
-    }
-  }
-
-  export class UIEventTargetImpl extends EventTargetImpl implements UIEventTarget{
-    public valid = true;
-    public invalidate() {
-      this.valid = false;
-      util.callLater(function() {
-        if (!this.valid) {
-          this.valid = true;
-          this.render();
-        }
-      }.bind(this) );
-    }
-    public render() {
     }
   }
 }
