@@ -1,0 +1,125 @@
+/*
+ * comfortable - template-support
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+
+.ctj-header {
+  font-weight : bold;
+}
+
+.ctj-even {
+  background-color : rgba(0,0,0,0.05);
+}
+
+.ctj-odd {
+}
+
+.ctj-readonly {
+}
+
+.ctj-item-hover {
+  background-color : rgba(255,255,0,0.1);
+}
+
+.ctj-item-selected {
+  background-color : rgba(255,127,0,0.1);
+}
+
+.ctj-clickable:hover {
+  background-color : rgba(0,0,0,0.1);
+}
+
+.ctj-clickable:active {
+  background-color : rgba(0,0,0,0.2);
+}
+
+.ctj-clickable-op:hover {
+  opacity : 0.6;
+}
+
+.ctj-selected,
+.ctj-selected:hover {
+  background-color : rgba(0,0,0,0.2);
+}
+
+.ctj-dialog {
+  font-family : 'ms pgothic', sans-serif;
+  font-size : 14px;
+  background-color : #ffffff;
+  cursor : default;
+  -webkit-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+          box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+  padding : 4px;
+}
+
+.ctj-contextmenu {
+  font-family : 'ms pgothic', sans-serif;
+  font-size : 14px;
+  background-color : #ffffff;
+  cursor : default;
+  -webkit-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+          box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+.ctj-menuitem {
+  padding : 4px 12px;
+}
+
+.ctj-button {
+  margin-top : 4px;
+  margin-left : 4px;
+}
+
+.ctj-listitem {
+  padding : 4px;
+}
+
+.ctj-column-edit-bar {
+  border-top : 3px solid rgba(0,0,0,0.8);
+}
+
+.ctj-column-edit-lock-column {
+  color : #0000ff;
+}
+
+.ctj-selector-body,
+.ctj-checkbox-body {
+  border : 1px solid rgba(0,0,0,0.8);
+}
+
+.ctj-checkbox-check {
+	stroke-width : 2;
+	fill : none;
+  stroke : rgba(0,0,0,0.8);
+}
+
+.ctj-checkbox-incomplete-check {
+  stroke : rgba(0,0,0,0.3);
+}
+
+.ctj-filter-button {
+  right : 4px;
+}
+
+.ctj-filter-body {
+  stroke : none;
+  fill : rgba(0,0,0,0.1);
+}
+
+.ctj-filter-fill {
+  stroke : none;
+  fill : rgba(0,0,0,0.8);
+}
+
+.ctj-filter-stroke {
+  stroke : rgba(0,0,0,0.8);
+	fill : none;
+}

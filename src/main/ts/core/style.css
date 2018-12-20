@@ -1,0 +1,55 @@
+/*
+ * comfortable - style
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+
+.ctj-v-resize-line {
+  border-left-style : dashed;
+  border-left-color : rgba(0,0,0,0.8);
+}
+
+.ctj-h-lock-line {
+  border-top : 1px solid rgba(0,0,0,0.5);
+}
+
+.ctj-v-lock-line {
+  border-left : 1px solid rgba(0,0,0,0.5);
+}
+
+.ctj-column-drag-proxy {
+  background-color : rgba(0,0,0,0.1);
+}
+
+.ctj-column-drag-marker {
+  background-color : rgba(0,0,0,0.5);
+}
+
+INPUT[type="text"].ctj-editor {
+  width : 100%;
+  height : 100%;
+  padding : 0px;
+  margin : 0px;
+  border : none;
+  background-color : transparent;
+}
+
+INPUT[type="checkbox"].ctj-editor {
+  padding : 0px;
+  margin : 0px;
+  border : none;
+}
+
+SELECT.ctj-editor {
+  width : 100%;
+  height : 100%;
+  padding : 0px;
+  margin : 0px;
+  border : none;
+  background-color : transparent;
+}
