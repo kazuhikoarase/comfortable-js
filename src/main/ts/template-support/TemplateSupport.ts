@@ -396,12 +396,6 @@ namespace comfortable {
       lockColumn : template.lockColumn || 0,
       enableLockColumn : true,
       defaultLockColumn : 0,
-      resetFilter : function() {
-        var tableModel = this.model as TemplateTableModel;
-        tableModel.filterContext = createFilterContext();
-        tableModel.filteredItems = null;
-        this.invalidate();
-      },
       getLockColumn : function() {
         return !this.enableLockColumn? 0 : this.lockColumn;
       },
@@ -411,8 +405,8 @@ namespace comfortable {
         return [
           {
             label : messages.RESET_FILTER,
-            action : () => {
-              this.resetFilter();
+            action : function() {
+              tableModel.resetFilter();
             }
           },
           {
@@ -467,6 +461,11 @@ namespace comfortable {
       hoverRow : -1,
       multipleRowsSelectable : false,
       selectedRows : {},
+      resetFilter : function() {
+        this.filterContext = createFilterContext();
+        this.filteredItems = null;
+        table.invalidate();
+      },
       getItemCount : function() {
         return (this.filteredItems || this.items).length;
       },

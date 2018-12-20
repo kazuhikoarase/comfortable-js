@@ -57,6 +57,7 @@ namespace comfortable {
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
     items : any[];
     filteredItems : any[];
+    resetFilter : () => void;
     getItemAt : (row : number) => any;
     getItemCount : () => number;
     getItemIndexAt : (row : number, col : number) => ItemIndex;
@@ -81,7 +82,6 @@ namespace comfortable {
   export interface TemplateTable extends Table {
     enableLockColumn : boolean;
     defaultLockColumn : number;
-    resetFilter : () => void;
   }
 
 }
