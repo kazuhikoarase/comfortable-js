@@ -13,8 +13,6 @@ namespace comfortable {
 
   'use strict';
 
-  var $c = comfortable;
-
   var table = {
     template: '<div class="comfortable"></div>',
     props : {
@@ -49,7 +47,7 @@ namespace comfortable {
     },
     mounted : function() {
 
-      var table = $c.fromTemplate(this.template);
+      var table = fromTemplate(this.template);
 
       // set default values.
       table.$el.style.width = '100%';
@@ -76,7 +74,7 @@ namespace comfortable {
       this.setItems(items? JSON.parse(items) : []);
 
       // observe the size of table.
-      $c.util.extend(this.$options, {
+      util.extend(this.$options, {
         observeInterval : 20, // ms(50fps)
         alive : true, lastSize : { width : 0, height : 0 }
       });

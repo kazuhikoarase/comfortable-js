@@ -9,11 +9,11 @@
 //  http://www.opensource.org/licenses/mit-license.php
 //
 
+/// <reference path="event-target.ts" />
+
 namespace comfortable {
 
   'use strict';
-
-  var $c = comfortable;
 
   export interface List<T,C extends ListCell> extends UIEventTarget {
     $el : Element;
@@ -72,7 +72,7 @@ namespace comfortable {
     public getItemAt(index : number) : T { return <any>'item' + index; }
     public getItemCount() { return 100000; }
     public createCell() : C {
-      return <any>{ $el : $c.util.createElement('div', {
+      return <any>{ $el : util.createElement('div', {
         props : { textContent : 'M' },
         style : { borderBottom : '1px solid silver' }
       }), row : -1 };

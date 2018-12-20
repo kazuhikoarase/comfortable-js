@@ -13,8 +13,6 @@ namespace comfortable.i18n {
 
   'use strict';
 
-  var $c = comfortable;
-
   export interface I18N {
     messages : Messages
   }
@@ -35,13 +33,13 @@ namespace comfortable.i18n {
 
   export var getInstance = function(lang : string) {
     lang = lang || navigator.language || navigator.userLanguage;
-    var i18n : any = $c.i18n;
-    return <I18N>($c.util.extend({}, i18n.en, i18n[lang] ||
-        i18n[lang.replace(/\-\w+$/, '')] || {}) );
+    var _i18n : any = i18n;
+    return <I18N>(util.extend({}, _i18n.en, _i18n[lang] ||
+        _i18n[lang.replace(/\-\w+$/, '')] || {}) );
   };
 
   export var getMessages = function() : Messages {
-    return $c.util.extend(
+    return util.extend(
         this.getInstance('en').messages,
         this.getInstance().messages);
   };

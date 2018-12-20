@@ -13,8 +13,6 @@ namespace comfortable {
 
   'use strict';
 
-  var $c = comfortable;
-
   interface Selector {
     $el : HTMLElement,
     selected : boolean,
@@ -56,7 +54,7 @@ namespace comfortable {
 
   // selector of sort order
   var createSelector = function() : Selector {
-    var rect = $c.util.createElement('span', {
+    var rect = util.createElement('span', {
       attrs : { 'class' : '${prefix}-selector-body' }, 
       style : { display:'inline-block', width:'12px', height : '12px' }
     });
@@ -65,7 +63,7 @@ namespace comfortable {
       selected : false,
       setSelected : function(selected) {
         this.selected = selected;
-        $c.util.$(rect).addClass('${prefix}-selected', !selected);
+        util.$(rect).addClass('${prefix}-selected', !selected);
       },
       isSelected : function() {
         return this.selected;
@@ -82,24 +80,24 @@ namespace comfortable {
         boxSizing : 'content-box',
         lineHeight : '1' };
 
-    var path = $c.util.createSVGElement('path', { attrs : {
+    var path = util.createSVGElement('path', { attrs : {
         'class' : '${prefix}-checkbox-check',
         d : 'M 2 5 L 5 9 L 10 3'
       },
       style : antiBsGlobals });
     return {
-      $el : $c.util.createElement('span', {
+      $el : util.createElement('span', {
         attrs : { 'class' : '${prefix}-checkbox-body' }, 
-        style : $c.util.extend(antiBsGlobals, { display : 'inline-block',
+        style : util.extend(antiBsGlobals, { display : 'inline-block',
           width : '12px', height : '12px' }
         )}, [
-          $c.util.createSVGElement('svg', {
+          util.createSVGElement('svg', {
             attrs : { width : '12', height : '12' },
             style : antiBsGlobals }, [ path ])
         ] ),
       checked : true,
       setIncomplete : function(incomplete) {
-        $c.util.$(path).addClass(
+        util.$(path).addClass(
             '${prefix}-checkbox-incomplete-check', !incomplete);
       },
       setChecked : function(checked) {
@@ -114,8 +112,7 @@ namespace comfortable {
 
   var createFilterDialog = function(opts : FilterDialogOptions, cell : TemplateTableCell) {
 
-    var messages = $c.i18n.getMessages();
-    var SortOrder = $c.SortOrder;
+    var messages = i18n.getMessages();
     var labelStyle : { [ k : string ] : string } =
       { marginLeft : '4px', verticalAlign : 'middle' };
 
@@ -124,9 +121,9 @@ namespace comfortable {
       selector.$el.style.verticalAlign = 'middle';
       return {
         selector : selector,
-        $el : $c.util.createElement('div', [
+        $el : util.createElement('div', [
           selector.$el,
-          $c.util.createElement('span', {
+          util.createElement('span', {
             style : labelStyle, props : { textContent : label } })
         ], { attrs : { 'class' : '${prefix}-clickable-op' }, on : {
           mousedown : function(event) { event.preventDefault(); },
@@ -165,7 +162,7 @@ namespace comfortable {
         checkbox.$el.style.verticalAlign = 'middle';
         return checkbox;
       })();
-      private label = $c.util.createElement('span', { style : labelStyle,
+      private label = util.createElement('span', { style : labelStyle,
         props : { textContent : 'M' } });
       public index = 0;
       public row = 0;
@@ -173,7 +170,7 @@ namespace comfortable {
         this.label.textContent = text || messages.SELECT_BLANK;
         this.$el.setAttribute('title', this.label.textContent);
       }
-      public $el = $c.util.createElement('div', {
+      public $el = util.createElement('div', {
           attrs : { 'class' : '${prefix}-clickable-op' },
           on : {
             mousedown : (event) => { event.preventDefault(); },
@@ -198,7 +195,7 @@ namespace comfortable {
             label.textContent = text || messages.SELECT_BLANK;
             this.$el.setAttribute('title', label.textContent);
           },
-          $el : $c.util.createElement('div', {
+          $el : util.createElement('div', {
             attrs : { 'class' : '${prefix}-clickable-op' },
             on : {
               mousedown : function(event) { event.preventDefault(); },
@@ -225,13 +222,13 @@ namespace comfortable {
     var filterItemList = new FilterItemList();
 
 /*
-    var filterItemList = $c.util.extend($c.c_reateList(), {
+    var filterItemList = util.extend($c.c_reateList(), {
       items : filterItems,
       getItemAt : function(row : number) { return this.items[row]; },
       getItemCount : function() { return this.items.length; },
       createCell : function() {
         var checkbox = createCheckbox();
-        var label = $c.util.createElement('span', { style : labelStyle,
+        var label = util.createElement('span', { style : labelStyle,
           props : { textContent : 'M' } });
         checkbox.$el.style.verticalAlign = 'middle';
         var $public = {
@@ -242,7 +239,7 @@ namespace comfortable {
             label.textContent = text || messages.SELECT_BLANK;
             this.$el.setAttribute('title', label.textContent);
           },
-          $el : $c.util.createElement('div', {
+          $el : util.createElement('div', {
             attrs : { 'class' : '${prefix}-clickable-op' },
             on : {
               mousedown : function(event) { event.preventDefault(); },
@@ -285,12 +282,12 @@ namespace comfortable {
     filterItemList.$el.style.height = '0px';
     filterItemList.invalidate();
 
-    var dialog = $c.util.extend($c.ui.createDialog([
+    var dialog = util.extend(ui.createDialog([
       // sort
       sortAscButton.$el,
       sortDescButton.$el,
       // search box
-      $c.util.createElement('input', { attrs : { type : 'text' },
+      util.createElement('input', { attrs : { type : 'text' },
         style : { width : '150px', margin : '4px 0px' },
         on : { keyup : function(event) {
           var value = event.currentTarget.value;
@@ -302,14 +299,14 @@ namespace comfortable {
       // filter items
         filterItemList.$el,
       // buttons
-      $c.util.createElement('div', { style :
+      util.createElement('div', { style :
           { marginTop : '4px', display : 'inline-block', float : 'right' } },
         [
-          $c.ui.createButton(messages.OK, function() {
+          ui.createButton(messages.OK, function() {
             dialog.dispose();
             dialog.trigger('applyfilter');
           }),
-          $c.ui.createButton(messages.CANCEL, function() {
+          ui.createButton(messages.CANCEL, function() {
             dialog.dispose();
           })
         ])
@@ -385,7 +382,7 @@ namespace comfortable {
 
   var createFilterButton = function() : FilterButton {
     return {
-      $el : $c.util.createSVGElement('svg',
+      $el : util.createSVGElement('svg',
           { style : { position : 'absolute' },
             attrs : { width : '15', height : '15',
             'class' : '${prefix}-filter-button ${prefix}-clickable-op' } }),
@@ -405,7 +402,7 @@ namespace comfortable {
           this.$el.removeChild(this.$el.firstChild);
         }
         // outer rect
-        this.$el.appendChild($c.util.createSVGElement('rect', {
+        this.$el.appendChild(util.createSVGElement('rect', {
           attrs : { 'class' : '${prefix}-filter-body',
             x : '0', y : '0', width: '15', height : '15',
             rx: '3', ry : '3' } }) );
@@ -413,28 +410,28 @@ namespace comfortable {
         var fillClass = '${prefix}-filter-fill';
         var strokeClass = '${prefix}-filter-stroke';
         if (this.filtered) {
-          this.$el.appendChild($c.util.createSVGElement('path', {
+          this.$el.appendChild(util.createSVGElement('path', {
             attrs : { 'class' : fillClass,
               d : 'M 5 4 L 8 7 L 8 12 L 11 12 L 11 7 L 14 4 Z' } }) );
           if (this.sortOrder == null) {
-            this.$el.appendChild($c.util.createSVGElement('path', {
+            this.$el.appendChild(util.createSVGElement('path', {
               attrs : { 'class' : fillClass, d: 'M 0 8 L 3 12 L 6 8 Z' } }) );
           }
         } else if (this.sortOrder == null) {
-          this.$el.appendChild($c.util.createSVGElement('path', {
+          this.$el.appendChild(util.createSVGElement('path', {
             attrs : { 'class' : fillClass, d: 'M 1 4 L 7 11 L 13 4 Z' } }) );
         } else {
-          this.$el.appendChild($c.util.createSVGElement('path', {
+          this.$el.appendChild(util.createSVGElement('path', {
             attrs : { 'class' : fillClass, d: 'M 4 5 L 9 11 L 14 5 Z' } }) );
         }
         if (this.sortOrder != null) {
-          this.$el.appendChild($c.util.createSVGElement('path', {
+          this.$el.appendChild(util.createSVGElement('path', {
             attrs : { 'class' : strokeClass, d: 'M 3 2 L 3 12'} } ) );
-          if (this.sortOrder == $c.SortOrder.ASC) {
-            this.$el.appendChild($c.util.createSVGElement('path', {
+          if (this.sortOrder == SortOrder.ASC) {
+            this.$el.appendChild(util.createSVGElement('path', {
               attrs : { 'class' : strokeClass, d: 'M 1 5 L 3 2 L 5 5'} }) );
           } else {
-            this.$el.appendChild($c.util.createSVGElement('path', {
+            this.$el.appendChild(util.createSVGElement('path', {
               attrs : { 'class' : strokeClass, d : 'M 1 9 L 3 12 L 5 9' } }) );
           }
         }
@@ -476,11 +473,11 @@ namespace comfortable {
       function(opts? : CellRendererFactoryOpts) :
         TableCellRendererFactory {
 
-    opts = $c.util.extend($c.createDefaultCellRendererFactoryOpts(), opts || {});
+    opts = util.extend(createDefaultCellRendererFactoryOpts(), opts || {});
 
     return function(td) : TableCellRenderer {
 
-      var labelRenderer = $c.createMultiLineLabelRenderer(td.$el);
+      var labelRenderer = createMultiLineLabelRenderer(td.$el);
 
       var tableModel : TemplateTableModel = <any>td.tableModel;
       var filterButton : FilterButton = null;
@@ -491,7 +488,7 @@ namespace comfortable {
         var dataField = filterButton.cell.dataField;
         var filterValues = getFilterValues(tableModel, dataField,
             filterButton.cell.comparator);
-        var dialog = createFilterDialog($c.util.extend({
+        var dialog = createFilterDialog(util.extend({
           sortOrder : filterContext.sort &&
             filterContext.sort.dataField == dataField?
             filterContext.sort.sortOrder : null,
@@ -507,7 +504,7 @@ namespace comfortable {
           filterContext.filters[dataField] = this.rejects;
           tableModel.trigger('filterchange');
         });
-        var off = $c.util.offset(td.$el);
+        var off = util.offset(td.$el);
         dialog.$el.style.left = off.left + 'px',
         dialog.$el.style.top = (off.top + td.$el.offsetHeight) + 'px';
         dialog.show();
@@ -523,12 +520,12 @@ namespace comfortable {
 
             if (!filterButton) {
               filterButton = createFilterButton();
-              $c.util.set(filterButton.$el, {
+              util.set(filterButton.$el, {
                 on : { mousedown : function(event) {
                     event.preventDefault();
                     if (dialog == null) {
                       // wait for end edit then show dialog.
-                      $c.util.callLater(function() {
+                      util.callLater(function() {
                         dialog = showFilterDialog();
                         dialog.on('dispose', function() {
                           dialog = null;

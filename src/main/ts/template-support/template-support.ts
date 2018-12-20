@@ -13,8 +13,6 @@ namespace comfortable {
 
   'use strict';
 
-  var $c = comfortable;
-
   var createFilterContext = function() : FilterContext {
     return { sort : null, filters : {} };
   };
@@ -30,7 +28,7 @@ namespace comfortable {
 
   var showColumnEditDialog = function(table : TemplateTable) {
 
-    var messages = $c.i18n.getMessages();
+    var messages = i18n.getMessages();
     var tableModel = <TemplateTableModel>table.model;
 
     interface ColumnItem {
@@ -64,14 +62,14 @@ namespace comfortable {
     }();
 
     var columnItems = columns.map(function(column) {
-      return $c.util.createElement('div', {
+      return util.createElement('div', {
           attrs : { 'class' : '${prefix}-listitem ${prefix}-clickable' +
             (column.type == 'lockColumn'?
                 ' ${prefix}-column-edit-lock-column' : '') },
           on : { mousedown : function(event) {
             event.preventDefault();
             columnItems.forEach(function(elm) {
-              $c.util.$(elm).removeClass('${prefix}-clickable');
+              util.$(elm).removeClass('${prefix}-clickable');
             });
             var mousemoveHandler = function(event : Event) {
               if (!started && Math.abs(event.pageY - dragPoint.y) > 4) {
@@ -80,13 +78,13 @@ namespace comfortable {
               if (!started) {
                 return;
               }
-              var listitem = $c.util.closest(event.target,
+              var listitem = util.closest(event.target,
                   { className : '${prefix}-listitem', root : dialog.$el });
               if (!listitem) {
                 return;
               }
               indexTo = columnItems.indexOf(listitem);
-              var off = $c.util.offset(listitem);
+              var off = util.offset(listitem);
               var top = listitem.offsetTop - 2 - (<HTMLElement>listitem.parentNode).scrollTop;
               if (off.top + listitem.offsetHeight / 2 < event.pageY) {
                 indexTo += 1;
@@ -96,18 +94,18 @@ namespace comfortable {
               bar.style.top = top + 'px';
             };
             var mouseupHandler = function(event : Event) {
-              $c.util.$(document).off('mousemove', mousemoveHandler).
+              util.$(document).off('mousemove', mousemoveHandler).
                 off('mouseup', mouseupHandler);
               columnItems.forEach(function(elm) {
-                $c.util.$(elm).addClass('${prefix}-clickable');
+                util.$(elm).addClass('${prefix}-clickable');
               });
               lastTarget = target;
               dialog.$el.removeChild(bar);
               if (indexTo != -1 && indexFrom != indexTo) {
                 var parent = target.parentNode;
                 var ref = columnItems[indexTo];
-                columns = $c.util.moveSublist(columns, indexFrom, 1, indexTo);
-                columnItems = $c.util.moveSublist(columnItems, indexFrom, 1, indexTo);
+                columns = util.moveSublist(columns, indexFrom, 1, indexTo);
+                columnItems = util.moveSublist(columnItems, indexFrom, 1, indexTo);
                 parent.removeChild(target);
                 if (ref) {
                   parent.insertBefore(target, ref);
@@ -116,10 +114,10 @@ namespace comfortable {
                 }
               }
             };
-            $c.util.$(document).on('mousemove', mousemoveHandler).
+            util.$(document).on('mousemove', mousemoveHandler).
               on('mouseup', mouseupHandler);
             var target = event.currentTarget;
-            var bar = $c.util.createElement('div', {
+            var bar = util.createElement('div', {
               attrs : { 'class' : '${prefix}-column-edit-bar' },
               style : { position : 'absolute', left : '0px',
                 display : 'none', width : target.offsetWidth + 'px' }
@@ -130,22 +128,22 @@ namespace comfortable {
             var dragPoint = { x : event.pageX, y : event.pageY };
             dialog.$el.appendChild(bar);
             if (lastTarget != null) {
-              $c.util.$(lastTarget).removeClass('${prefix}-selected');
+              util.$(lastTarget).removeClass('${prefix}-selected');
             }
-            $c.util.$(target).addClass('${prefix}-selected');
+            util.$(target).addClass('${prefix}-selected');
           }}
         },[
-        $c.util.createElement('input', {
+        util.createElement('input', {
           attrs : { type : 'checkbox' },
           props : { checked : !column.hidden },
           style : { verticalAlign : 'middle' },
           on:{ click : function(event) {
             var target = event.currentTarget;
-            var index = $c.util.indexOf(target.parentNode);
+            var index = util.indexOf(target.parentNode);
             columns[index].hidden = !target.checked;
           }}
         }),
-        $c.util.createElement('span', {
+        util.createElement('span', {
           style : { verticalAlign : 'middle' },
           props : { textContent : column.label }
         }) ]);
@@ -153,13 +151,13 @@ namespace comfortable {
 
     var lastTarget : HTMLElement = null;
 
-    var dialog =  $c.util.extend($c.ui.createDialog([
+    var dialog =  util.extend(ui.createDialog([
       // columns
-      $c.util.createElement('div',
+      util.createElement('div',
         { style : { overflow : 'auto',  height : '200px' } }, columnItems),
       // buttons
-      $c.util.createElement('div', { style : { float : 'right'} }, [
-        $c.ui.createButton(messages.RESET, function() {
+      util.createElement('div', { style : { float : 'right'} }, [
+        ui.createButton(messages.RESET, function() {
           dialog.dispose();
           tableModel.orderedColumnIndices = null;
           tableModel.hiddenColumns = {};
@@ -168,7 +166,7 @@ namespace comfortable {
           table.enableLockColumn = true;
           table.invalidate();
         }),
-        $c.ui.createButton(messages.APPLY, function() {
+        ui.createButton(messages.APPLY, function() {
           dialog.dispose();
           var orderedColumnIndices : number[] = [];
           var hiddenColumns : { [ orderedCol : number ] : boolean } = {};
@@ -194,7 +192,7 @@ namespace comfortable {
           table.enableLockColumn = enableLockColumn;
           table.invalidate();
         }),
-        $c.ui.createButton(messages.CANCEL, function() {
+        ui.createButton(messages.CANCEL, function() {
           dialog.dispose();
         })
       ])
@@ -218,7 +216,7 @@ namespace comfortable {
           // skip
           return;
         }
-        $c.util.$(td.$el).addClass('${prefix}-item-hover', !hover);
+        util.$(td.$el).addClass('${prefix}-item-hover', !hover);
         //var cs = null;
         for (var i = 0; i < td.$el.childNodes.length; i += 1) {
           var child = td.$el.childNodes[i];
@@ -322,14 +320,14 @@ namespace comfortable {
     template.thead.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
-          cell.factory = $c.createDefaultHeaderCellRendererFactory(<any>cell);
+          cell.factory = createDefaultHeaderCellRendererFactory(<any>cell);
         }
       });
     });
     template.tbody.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
-          cell.factory = $c.createDefaultCellRendererFactory(<any>cell);
+          cell.factory = createDefaultCellRendererFactory(<any>cell);
         }
       });
     });
@@ -344,7 +342,7 @@ namespace comfortable {
       var setSpaned = function(row : number, col : number, cell : TableCell) {
         for (var r = 0; r < cell.rowSpan; r += 1) {
           for (var c = 0; c < cell.colSpan; c += 1) {
-            spaned[$c.util.getCellId(row + r, col + c)] = true;
+            spaned[util.getCellId(row + r, col + c)] = true;
           }
         }
       };
@@ -353,13 +351,13 @@ namespace comfortable {
         var col = 0;
         var c = 0;
         while (c < tr.length) {
-          var id = $c.util.getCellId(row, col);
+          var id = util.getCellId(row, col);
           if (spaned[id]) {
             col += 1;
             continue;
           }
           var td = tr[c];
-          var cell = $c.util.extend({ rowSpan : 1, colSpan : 1 }, td);
+          var cell = util.extend({ rowSpan : 1, colSpan : 1 }, td);
           setSpaned(row, col, cell);
           if (typeof cell.width == 'number') {
             cellWidth[col] = cell.width;
@@ -393,7 +391,7 @@ namespace comfortable {
     var headLength = template.thead.length;
     var bodyLength = template.tbody.length;
 
-    var table = $c.util.extend($c.createTable(), {
+    var table = util.extend(createTable(), {
       lockRow : headLength,
       lockColumn : template.lockColumn || 0,
       enableLockColumn : true,
@@ -402,7 +400,7 @@ namespace comfortable {
         return !this.enableLockColumn? 0 : this.lockColumn;
       },
       getContextMenuItems : function() {
-        var messages = $c.i18n.getMessages();
+        var messages = i18n.getMessages();
         var tableModel = table.model;
         return [
           { label : messages.RESET_FILTER, action : function() {
@@ -433,8 +431,8 @@ namespace comfortable {
       }
 
       detail.originalEvent.preventDefault();
-      $c.util.callLater(function() {
-        $c.ui.showMenu(
+      util.callLater(function() {
+        ui.showMenu(
             detail.originalEvent.pageX,
             detail.originalEvent.pageY,
             menuItems);
@@ -444,9 +442,9 @@ namespace comfortable {
     // keep default value for restore.
     table.defaultLockColumn = table.lockColumn;
 
-    table.model = $c.util.extend(table.model, {
+    table.model = util.extend(table.model, {
       // user defines
-      defaultHeaderCellRendererFactory : $c.createDefaultHeaderCellRendererFactory(),
+      defaultHeaderCellRendererFactory : createDefaultHeaderCellRendererFactory(),
       cellWidth : cellWidth,
       cellHeight : cellHeight,
       columnDraggable : columnDraggable,
@@ -526,7 +524,7 @@ namespace comfortable {
       },
       getCellStyleAt : function(row : number, col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
-        var style = $c.util.extend({}, getCellStyleAt(row, orderedCol) );
+        var style = util.extend({}, getCellStyleAt(row, orderedCol) );
         style.className = style.className || '';
         if (row < headLength) {
           style.className += ' ${prefix}-header';
@@ -563,7 +561,7 @@ namespace comfortable {
         this.cellWidth[orderedCol] = detail.cellWidth;
       }
     }).on('columndragged', function(event : Event, detail : any) {
-      this.orderedColumnIndices = $c.util.moveSublist(
+      this.orderedColumnIndices = util.moveSublist(
           this.orderedColumnIndices, detail.colFrom, detail.colSpan, detail.colTo);
       if (detail.colFrom < table.lockColumn && table.lockColumn <= detail.colTo) {
         table.lockColumn -= detail.colSpan;
@@ -588,7 +586,7 @@ namespace comfortable {
 
       var sort = this.filterContext.sort;
       if (sort) {
-        var order = sort.sortOrder == $c.SortOrder.ASC? 1 : -1;
+        var order = sort.sortOrder == SortOrder.ASC? 1 : -1;
         var dataField = sort.dataField;
         var indexField = '.index';
         var sortKeyField = '.sortKey';
@@ -632,7 +630,7 @@ namespace comfortable {
         detail.itemIndex = this.getItemIndexAt(detail.row, detail.col);
       });
     });
-    $c.tableEventTypes.forEach(function(type) {
+    tableEventTypes.forEach(function(type) {
       table.on(type, function(event : Event, detail : any) {
         detail.itemIndex = this.model.getItemIndexAt(detail.row, detail.col);
       });

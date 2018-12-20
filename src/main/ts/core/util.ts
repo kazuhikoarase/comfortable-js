@@ -13,8 +13,6 @@ namespace comfortable.util {
 
   'use strict';
 
-  var $c = comfortable;
-
   var parseArguments = function(args : IArguments) {
     var children : any[] = [];
     var opts = {};

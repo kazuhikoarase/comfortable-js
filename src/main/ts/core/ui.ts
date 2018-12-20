@@ -13,11 +13,9 @@ namespace comfortable.ui {
 
   'use strict';
 
-  var $c = comfortable;
-
   export var createButton = function(
       label : string, action : (event : Event) => void) {
-    return $c.util.createElement('button',{
+    return util.createElement('button',{
       props : { textContent : label },
       attrs : { 'class' : '${prefix}-button' },
       on : { mousedown : function(event : Event) {
@@ -26,21 +24,21 @@ namespace comfortable.ui {
   };
 
   export var createDialog = function(children : HTMLElement[]) {
-    var dialog = $c.util.extend($c.createEventTarget(), {
-      $el : $c.util.createElement('div', {
+    var dialog = util.extend(new EventTargetImpl(), {
+      $el : util.createElement('div', {
           attrs : { 'class' : '${prefix}-dialog' },
           style : { position : 'absolute' }
       }, children),
       show : function() {
         document.body.appendChild(this.$el);
         this.trigger('beforeshow');
-        $c.util.callLater(function() {
-          $c.util.$(document).on('mousedown', mousedownHandler);
+        util.callLater(function() {
+          util.$(document).on('mousedown', mousedownHandler);
         });
       },
       dispose : function() {
         if (this.$el) {
-          $c.util.$(document).off('mousedown', mousedownHandler);
+          util.$(document).off('mousedown', mousedownHandler);
           document.body.removeChild(this.$el);
           this.$el = null;
           this.trigger('dispose');
@@ -48,7 +46,7 @@ namespace comfortable.ui {
       }
     } );
     var mousedownHandler = function(event : Event) {
-      if (!$c.util.closest(event.target,
+      if (!util.closest(event.target,
           { $el : dialog.$el, root : document.body }) ) {
         dialog.dispose();
       }
@@ -68,11 +66,11 @@ namespace comfortable.ui {
 
   export var showMenu = function(left : number, top : number, menuItems : MenuItem[]) : Menu {
     var subMenu : Menu = null;
-    var menu = $c.util.createElement('div', {
+    var menu = util.createElement('div', {
       attrs : { 'class' : '${prefix}-contextmenu' },
       style : { position : 'absolute', left : left + 'px', top : top + 'px' } },
       <HTMLElement[]>menuItems.map(function(menuItem) {
-        return $c.util.createElement('div', {
+        return util.createElement('div', {
             attrs : { 'class' : '${prefix}-menuitem ${prefix}-clickable' },
             props : { textContent : menuItem.label },
             style : { position : 'relative', whiteSpace : 'nowrap' },
@@ -104,10 +102,10 @@ namespace comfortable.ui {
       }
     };
     var mousedownHandler = function(event : Event) {
-      $c.util.$(document).off('mousedown', mousedownHandler);
+      util.$(document).off('mousedown', mousedownHandler);
       dispose();
     };
-    $c.util.$(document).on('mousedown', mousedownHandler);
+    util.$(document).on('mousedown', mousedownHandler);
     document.body.appendChild(menu);
     return { dispose : dispose };
   };

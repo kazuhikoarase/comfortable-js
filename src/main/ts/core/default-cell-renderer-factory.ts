@@ -13,10 +13,7 @@ namespace comfortable {
 
   'use strict';
 
-  var $c = comfortable;
-
   var createTextEditor = function(opts : TextEditorOptions) : CellEditor {
-    var util = $c.util;
     return {
       $el : util.createElement('input', {
         attrs : { type : 'text', 'class' : '${prefix}-editor' }
@@ -53,8 +50,8 @@ namespace comfortable {
       },
       getValue : function() {
         if (opts.dataType == 'number') {
-          var value = $c.numUtil.format(
-              $c.numUtil.toNarrow(this.$el.value),
+          var value = numUtil.format(
+              numUtil.toNarrow(this.$el.value),
               opts.decimalDigits, '');
           return this.valueType == 'number'? +value : value;
         }
@@ -62,7 +59,7 @@ namespace comfortable {
       },
       isValid : function() {
         if (opts.dataType == 'number') {
-          return !!$c.numUtil.toNarrow(this.getValue() ).match($c.numUtil.re);
+          return !!numUtil.toNarrow(this.getValue() ).match(numUtil.re);
         }
         return true;
       }
@@ -70,7 +67,6 @@ namespace comfortable {
   };
 
   var createCheckBox = function(opts : CheckBoxOptions) : CellEditor {
-    var util = $c.util;
     var booleanValues : any[] = null;
     return {
       $el : util.createElement('input', {
@@ -103,7 +99,6 @@ namespace comfortable {
   };
 
   var createSelectBox = function(opts : SelectBoxOptions) : CellEditor {
-    var util = $c.util;
     var select = util.createElement('select', {
       attrs : { 'class' : '${prefix}-editor' }
     });
@@ -182,7 +177,7 @@ namespace comfortable {
         } else if (value === null || typeof value == 'undefined') {
           return '';
         } else if (this.dataType == 'number') {
-          return $c.numUtil.format(value, this.decimalDigits);
+          return numUtil.format(value, this.decimalDigits);
         } else if (this.dataType == 'select-one') {
           var options = getOptions(cell);
           if (typeof options.splice != 'function') {
@@ -217,7 +212,7 @@ namespace comfortable {
       function(opts? : CellRendererFactoryOpts) :
         TableCellRendererFactory {
 
-    opts = $c.util.extend($c.createDefaultCellRendererFactoryOpts(), opts || {});
+    opts = util.extend(createDefaultCellRendererFactoryOpts(), opts || {});
 
     return function(td : TdWrapper) : TableCellRenderer {
 

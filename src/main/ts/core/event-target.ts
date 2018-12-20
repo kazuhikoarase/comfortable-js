@@ -61,33 +61,6 @@ namespace comfortable {
     }
   }
 
-  export var createEventTarget = function() : EventTarget {
-/*    var map : { [ type : string ] : EventListener[] } = {};
-    var listeners = function(type : string) {
-       return map[type] || (map[type] = []); };
-    return {
-      trigger : function(type : string, detail : any) {
-        var ctx = this;
-        listeners(type).forEach(function(listener) {
-          listener.call(ctx, { type : type }, detail);
-        });
-        return this;
-      },
-      on : function(type : string, listener : EventListener) {
-        listeners(type).push(listener);
-        return this;
-      },
-      off : function(type : string, listener : EventListener) {
-        map[type] = listeners(type).filter(function(l) {
-          return listener != l;
-        });
-        return this;
-      }
-    };
-    */
-    return new EventTargetImpl();
-  }
-
   export class UIEventTargetImpl extends EventTargetImpl implements UIEventTarget{
     public valid = true;
     public invalidate() {
@@ -102,25 +75,4 @@ namespace comfortable {
     public render() {
     }
   }
-
-  export var createUIEventTarget = function() : UIEventTarget {
-    /*
-    return $c.util.extend(createEventTarget(), {
-      valid : true,
-      invalidate : function() {
-        this.valid = false;
-        $c.util.callLater(function() {
-          if (!this.valid) {
-            this.valid = true;
-            this.render();
-          }
-        }.bind(this) );
-      },
-      render : function() {
-      }
-    });
-    */
-    return new UIEventTargetImpl();
-  }
-
 }
