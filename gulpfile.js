@@ -21,13 +21,6 @@ gulp.task('clean', function() {
   return del([ `${build}/*` ]);
 });
 
-gulp.task('watch', function(){
-  gulp.watch(mainTsSrc,
-      gulp.series('build-main') ).on('change', function(path) {
-    console.log(path);
-  });
-});
-
 gulp.task('concat-main-css', function() {
   return gulp.src([ 'src/main/ts/**/*.css' ])
     .pipe(order([ '**/*.css']) )
@@ -53,6 +46,15 @@ gulp.task('build-main', gulp.series('concat-main-css', function() {
     .pipe(gulp.dest(build) );
 }) );
 
+gulp.task('build', gulp.series('build-main', 'concat-main-css') );
+
+gulp.task('watch', gulp.series('build', function(){
+  gulp.watch(mainTsSrc, gulp.series('build') )
+    .on('change', function(path) {
+      console.log(path);
+    });
+} ) );
+
 //gulp.task('concat-main', gulp.series('concat-main-css', function() {
 //  return gulp.src([ 'src/main/js/**/*.js' ])
 //    .pipe(plumber({
@@ -75,7 +77,7 @@ gulp.task('build-main', gulp.series('concat-main-css', function() {
 //    .pipe(gulp.dest('lib/') );
 //});
 
-gulp.task('compress', gulp.series('build-main', function () {
+gulp.task('compress', gulp.series('build', function () {
   return gulp.src(`${build}/${targetName}.js`)
     .pipe(uglify({ output : { ascii_only : true } }) )
     .pipe(rename({ suffix: '.min' }) )

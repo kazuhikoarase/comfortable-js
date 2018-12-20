@@ -1,10 +1,10 @@
 {
   "name": "comfortable-js",
-  "version": "0.1.35",
+  "version": "0.1.36",
   "description": "Simple, Fast, Customizable Table Component in JavaScript.",
   "author": "Kazuhiko Arase",
   "main": "lib/comfortable.js",
-  "types": "src/main/ts/comfortable.d.ts",
+  "types": "lib/comfortable.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/kazuhikoarase/comfortable-js.git"
