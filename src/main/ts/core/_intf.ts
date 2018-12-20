@@ -124,13 +124,4 @@ namespace comfortable {
     isValid : () => boolean;
   }
 
-  export interface Intf5 {
-  }
-  export interface Intf6 {
-  }
-  export interface Intf7 {
-  }
-  export interface Intf8 {
-  }
-
 }

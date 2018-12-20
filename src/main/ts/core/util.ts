@@ -46,8 +46,7 @@ namespace comfortable.util {
 
   var classNamePrefixRe = /\$\{prefix\}/g;
   export var replaceClassNamePrefix = function(className : string) {
-    return className.replace(classNamePrefixRe,
-       $c.classNamePrefix);
+    return className.replace(classNamePrefixRe, classNamePrefix);
   };
 
   export interface ElementOptions {

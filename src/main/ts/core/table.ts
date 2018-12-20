@@ -97,7 +97,7 @@ namespace comfortable {
     left? : number;
   }
 
-  interface InternalEditor {
+  interface InternalEditor extends Editor {
     cell? : { row : number, col : number };
     beginEdit : (row : number, col : number, makeVisible? : boolean) => void;
     endEdit : () => void;
@@ -495,9 +495,9 @@ namespace comfortable {
                 };
                 util.$(document).on('mousemove', mousemoveHandler).
                   on('mouseup', mouseupHandler);
-                var getTargetColumn = function(centerX : number) {
+                var getTargetColumn = (centerX : number) => {
                   var targetColumn : TargetColumn = null;
-                  tables.forEach(function(tbl, i) {
+                  tables.forEach( (tbl, i) => {
                     if (tbl.row == table.row) {
                       var tableState = tbl.tableState;
                       var rect = this.getCellSizeCache().rects[i];
