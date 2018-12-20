@@ -419,10 +419,10 @@ declare namespace comfortable {
         options?: any[] | ((row: number, col: number) => any[]);
     }
     interface CellRendererFactoryOpts {
-        createEditor: () => CellEditor;
+        labelFunction?: (value: any, cell: EditorCell) => string;
+        createEditor?: () => CellEditor;
         renderIsEditor?: boolean;
         dataType?: string;
-        labelFunction: (value: any, cell: EditorCell) => string;
     }
     type EditorCell = TextEditorCell | CheckBoxCell | SelectBoxCell;
     interface CellEditor {
@@ -446,7 +446,7 @@ declare namespace comfortable {
     var fromTemplate: (template: TableTemplate) => TemplateTable;
 }
 declare namespace comfortable {
-    interface TableTemplateCellStyle extends TableCellStyle {
+    interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
         width?: number;
         height?: number;
         columnDraggable?: boolean;
@@ -466,7 +466,6 @@ declare namespace comfortable {
         options?: (any[] | ((row: number, col: number) => any[]));
         labelField?: string;
         valueField?: string;
-        labelFunction?: (value: any) => string;
         factory?: TableCellRendererFactory;
     }
     interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {

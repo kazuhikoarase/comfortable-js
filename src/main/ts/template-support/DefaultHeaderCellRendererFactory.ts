@@ -50,6 +50,15 @@ namespace comfortable {
     dispose : () => void;
   }
 
+  interface FilterItem {
+    index: number;
+    label: any;
+    value: string;
+    checked: boolean;
+    color: boolean;
+    incomplete? : boolean;
+  }
+
   export var SortOrder = { ASC : 'asc', DESC : 'desc' };
 
   // selector of sort order
@@ -135,15 +144,6 @@ namespace comfortable {
 
     var sortAscButton = createSortButton(messages.SORT_ASC);
     var sortDescButton = createSortButton(messages.SORT_DESC);
-
-    interface FilterItem {
-      index: number;
-      label: any;
-      value: string;
-      checked: boolean;
-      color: boolean;
-      incomplete? : boolean;
-    }
 
     var filterItems : FilterItem[] = [ messages.SELECT_ALL ].concat(opts.filterValues).
       map(function(value, i) {

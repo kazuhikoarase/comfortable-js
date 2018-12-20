@@ -106,10 +106,10 @@ namespace comfortable {
   }
 
   export interface CellRendererFactoryOpts {
-    createEditor : () => CellEditor;
+    labelFunction? : (value : any, cell : EditorCell) => string;
+    createEditor? : () => CellEditor;
     renderIsEditor? : boolean;
     dataType? : string;
-    labelFunction : (value : any, cell : EditorCell) => string;
   }
 
   export type EditorCell = TextEditorCell|CheckBoxCell|SelectBoxCell;

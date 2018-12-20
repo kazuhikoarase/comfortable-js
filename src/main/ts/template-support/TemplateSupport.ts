@@ -320,14 +320,14 @@ namespace comfortable {
     template.thead.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
-          cell.factory = createDefaultHeaderCellRendererFactory(<any>cell);
+          cell.factory = createDefaultHeaderCellRendererFactory(cell);
         }
       });
     });
     template.tbody.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
-          cell.factory = createDefaultCellRendererFactory(<any>cell);
+          cell.factory = createDefaultCellRendererFactory(cell);
         }
       });
     });

@@ -2,7 +2,7 @@ namespace comfortable {
 
   'use strict';
 
-  export interface TableTemplateCellStyle extends TableCellStyle {
+  export interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
 
     width? : number;
     height? : number;
@@ -30,8 +30,6 @@ namespace comfortable {
     options? : (any[] | ((row : number, col : number) => any[]) );
     labelField? : string;
     valueField? : string;
-
-    labelFunction? : (value : any) => string;
 
     factory? : TableCellRendererFactory;
   }
