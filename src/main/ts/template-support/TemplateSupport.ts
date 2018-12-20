@@ -497,7 +497,10 @@ namespace comfortable {
         if (row < headLength) {
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
-          this.getItemAt(itemIndex.row)[itemIndex.col] = value;
+          var item = this.getItemAt(itemIndex.row);
+          if (item) {
+            item[itemIndex.col] = value;
+          }
         }
       },
       // overrides
