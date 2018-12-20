@@ -13,8 +13,6 @@ namespace comfortable {
 
   'use strict';
 
-  var $c = comfortable;
-
   export interface Event {
     type : string;
     target? : any;
@@ -24,7 +22,6 @@ namespace comfortable {
     defaultPrevented? : boolean;
     pageX? : number;
     pageY? : number;
-
   }
 
   export type EventListener = (event : Event, detail? : any) => void;
@@ -40,8 +37,32 @@ namespace comfortable {
     render : () => void;
   }
 
+  export class EventTargetImpl implements EventTarget {
+    private map : { [ type : string ] : EventListener[] } = {};
+    private listeners(type : string) : EventListener[] {
+       return this.map[type] || (this.map[type] = []);
+    }
+    public trigger(type : string, detail? : any) {
+      var ctx = this;
+      (this.listeners(type)).forEach(function(listener : EventListener) {
+        listener.call(ctx, { type : type }, detail);
+      });
+      return this;
+    }
+    public on(type : string, listener : EventListener) {
+      this.listeners(type).push(listener);
+      return this;
+    }
+    public off(type : string, listener : EventListener) {
+      this.map[type] = this.listeners(type).filter(function(l : EventListener) {
+        return listener != l;
+      });
+      return this;
+    }
+  }
+
   export var createEventTarget = function() : EventTarget {
-    var map : { [ type : string ] : EventListener[] } = {};
+/*    var map : { [ type : string ] : EventListener[] } = {};
     var listeners = function(type : string) {
        return map[type] || (map[type] = []); };
     return {
@@ -63,9 +84,27 @@ namespace comfortable {
         return this;
       }
     };
-  };
+    */
+    return new EventTargetImpl();
+  }
+
+  export class UIEventTargetImpl extends EventTargetImpl implements UIEventTarget{
+    public valid = true;
+    public invalidate() {
+      this.valid = false;
+      util.callLater(function() {
+        if (!this.valid) {
+          this.valid = true;
+          this.render();
+        }
+      }.bind(this) );
+    }
+    public render() {
+    }
+  }
 
   export var createUIEventTarget = function() : UIEventTarget {
+    /*
     return $c.util.extend(createEventTarget(), {
       valid : true,
       invalidate : function() {
@@ -80,6 +119,8 @@ namespace comfortable {
       render : function() {
       }
     });
-  };
+    */
+    return new UIEventTargetImpl();
+  }
 
 }

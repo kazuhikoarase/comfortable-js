@@ -52,6 +52,8 @@ namespace comfortable {
     dispose : () => void;
   }
 
+  export var SortOrder = { ASC : 'asc', DESC : 'desc' };
+
   // selector of sort order
   var createSelector = function() : Selector {
     var rect = $c.util.createElement('span', {
@@ -157,7 +159,73 @@ namespace comfortable {
         };
       });
 
-    var filterItemList = $c.util.extend($c.createList(), {
+    class FilterItemCell implements ListCell {
+      public checkbox = (() => {
+        var checkbox = createCheckbox();
+        checkbox.$el.style.verticalAlign = 'middle';
+        return checkbox;
+      })();
+      private label = $c.util.createElement('span', { style : labelStyle,
+        props : { textContent : 'M' } });
+      public index = 0;
+      public row = 0;
+      public setLabel(text : string) {
+        this.label.textContent = text || messages.SELECT_BLANK;
+        this.$el.setAttribute('title', this.label.textContent);
+      }
+      public $el = $c.util.createElement('div', {
+          attrs : { 'class' : '${prefix}-clickable-op' },
+          on : {
+            mousedown : (event) => { event.preventDefault(); },
+            click : () => {
+              dialog.trigger('filterclick', { index : this.index });
+            }
+          }
+        }, [ this.checkbox.$el, this.label ])
+    }
+
+    class FilterItemList extends ListImpl<FilterItem,FilterItemCell> {
+      public items = filterItems;
+      public getItemAt(row : number) { return this.items[row]; }
+      public getItemCount() { return this.items.length; }
+      public createCell() {
+        /*
+        var $public = {
+          index : 0 as number,
+          row : 0,
+          checkbox : checkbox,
+          setLabel : function(text : string) {
+            label.textContent = text || messages.SELECT_BLANK;
+            this.$el.setAttribute('title', label.textContent);
+          },
+          $el : $c.util.createElement('div', {
+            attrs : { 'class' : '${prefix}-clickable-op' },
+            on : {
+              mousedown : function(event) { event.preventDefault(); },
+              click : function() {
+                dialog.trigger('filterclick', { index : $public.index });
+              }
+            }
+          }, [ checkbox.$el, label ])
+        };
+        return $public;
+        */
+        return new FilterItemCell();
+      }
+      public renderCell(cell : FilterItemCell, item : FilterItem) {
+        cell.index = item.index;
+        cell.setLabel(item.label);
+        cell.checkbox.setChecked(item.checked);
+        cell.checkbox.setIncomplete(item.incomplete);
+      }
+      public height = 0;
+      public maxHeight = 150;
+    }
+
+    var filterItemList = new FilterItemList();
+
+/*
+    var filterItemList = $c.util.extend($c.c_reateList(), {
       items : filterItems,
       getItemAt : function(row : number) { return this.items[row]; },
       getItemCount : function() { return this.items.length; },
@@ -203,6 +271,16 @@ namespace comfortable {
         this.invalidate();
       }
     });
+*/    
+    filterItemList.on('rendered', function(event : Event, detail : any) {
+      var height = Math.min(this.maxHeight,
+          this.cellHeight * this.getItemCount() );
+      if (this.height != height) {
+        this.height = height;
+        this.$el.style.height = height + 'px';
+        this.invalidate();
+      }
+    })
     filterItemList.$el.style.width = '150px';
     filterItemList.$el.style.height = '0px';
     filterItemList.invalidate();
@@ -487,8 +565,5 @@ namespace comfortable {
         }
       };
     };
-  };
-
-  export var SortOrder = { ASC : 'asc', DESC : 'desc' };
-
+  }
 }

@@ -15,129 +15,125 @@ namespace comfortable {
 
   var $c = comfortable;
 
-  export interface List extends UIEventTarget {
+  export interface List<T,C extends ListCell> extends UIEventTarget {
     $el : Element;
-    getItemAt : (index : number) => any;
+    getItemAt : (index : number) => T;
     getItemCount : () => number;
-    createCell : () => { $el : Element };
-    renderCell : (cell : ListCell, item :any) => void;
+    createCell : () => C;
+    renderCell : (cell : C, item : T) => void;
     cellHeight : number;
   }
 
   export interface ListCell {
     $el : HTMLElement;
+    row : number;
   }
 
-  export var createList = function() : List {
+  export class ListImpl<T,C extends ListCell>
+  extends UIEventTargetImpl implements List<T,C> {
 
-    var util = $c.util;
-
-    var listContent = util.createElement('div', {
+    private listContent = util.createElement('div', {
       style : { position : 'absolute' } });
-    var list = { $el :  util.createElement('div', {
+    private list = { $el :  util.createElement('div', {
       style : { position : 'absolute',
-        overflow : 'hidden', whiteSpace:'nowrap' } }, [ listContent ]) };
+        overflow : 'hidden', whiteSpace:'nowrap' } }, [ this.listContent ]) };
 
-    var scr = util.createElement('div', {
+    private scr = util.createElement('div', {
       style : { position : 'absolute' } });
 
-    var viewPane = util.createElement('div', {
+    private viewPane = util.createElement('div', {
         style : { position : 'absolute',
           overflowX : 'hidden', overflowY : 'auto' },
-        on : { scroll : function(event) { $public.render(); } }
-      }, [scr]);
+        on : { scroll : (event) => { this.render(); } }
+      }, [this.scr]);
   
-    var frame = util.createElement('div', {
+    private frame = util.createElement('div', {
         style : { position : 'relative', overflow : 'hidden',
           width : '100px', height : '100px' },
         on : {
-          wheel : function(event) {
-            viewPane.scrollLeft += event.deltaX;
-            viewPane.scrollTop += event.deltaY;
+          wheel : (event) => {
+            this.viewPane.scrollLeft += event.deltaX;
+            this.viewPane.scrollTop += event.deltaY;
           }
-        } },[ viewPane, list.$el ]);
+        } },[ this.viewPane, this.list.$el ]);
 
-    var cells : ListCell[] = [];
-    var getOrCrt = function(index : number) {
-      if (index < cells.length) {
-        return cells[index];
+    private cells : C[] = [];
+    private getOrCrt(index : number) {
+      if (index < this.cells.length) {
+        return this.cells[index];
       }
-      var cell = $public.createCell();
-      listContent.appendChild(cell.$el);
-      cells.push(cell);
+      var cell = this.createCell();
+      this.listContent.appendChild(cell.$el);
+      this.cells.push(cell);
       return cell;
     };
 
-    var $public = util.extend($c.createUIEventTarget(), {
-      $el : frame,
-      getItemAt : function(index : number) { return 'item' + index; },
-      getItemCount : function() { return 100000; },
-      createCell : function() {
-        return { $el : $c.util.createElement('div', {
-          props : { textContent : 'M' },
-          style : { borderBottom : '1px solid silver' }
-        }) };
-      },
-      renderCell : function(cell : ListCell, item : string) {
-        cell.$el.textContent = item;
-      },
-      cellHeight : -1,
-      render : function() {
+    public $el = this.frame;
+    public getItemAt(index : number) : T { return <any>'item' + index; }
+    public getItemCount() { return 100000; }
+    public createCell() : C {
+      return <any>{ $el : $c.util.createElement('div', {
+        props : { textContent : 'M' },
+        style : { borderBottom : '1px solid silver' }
+      }), row : -1 };
+    }
+    public renderCell(cell : C, item : T) {
+      cell.$el.textContent = <any>item;
+    }
+    public cellHeight = -1;
+    public render() {
 
-        util.set(viewPane, { style : {
-          left : '0px', top : '0px',
-          width : this.$el.offsetWidth + 'px',
-          height : this.$el.offsetHeight + 'px'
-        } });
+      util.set(this.viewPane, { style : {
+        left : '0px', top : '0px',
+        width : this.$el.offsetWidth + 'px',
+        height : this.$el.offsetHeight + 'px'
+      } });
 
-        if (this.cellHeight == -1) {
-          this.cellHeight = getOrCrt(0).$el.offsetHeight;
-        }
-        var viewHeight = this.cellHeight * this.getItemCount();
-        var scrHeight = Math.min(viewHeight, 1E6);
-
-        var listTop = -(scrHeight > viewPane.clientHeight?
-            util.translate(viewPane.scrollTop,
-            0, scrHeight - viewPane.clientHeight,
-            0, viewHeight - viewPane.clientHeight,
-            'list.top') : 0);
-
-        var minRow = Math.floor(-listTop / this.cellHeight);
-        var maxRow = Math.min(this.getItemCount() - 1,
-            Math.floor( (-listTop + viewPane.clientHeight) / this.cellHeight) );
-        var top = listTop + minRow * this.cellHeight;
-
-        util.set(listContent, { style : { left : '0px', top : top + 'px' } });
-
-        var cellIndex = 0;
-        for (var row = minRow; row <= maxRow; row += 1) {
-          var cell = getOrCrt(cellIndex);
-          cell.row = row;
-          cell.$el.style.display = '';
-          this.renderCell(cell, this.getItemAt(row) );
-          cellIndex += 1;
-        }
-        for (; cellIndex < cells.length; cellIndex += 1) {
-          cells[cellIndex].$el.style.display = 'none';
-        }
-
-        util.set(scr, { style : {
-          left : '0px', top : '0px',
-          width : this.$el.offsetWidth + 'px',
-          height : scrHeight + 'px'
-        } });
-
-        util.set(list.$el, { style : {
-          whiteSpace : 'nowrap',
-          width : viewPane.clientWidth + 'px',
-          height : viewPane.clientHeight + 'px'
-        } });
-
-        this.trigger('rendered', {
-          listState : { minRow : minRow, maxRow : maxRow } } );
+      if (this.cellHeight == -1) {
+        this.cellHeight = this.getOrCrt(0).$el.offsetHeight;
       }
-    });
+      var viewHeight = this.cellHeight * this.getItemCount();
+      var scrHeight = Math.min(viewHeight, 1E6);
 
-    return $public;
-  };
+      var listTop = -(scrHeight > this.viewPane.clientHeight?
+          util.translate(this.viewPane.scrollTop,
+          0, scrHeight - this.viewPane.clientHeight,
+          0, viewHeight - this.viewPane.clientHeight,
+          'list.top') : 0);
+
+      var minRow = Math.floor(-listTop / this.cellHeight);
+      var maxRow = Math.min(this.getItemCount() - 1,
+          Math.floor( (-listTop + this.viewPane.clientHeight) / this.cellHeight) );
+      var top = listTop + minRow * this.cellHeight;
+
+      util.set(this.listContent, { style : { left : '0px', top : top + 'px' } });
+
+      var cellIndex = 0;
+      for (var row = minRow; row <= maxRow; row += 1) {
+        var cell = this.getOrCrt(cellIndex);
+        cell.row = row;
+        cell.$el.style.display = '';
+        this.renderCell(cell, this.getItemAt(row) );
+        cellIndex += 1;
+      }
+      for (; cellIndex < this.cells.length; cellIndex += 1) {
+        this.cells[cellIndex].$el.style.display = 'none';
+      }
+
+      util.set(this.scr, { style : {
+        left : '0px', top : '0px',
+        width : this.$el.offsetWidth + 'px',
+        height : scrHeight + 'px'
+      } });
+
+      util.set(this.list.$el, { style : {
+        whiteSpace : 'nowrap',
+        width : this.viewPane.clientWidth + 'px',
+        height : this.viewPane.clientHeight + 'px'
+      } });
+
+      this.trigger('rendered', {
+        listState : { minRow : minRow, maxRow : maxRow } } );
+    }
+  }
 }

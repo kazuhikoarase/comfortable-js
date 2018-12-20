@@ -73,6 +73,7 @@ namespace comfortable {
   }
 
   export type Rejects = { [ value : string ] : boolean };
+
   export interface FilterContext {
     sort? : { dataField : string; sortOrder : string; }
     filters : { [ dataField : string ] : Rejects };

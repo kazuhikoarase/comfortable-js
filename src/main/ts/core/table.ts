@@ -89,12 +89,9 @@ namespace comfortable {
     top : { [i : number] : number }
   }
 
-  interface TableModelImpl extends TableModelIntf {
-  }
-
   var createDefaultTableModel = function() : TableModel {
     var util = $c.util;
-    return util.extend($c.createEventTarget(), <TableModelImpl>{
+    return util.extend($c.createEventTarget(), {
       defaultCellWidth : 100,
       defaultCellHeight : 28,
       defaultCellStyle : { rowSpan : 1, colSpan : 1, editable : true },
@@ -104,19 +101,19 @@ namespace comfortable {
       minCellWidth : 8,
       getRowCount : function() { return 1E5; },
       getColumnCount : function() { return 1E5; },
-      getLineRowAt : function(row) { return row; },
-      getLineRowCountAt : function(row) { return this.getRowCount(); },
-      getValueAt : function(row, col) { return row + ',' + col; },
-      getCellStyleAt : function(row, col) { return {}; },
-      getCellRendererFactoryAt : function(row, col) { return this.defaultCellRendererFactory; },
-      getCellWidthAt : function(col) { return this.defaultCellWidth; },
-      getCellHeightAt : function(row) { return this.defaultCellHeight; },
-      getCellAt : function(row, col) {
+      getLineRowAt : function(row : number) { return row; },
+      getLineRowCountAt : function(row : number) { return this.getRowCount(); },
+      getValueAt : function(row : number, col : number) { return row + ',' + col; },
+      getCellStyleAt : function(row : number, col : number) { return {}; },
+      getCellRendererFactoryAt : function(row : number, col : number) { return this.defaultCellRendererFactory; },
+      getCellWidthAt : function(col : number) { return this.defaultCellWidth; },
+      getCellHeightAt : function(row : number) { return this.defaultCellHeight; },
+      getCellAt : function(row : number, col : number) {
         return util.extend({
             row : row, col : col, value : this.getValueAt(row, col) },
             this.defaultCellStyle, this.getCellStyleAt(row, col) );
       },
-      checkSpaned : function(row, col) {
+      checkSpaned : function(row : number, col : number) {
         var minRow = Math.max(0, row - this.maxRowSpan);
         var minCol = Math.max(0, col - this.maxColSpan);
         for (var r = row; r >= minRow; r -= 1) {
@@ -131,8 +128,8 @@ namespace comfortable {
         }
         return null;
       },
-      isColumnResizableAt : function(col) { return true; },
-      isColumnDraggableAt : function(col) { return true; }
+      isColumnResizableAt : function(col : number) { return true; },
+      isColumnDraggableAt : function(col : number) { return true; }
     } );
   };
 
@@ -1094,13 +1091,13 @@ namespace comfortable {
       }
     };
 
-    var $public = util.extend($c.createUIEventTarget(), <TableIntf>{
+    var $public = util.extend($c.createUIEventTarget(), {
       $el : frame,
       lockRow : 0,
       lockColumn : 0,
       getLockRow : function() { return this.lockRow; },
       getLockColumn : function() { return this.lockColumn; },
-      forEachCells : function(callback) {
+      forEachCells : function(callback : any) {
         tables.forEach(function(table) {
           (table.tbody.children || []).forEach(function(tr) {
             (tr.children || []).forEach(function(cell) {

@@ -7,7 +7,7 @@ namespace comfortable {
     endEdit : () => void;
   }
 
-  export interface TableIntf {
+  export interface Table extends UIEventTarget {
     $el : Element;
     lockRow : number;
     lockColumn : number;
@@ -17,9 +17,6 @@ namespace comfortable {
       $el : HTMLElement, row : number, col : number }) => void) => void;
     model : TableModel;
     editor : Editor;
-  }
-
-  export interface Table extends UIEventTarget, TableIntf {
   }
 
   export interface TableCellRenderer {
@@ -55,7 +52,7 @@ namespace comfortable {
     borderBottom? : string;
   }
 
-  export interface TableModelIntf {
+  export interface TableModel extends EventTarget {
     defaultCellWidth : number;
     defaultCellHeight : number;
     defaultCellStyle : TableCellStyle;
@@ -76,9 +73,6 @@ namespace comfortable {
     checkSpaned : (row : number, col : number) => { row : number, col : number };
     isColumnResizableAt : (col : number) => boolean;
     isColumnDraggableAt : (col : number) => boolean;
-  }
-
-  export interface TableModel extends EventTarget, TableModelIntf {
   }
 
   export interface TableCell extends TableCellStyle {
