@@ -39,6 +39,7 @@ var tableFromTemplate = function(targetId) {
   };
 
   var table = $c.fromTemplate({
+    lockColumn : 2,
     thead : [[
       { label : 'A', width : 140, backgroundColor : '#ff6666', textAlign : 'center',
         dataField : 'myData1' },

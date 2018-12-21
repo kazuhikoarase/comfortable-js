@@ -392,39 +392,19 @@ namespace comfortable {
     var headLength = template.thead.length;
     var bodyLength = template.tbody.length;
 
-//    class A {}
-    var a = new (class A {})();
-/*
-    class A extends TableImpl implements TemplateTable {
-      private lockColumn = 0;
-
-      constructor(model : TableModel) {
-        super(model);
-      }
-
+    class TemplateTableImpl extends TableImpl implements TemplateTable {
+      private lockColumn = template.lockColumn || 0;
       public enableLockColumn = true;
-      public defaultLockColumn = 0;
+      // keep default value for restore.
+      public defaultLockColumn = this.lockColumn;
       public setLockColumn(lockColumn : number) {
         this.lockColumn = lockColumn;
       }
       public getLockColumn() {
         return !this.enableLockColumn? 0 : this.lockColumn;
       }
-    }
-*/
-
-    var table : TemplateTable = util.extend(createTable(), {
-      lockColumn : template.lockColumn || 0,
-      enableLockColumn : true,
-      defaultLockColumn : 0,
-      setLockColumn : function(lockColumn : number) {
-        this.lockColumn = lockColumn;
-      },
-      getLockColumn : function() {
-        return !this.enableLockColumn? 0 : this.lockColumn;
-      },
-      getLockRow : function() { return headLength; },
-      getContextMenuItems : function() {
+      public getLockRow() { return headLength; }
+      public getContextMenuItems() {
         var messages = i18n.getMessages();
         var tableModel = table.model as TemplateTableModel;
         return [
@@ -441,9 +421,140 @@ namespace comfortable {
             }
           }
         ];
-      },
+      }
+    }
 
-    }).on('mousedown', function(event : Event, detail : any) {
+    class TemplateTableModelImpl
+    extends DefaultTableModel implements TemplateTableModel {
+      // user defines
+      public defaultHeaderCellRendererFactory =
+        createDefaultHeaderCellRendererFactory();
+      public cellWidth = cellWidth;
+      public cellHeight = cellHeight;
+      public columnDraggable = columnDraggable;
+      public columnResizable = columnResizable;
+      public orderedColumnIndices : number[] = null;
+      public filterContext = createFilterContext();
+      public hiddenColumns : { [ orderedCol : number ] : boolean } = {};
+      public items : any[] = [];
+      public filteredItems : any[] = null;
+      public hoverRow = -1;
+      public multipleRowsSelectable = false;
+      public selectedRows : { [ row : number ] : boolean } = {};
+      public resetFilter() {
+        this.filterContext = createFilterContext();
+        this.filteredItems = null;
+        table.invalidate();
+      }
+      public getItemCount() {
+        return (this.filteredItems || this.items).length;
+      }
+      public getItemAt(row : number) {
+        return (this.filteredItems || this.items)[row];
+      }
+      public getOrderedColumnIndexAt(col : number) {
+        if (this.orderedColumnIndices == null) {
+          this.orderedColumnIndices = createDefaultOrderedColumnIndices(this);
+        }
+        return this.orderedColumnIndices[col];
+      }
+      public getItemIndexAt(row : number, col : number) {
+        if (row < headLength) {
+          return { row : -1, col : -1 };
+        } else {
+          var orderedCol = this.getOrderedColumnIndexAt(col);
+          var style = getCellStyleAt(row, orderedCol);
+          row -= headLength;
+          return {
+            row : ~~(row / bodyLength),
+            col : style.dataField ||
+              ( (row % bodyLength) * this.getColumnCount() + orderedCol)
+          };
+        }
+      }
+      public setValueAt(row : number, col : number, value : any) {
+        if (row < headLength) {
+        } else {
+          var itemIndex = this.getItemIndexAt(row, col);
+          var item = this.getItemAt(itemIndex.row);
+          if (item) {
+            item[itemIndex.col] = value;
+          }
+        }
+      }
+      // overrides
+      public getRowCount() { return headLength +
+        bodyLength * this.getItemCount(); }
+      public getColumnCount() { return columnCount; }
+      public getLineRowCountAt(row : number) {
+        return row < headLength? headLength : bodyLength; }
+      public getLineRowAt(row : number) {
+        return row < headLength? row : (row - headLength) % bodyLength; }
+      public getCellWidthAt(col : number) {
+        var orderedCol = this.getOrderedColumnIndexAt(col);
+        if (this.hiddenColumns[orderedCol]) {
+          return 0;
+        }
+        var v = this.cellWidth[orderedCol];
+        return typeof v == 'number'? v : this.defaultCellWidth;
+      }
+      public getCellHeightAt(row : number) {
+        var v = this.cellHeight[row];
+        return typeof v == 'number'? v : this.defaultCellHeight;
+      }
+      public isColumnDraggableAt(col : number) {
+        var orderedCol = this.getOrderedColumnIndexAt(col);
+        var v = this.columnDraggable[orderedCol];
+        return typeof v == 'boolean'? v : true;
+      }
+      public isColumnResizableAt(col : number) {
+        var orderedCol = this.getOrderedColumnIndexAt(col);
+        var v = this.columnResizable[orderedCol];
+        return typeof v == 'boolean'? v : true;
+      }
+      public getCellRendererFactoryAt(row : number, col : number) {
+        var orderedCol = this.getOrderedColumnIndexAt(col);
+        return getCellStyleAt(row, orderedCol).factory || (row < headLength?
+            this.defaultHeaderCellRendererFactory :
+            this.defaultCellRendererFactory);
+      }
+      public getCellStyleAt(row : number, col : number) {
+        var orderedCol = this.getOrderedColumnIndexAt(col);
+        var style = util.extend({}, getCellStyleAt(row, orderedCol) );
+        style.className = style.className || '';
+        if (row < headLength) {
+          style.className += ' ${prefix}-header';
+          style.editable = false;
+        } else {
+          var itemIndex = this.getItemIndexAt(row, col);
+          row -= headLength;
+          style.className += ' ${prefix}-' +
+            (itemIndex.row % 2 == 0? 'even' : 'odd');
+          if (this.selectedRows[itemIndex.row]) {
+            style.className += ' ${prefix}-item-selected';
+          }
+        }
+        if (style.editable === false) {
+          style.className += ' ${prefix}-readonly';
+        }
+        return style;
+      }
+      public getValueAt(row : number, col : number) {
+        var orderedCol = this.getOrderedColumnIndexAt(col);
+        if (row < headLength) {
+          return getCellStyleAt(row, orderedCol).label || '';
+        } else {
+          var itemIndex = this.getItemIndexAt(row, col);
+          var value = this.getItemAt(itemIndex.row)[itemIndex.col];
+          return typeof value != 'undefined'? value : '';
+        }
+      }
+    }
+
+    var table : TemplateTable = new TemplateTableImpl(
+        new TemplateTableModelImpl() );
+
+    table.on('mousedown', function(event : Event, detail : any) {
       if (detail.row < this.getLockRow() ) {
         // on header.
         this.editor.endEdit();
@@ -469,133 +580,7 @@ namespace comfortable {
       });
     });
 
-    // keep default value for restore.
-    table.defaultLockColumn = table.getLockColumn();
-
-    table.model = util.extend(table.model, {
-      // user defines
-      defaultHeaderCellRendererFactory : createDefaultHeaderCellRendererFactory(),
-      cellWidth : cellWidth,
-      cellHeight : cellHeight,
-      columnDraggable : columnDraggable,
-      columnResizable : columnResizable,
-      orderedColumnIndices : null,
-      filterContext : createFilterContext(),
-      hiddenColumns : {},
-      items : [],
-      filteredItems : null,
-      hoverRow : -1,
-      multipleRowsSelectable : false,
-      selectedRows : {},
-      resetFilter : function() {
-        this.filterContext = createFilterContext();
-        this.filteredItems = null;
-        table.invalidate();
-      },
-      getItemCount : function() {
-        return (this.filteredItems || this.items).length;
-      },
-      getItemAt : function(row : number) {
-        return (this.filteredItems || this.items)[row];
-      },
-      getOrderedColumnIndexAt : function(col : number) {
-        if (this.orderedColumnIndices == null) {
-          this.orderedColumnIndices = createDefaultOrderedColumnIndices(this);
-        }
-        return this.orderedColumnIndices[col];
-      },
-      getItemIndexAt : function(row : number, col : number) {
-        if (row < headLength) {
-          return { row : -1, col : -1 };
-        } else {
-          var orderedCol = this.getOrderedColumnIndexAt(col);
-          var style = getCellStyleAt(row, orderedCol);
-          row -= headLength;
-          return {
-            row : ~~(row / bodyLength),
-            col : style.dataField ||
-              ( (row % bodyLength) * this.getColumnCount() + orderedCol)
-          };
-        }
-      },
-      setValueAt : function(row : number, col : number, value : any) {
-        if (row < headLength) {
-        } else {
-          var itemIndex = this.getItemIndexAt(row, col);
-          var item = this.getItemAt(itemIndex.row);
-          if (item) {
-            item[itemIndex.col] = value;
-          }
-        }
-      },
-      // overrides
-      getRowCount : function() { return headLength +
-        bodyLength * this.getItemCount(); },
-      getColumnCount : function() { return columnCount; },
-      getLineRowCountAt : function(row : number) {
-        return row < headLength? headLength : bodyLength; },
-      getLineRowAt : function(row : number) {
-        return row < headLength? row : (row - headLength) % bodyLength; },
-      getCellWidthAt : function(col : number) {
-        var orderedCol = this.getOrderedColumnIndexAt(col);
-        if (this.hiddenColumns[orderedCol]) {
-          return 0;
-        }
-        var v = this.cellWidth[orderedCol];
-        return typeof v == 'number'? v : this.defaultCellWidth;
-      },
-      getCellHeightAt : function(row : number) {
-        var v = this.cellHeight[row];
-        return typeof v == 'number'? v : this.defaultCellHeight;
-      },
-      isColumnDraggableAt : function(col : number) {
-        var orderedCol = this.getOrderedColumnIndexAt(col);
-        var v = this.columnDraggable[orderedCol];
-        return typeof v == 'boolean'? v : true;
-      },
-      isColumnResizableAt : function(col : number) {
-        var orderedCol = this.getOrderedColumnIndexAt(col);
-        var v = this.columnResizable[orderedCol];
-        return typeof v == 'boolean'? v : true;
-      },
-      getCellRendererFactoryAt : function(row : number, col : number) {
-        var orderedCol = this.getOrderedColumnIndexAt(col);
-        return getCellStyleAt(row, orderedCol).factory || (row < headLength?
-            this.defaultHeaderCellRendererFactory :
-            this.defaultCellRendererFactory);
-      },
-      getCellStyleAt : function(row : number, col : number) {
-        var orderedCol = this.getOrderedColumnIndexAt(col);
-        var style = util.extend({}, getCellStyleAt(row, orderedCol) );
-        style.className = style.className || '';
-        if (row < headLength) {
-          style.className += ' ${prefix}-header';
-          style.editable = false;
-        } else {
-          var itemIndex = this.getItemIndexAt(row, col);
-          row -= headLength;
-          style.className += ' ${prefix}-' +
-            (itemIndex.row % 2 == 0? 'even' : 'odd');
-          if (this.selectedRows[itemIndex.row]) {
-            style.className += ' ${prefix}-item-selected';
-          }
-        }
-        if (style.editable === false) {
-          style.className += ' ${prefix}-readonly';
-        }
-        return style;
-      },
-      getValueAt : function(row : number, col : number) {
-        var orderedCol = this.getOrderedColumnIndexAt(col);
-        if (row < headLength) {
-          return getCellStyleAt(row, orderedCol).label || '';
-        } else {
-          var itemIndex = this.getItemIndexAt(row, col);
-          var value = this.getItemAt(itemIndex.row)[itemIndex.col];
-          return typeof value != 'undefined'? value : '';
-        }
-      }
-    }).on('valuechange', function(event : Event, detail : any) {
+    table.model.on('valuechange', function(event : Event, detail : any) {
       this.setValueAt(detail.row, detail.col, detail.newValue);
     }).on('cellsizechange', function(event : Event, detail : any) {
       if (typeof detail.col == 'number') {

@@ -1,4 +1,90 @@
 declare namespace comfortable {
+    var SortOrder: {
+        ASC: string;
+        DESC: string;
+    };
+    var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
+}
+declare namespace comfortable {
+    var fromTemplate: (template: TableTemplate) => TemplateTable;
+}
+declare namespace comfortable {
+    interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
+        width?: number;
+        height?: number;
+        columnDraggable?: boolean;
+        columnResizable?: boolean;
+        dataField?: string;
+        /** one of 'string(default)', 'number', 'boolean', 'select-one' */
+        dataType?: string;
+        /** dataType : 'string', 'number' */
+        maxLength?: number;
+        /** dataType : 'number' */
+        decimalDigits?: number;
+        /** dataType : 'boolean',
+          2 elements array like [falseValue, trueValue].
+         */
+        booleanValues?: any[];
+        /** dataType : 'select-one' */
+        options?: (any[] | ((row: number, col: number) => any[]));
+        labelField?: string;
+        valueField?: string;
+        factory?: TableCellRendererFactory;
+    }
+    interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
+        label?: string;
+        /** dataType : 'number' */
+        comparator?: (v1: any, v2: any) => number;
+    }
+    interface TableTemplate {
+        lockColumn?: number;
+        thead?: TableTemplateHeaderCellStyle[][];
+        tbody?: TableTemplateCellStyle[][];
+    }
+    interface ItemIndex {
+        row: number;
+        /** col will be string if dataField is defined. */
+        col: (number | string);
+    }
+    interface TemplateTableModel extends TableModel {
+        filterContext: FilterContext;
+        defaultHeaderCellRendererFactory: TableCellRendererFactory;
+        items: any[];
+        filteredItems: any[];
+        resetFilter: () => void;
+        getItemAt: (row: number) => any;
+        getItemCount: () => number;
+        getItemIndexAt: (row: number, col: number) => ItemIndex;
+        getOrderedColumnIndexAt: (col: number) => number;
+        orderedColumnIndices: number[];
+        hiddenColumns: {
+            [orderedCol: number]: boolean;
+        };
+        hoverRow: number;
+    }
+    interface TemplateTableCell extends TableCell {
+        dataField?: string;
+        comparator?: (a: any, b: any) => number;
+    }
+    type Rejects = {
+        [value: string]: boolean;
+    };
+    interface FilterContext {
+        sort?: {
+            dataField: string;
+            sortOrder: string;
+        };
+        filters: {
+            [dataField: string]: Rejects;
+        };
+    }
+    interface TemplateTable extends Table {
+        enableLockColumn: boolean;
+        defaultLockColumn: number;
+        setLockColumn: (lockColumn: number) => void;
+    }
+}
+declare namespace comfortable {
     var createDefaultCellRendererFactoryOpts: () => CellRendererFactoryOpts;
     var createDefaultCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
     var createMultiLineLabelRenderer: (parent: HTMLElement) => {
@@ -426,92 +512,6 @@ declare namespace comfortable {
     }
 }
 declare namespace comfortable {
-}
-declare namespace comfortable {
-    var SortOrder: {
-        ASC: string;
-        DESC: string;
-    };
-    var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
-}
-declare namespace comfortable {
-    var fromTemplate: (template: TableTemplate) => TemplateTable;
-}
-declare namespace comfortable {
-    interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
-        width?: number;
-        height?: number;
-        columnDraggable?: boolean;
-        columnResizable?: boolean;
-        dataField?: string;
-        /** one of 'string(default)', 'number', 'boolean', 'select-one' */
-        dataType?: string;
-        /** dataType : 'string', 'number' */
-        maxLength?: number;
-        /** dataType : 'number' */
-        decimalDigits?: number;
-        /** dataType : 'boolean',
-          2 elements array like [falseValue, trueValue].
-         */
-        booleanValues?: any[];
-        /** dataType : 'select-one' */
-        options?: (any[] | ((row: number, col: number) => any[]));
-        labelField?: string;
-        valueField?: string;
-        factory?: TableCellRendererFactory;
-    }
-    interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
-        label?: string;
-        /** dataType : 'number' */
-        comparator?: (v1: any, v2: any) => number;
-    }
-    interface TableTemplate {
-        lockColumn?: number;
-        thead?: TableTemplateHeaderCellStyle[][];
-        tbody?: TableTemplateCellStyle[][];
-    }
-    interface ItemIndex {
-        row: number;
-        /** col will be string if dataField is defined. */
-        col: (number | string);
-    }
-    interface TemplateTableModel extends TableModel {
-        filterContext: FilterContext;
-        defaultHeaderCellRendererFactory: TableCellRendererFactory;
-        items: any[];
-        filteredItems: any[];
-        resetFilter: () => void;
-        getItemAt: (row: number) => any;
-        getItemCount: () => number;
-        getItemIndexAt: (row: number, col: number) => ItemIndex;
-        getOrderedColumnIndexAt: (col: number) => number;
-        orderedColumnIndices: number[];
-        hiddenColumns: {
-            [orderedCol: number]: boolean;
-        };
-        hoverRow: number;
-    }
-    interface TemplateTableCell extends TableCell {
-        dataField?: string;
-        comparator?: (a: any, b: any) => number;
-    }
-    type Rejects = {
-        [value: string]: boolean;
-    };
-    interface FilterContext {
-        sort?: {
-            dataField: string;
-            sortOrder: string;
-        };
-        filters: {
-            [dataField: string]: Rejects;
-        };
-    }
-    interface TemplateTable extends Table {
-        enableLockColumn: boolean;
-        defaultLockColumn: number;
-        setLockColumn: (lockColumn: number) => void;
-    }
 }
 declare namespace comfortable {
     var vueComponents: {
