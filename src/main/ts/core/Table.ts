@@ -734,10 +734,8 @@ namespace comfortable {
     }
 
     public $el = this.frame;
-    public lockRow = 0;
-    public lockColumn = 0;
-    public getLockRow() { return this.lockRow; }
-    public getLockColumn() { return this.lockColumn; }
+    public getLockRow() { return 0; }
+    public getLockColumn() { return 0; }
     public forEachCells(callback : any) {
       this.tables.forEach(function(table) {
         (table.tbody.children || []).forEach(function(tr) {

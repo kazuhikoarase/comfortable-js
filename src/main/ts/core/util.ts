@@ -224,6 +224,7 @@ namespace comfortable.util {
   // num utils
 
   export var numRe = /^([\+\-]?)([0-9]*)(\.[0-9]*)?$/;
+
   export var formatNumber = function(value : string,
       digits? : number, s1? : string, s2? : string) {
     digits = digits || 0;
@@ -268,6 +269,7 @@ namespace comfortable.util {
   if (wideNumChars.length != narrowNumChars.length) {
     throw wideNumChars + ',' + narrowNumChars;
   }
+
   export var toNarrowNumber = function(value : string) {
     var s = '';
     for (var i = 0; i < value.length; i += 1) {

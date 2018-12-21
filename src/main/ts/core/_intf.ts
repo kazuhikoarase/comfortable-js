@@ -9,14 +9,12 @@ namespace comfortable {
 
   export interface Table extends UIEventTarget {
     $el : HTMLElement;
-    lockRow : number;
-    lockColumn : number;
+    model : TableModel;
+    editor : Editor;
     getLockRow : () => number;
     getLockColumn : () => number;
     forEachCells : (callback : (cell : {
       $el : HTMLElement, row : number, col : number }) => void) => void;
-    model : TableModel;
-    editor : Editor;
   }
 
   export interface TableCellRenderer {

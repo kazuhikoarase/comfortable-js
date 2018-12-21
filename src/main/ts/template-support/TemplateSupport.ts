@@ -43,7 +43,7 @@ namespace comfortable {
       var columns : ColumnItem[] = [];
       var columnCount = tableModel.getColumnCount();
       for (var col = 0; col <= columnCount;) {
-        if (col == table.lockColumn) {
+        if (col == table.getLockColumn() ) {
           columns.push({ type : 'lockColumn', label : messages.LOCK_COLUMN,
             hidden : !table.enableLockColumn });
         }
@@ -162,7 +162,7 @@ namespace comfortable {
           tableModel.orderedColumnIndices = null;
           tableModel.hiddenColumns = {};
           tableModel.trigger('beforecellsizechange');
-          table.lockColumn = table.defaultLockColumn;
+          table.setLockColumn(table.defaultLockColumn);
           table.enableLockColumn = true;
           table.invalidate();
         }),
@@ -188,7 +188,7 @@ namespace comfortable {
           tableModel.orderedColumnIndices = orderedColumnIndices;
           tableModel.hiddenColumns = hiddenColumns;
           tableModel.trigger('beforecellsizechange');
-          table.lockColumn = lockColumn;
+          table.setLockColumn(lockColumn);
           table.enableLockColumn = enableLockColumn;
           table.invalidate();
         }),
@@ -392,14 +392,38 @@ namespace comfortable {
     var headLength = template.thead.length;
     var bodyLength = template.tbody.length;
 
+//    class A {}
+    var a = new (class A {})();
+/*
+    class A extends TableImpl implements TemplateTable {
+      private lockColumn = 0;
+
+      constructor(model : TableModel) {
+        super(model);
+      }
+
+      public enableLockColumn = true;
+      public defaultLockColumn = 0;
+      public setLockColumn(lockColumn : number) {
+        this.lockColumn = lockColumn;
+      }
+      public getLockColumn() {
+        return !this.enableLockColumn? 0 : this.lockColumn;
+      }
+    }
+*/
+
     var table : TemplateTable = util.extend(createTable(), {
-      lockRow : headLength,
       lockColumn : template.lockColumn || 0,
       enableLockColumn : true,
       defaultLockColumn : 0,
+      setLockColumn : function(lockColumn : number) {
+        this.lockColumn = lockColumn;
+      },
       getLockColumn : function() {
         return !this.enableLockColumn? 0 : this.lockColumn;
       },
+      getLockRow : function() { return headLength; },
       getContextMenuItems : function() {
         var messages = i18n.getMessages();
         var tableModel = table.model as TemplateTableModel;
@@ -418,6 +442,7 @@ namespace comfortable {
           }
         ];
       },
+
     }).on('mousedown', function(event : Event, detail : any) {
       if (detail.row < this.getLockRow() ) {
         // on header.
@@ -445,7 +470,7 @@ namespace comfortable {
     });
 
     // keep default value for restore.
-    table.defaultLockColumn = table.lockColumn;
+    table.defaultLockColumn = table.getLockColumn();
 
     table.model = util.extend(table.model, {
       // user defines
@@ -580,10 +605,10 @@ namespace comfortable {
     }).on('columndragged', function(event : Event, detail : any) {
       this.orderedColumnIndices = util.moveSublist(
           this.orderedColumnIndices, detail.colFrom, detail.colSpan, detail.colTo);
-      if (detail.colFrom < table.lockColumn && table.lockColumn <= detail.colTo) {
-        table.lockColumn -= detail.colSpan;
-      } else if (detail.colTo < table.lockColumn && table.lockColumn <= detail.colFrom) {
-        table.lockColumn += detail.colSpan;
+      if (detail.colFrom < table.getLockColumn() && table.getLockColumn() <= detail.colTo) {
+        table.setLockColumn(table.getLockColumn() - detail.colSpan);
+      } else if (detail.colTo < table.getLockColumn() && table.getLockColumn() <= detail.colFrom) {
+        table.setLockColumn(table.getLockColumn()+ detail.colSpan);
       }
     }).on('filterchange', function() {
 

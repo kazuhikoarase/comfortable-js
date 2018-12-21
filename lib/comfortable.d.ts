@@ -242,8 +242,6 @@ declare namespace comfortable {
         }): void;
         private createInternalEditor;
         $el: HTMLElement;
-        lockRow: number;
-        lockColumn: number;
         getLockRow(): number;
         getLockColumn(): number;
         forEachCells(callback: any): void;
@@ -319,8 +317,8 @@ declare namespace comfortable {
     }
     interface Table extends UIEventTarget {
         $el: HTMLElement;
-        lockRow: number;
-        lockColumn: number;
+        model: TableModel;
+        editor: Editor;
         getLockRow: () => number;
         getLockColumn: () => number;
         forEachCells: (callback: (cell: {
@@ -328,8 +326,6 @@ declare namespace comfortable {
             row: number;
             col: number;
         }) => void) => void;
-        model: TableModel;
-        editor: Editor;
     }
     interface TableCellRenderer {
         render: (cell: any) => void;
@@ -514,6 +510,7 @@ declare namespace comfortable {
     interface TemplateTable extends Table {
         enableLockColumn: boolean;
         defaultLockColumn: number;
+        setLockColumn: (lockColumn: number) => void;
     }
 }
 declare namespace comfortable {
