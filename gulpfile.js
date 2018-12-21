@@ -15,6 +15,7 @@ var targetName = 'comfortable';
 
 var mainTsSrc = [ 'src/main/ts/**/*.ts' ];
 var testTsSrc = [ 'src/test/ts/**/*.ts' ];
+var mainCssSrc = [ 'src/main/ts/**/*.css' ];
 
 var build = 'lib';
 
@@ -34,14 +35,7 @@ gulp.task('clean', function() {
   return del([ `${build}/*` ]);
 });
 
-gulp.task('concat-main-css', function() {
-  return gulp.src([ 'src/main/ts/**/*.css' ])
-    .pipe(order([ '**/*.css']) )
-    .pipe(concat(targetName + '.css') )
-    .pipe(gulp.dest(`${build}/`) );
-});
-
-gulp.task('build-main', gulp.series('concat-main-css', function() {
+gulp.task('build-main', function() {
   return gulp.src(mainTsSrc)
     .pipe(plumber({
       errorHandler : notify.onError({
@@ -53,9 +47,16 @@ gulp.task('build-main', gulp.series('concat-main-css', function() {
     .pipe(mainTsProject() )
     .pipe(sourcemaps.write('.') )
     .pipe(gulp.dest(build) );
-}) );
+});
 
-gulp.task('build-test', gulp.series('build-main', function() {
+gulp.task('concat-main-css', function() {
+  return gulp.src(mainCssSrc)
+    .pipe(order([ '**/*.css']) )
+    .pipe(concat(targetName + '.css') )
+    .pipe(gulp.dest(`${build}/`) );
+});
+
+gulp.task('build-test', function() {
   return gulp.src(testTsSrc)
     .pipe(plumber({
       errorHandler : notify.onError({
@@ -67,9 +68,10 @@ gulp.task('build-test', gulp.series('build-main', function() {
     .pipe(testTsProject() )
     .pipe(sourcemaps.write('.') )
     .pipe(gulp.dest(build) );
-}) );
+});
 
-gulp.task('build', gulp.series('build-test') );
+gulp.task('build', gulp.series('build-main', 'concat-main-css',
+    'build-test') );
 
 gulp.task('compress', gulp.series('build', function () {
   return gulp.src(`${build}/${targetName}.js`)
@@ -83,11 +85,12 @@ gulp.task('jasmine', gulp.series('build', function() {
   .pipe(jasmine() );
 }) );
 
-gulp.task('watch', gulp.series('jasmine', function(){
-  gulp.watch(mainTsSrc.concat(testTsSrc), gulp.series('jasmine') )
+gulp.task('watch', function() {
+  var src = mainTsSrc.concat(testTsSrc).concat(mainCssSrc);
+  gulp.watch(src, gulp.series('jasmine') )
     .on('change', function(path) {
       console.log(path);
     });
-}) );
+});
 
 gulp.task('default', gulp.series('clean', 'jasmine') );
