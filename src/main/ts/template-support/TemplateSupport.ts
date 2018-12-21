@@ -30,6 +30,7 @@ namespace comfortable {
 
     var messages = i18n.getMessages();
     var tableModel = <TemplateTableModel>table.model;
+    var lockColumn : number = (<any>table).lockColumn;
 
     interface ColumnItem {
       type : string;
@@ -43,7 +44,7 @@ namespace comfortable {
       var columns : ColumnItem[] = [];
       var columnCount = tableModel.getColumnCount();
       for (var col = 0; col <= columnCount;) {
-        if (col == table.getLockColumn() ) {
+        if (col == lockColumn) {
           columns.push({ type : 'lockColumn', label : messages.LOCK_COLUMN,
             hidden : !table.enableLockColumn });
         }
@@ -295,7 +296,8 @@ namespace comfortable {
     });
   };
 
-  export var fromTemplate = function(template : TableTemplate) {
+  export var fromTemplate =
+      function(template : TableTemplate) : TemplateTable {
 
     if (template.thead && !template.tbody) {
       // set default tbody if not exists.
@@ -393,7 +395,7 @@ namespace comfortable {
     var bodyLength = template.tbody.length;
 
     class TemplateTableImpl extends TableImpl implements TemplateTable {
-      private lockColumn = template.lockColumn || 0;
+      public lockColumn = template.lockColumn || 0;
       public enableLockColumn = true;
       // keep default value for restore.
       public defaultLockColumn = this.lockColumn;
@@ -551,7 +553,7 @@ namespace comfortable {
       }
     }
 
-    var table : TemplateTable = new TemplateTableImpl(
+    var table = new TemplateTableImpl(
         new TemplateTableModelImpl() );
 
     table.on('mousedown', function(event : Event, detail : any) {
@@ -590,10 +592,10 @@ namespace comfortable {
     }).on('columndragged', function(event : Event, detail : any) {
       this.orderedColumnIndices = util.moveSublist(
           this.orderedColumnIndices, detail.colFrom, detail.colSpan, detail.colTo);
-      if (detail.colFrom < table.getLockColumn() && table.getLockColumn() <= detail.colTo) {
-        table.setLockColumn(table.getLockColumn() - detail.colSpan);
-      } else if (detail.colTo < table.getLockColumn() && table.getLockColumn() <= detail.colFrom) {
-        table.setLockColumn(table.getLockColumn()+ detail.colSpan);
+      if (detail.colFrom < table.lockColumn && table.lockColumn <= detail.colTo) {
+        table.lockColumn -= detail.colSpan;
+      } else if (detail.colTo < table.lockColumn && table.lockColumn <= detail.colFrom) {
+        table.lockColumn += detail.colSpan;
       }
     }).on('filterchange', function() {
 

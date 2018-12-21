@@ -320,14 +320,17 @@ namespace comfortable {
       }
     }
     private cellSizeCache : CellSizeCache = null;
-    private beforeCellSizeChangeHandler(event : Event, detail : any) {
-      // note: 'this' is tableModel!
-      this.cellSizeCache = null;
-    }
+    private beforeCellSizeChangeHandler : EventListener = null;
     private getCellSizeCache() : CellSizeCache {
       var width = this.$el.clientWidth;
       var height = this.$el.clientHeight;
       var tableModel = this.model;
+      if (this.beforeCellSizeChangeHandler == null) {
+        this.beforeCellSizeChangeHandler = (event : Event, detail : any) => {
+          // note: 'this' bind to table's.
+          this.cellSizeCache = null;
+        };
+      }
       // observe cache size.
       tableModel.off('beforecellsizechange', this.beforeCellSizeChangeHandler);
       tableModel.on('beforecellsizechange', this.beforeCellSizeChangeHandler);

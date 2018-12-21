@@ -2,7 +2,8 @@ namespace comfortable {
 
   'use strict';
 
-  export interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
+  export interface TableTemplateCellStyle
+  extends TableCellStyle, CellRendererFactoryOpts {
 
     width? : number;
     height? : number;
@@ -34,7 +35,8 @@ namespace comfortable {
     factory? : TableCellRendererFactory;
   }
 
-  export interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
+  export interface TableTemplateHeaderCellStyle
+  extends TableTemplateCellStyle {
     label? : string;
     /** dataType : 'number' */
     comparator? : (v1 : any, v2 : any) => number;

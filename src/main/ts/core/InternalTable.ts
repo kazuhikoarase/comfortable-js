@@ -135,6 +135,7 @@ namespace comfortable {
       // offset cache
       if (this.beforeCellSizeChangeHandler == null) {
         this.beforeCellSizeChangeHandler = (event : Event, detail : any) => {
+          // note: 'this' bind to inner-table's.
           this.offsetCache = null;
         };
       }
