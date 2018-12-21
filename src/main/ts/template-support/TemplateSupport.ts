@@ -296,6 +296,51 @@ namespace comfortable {
     });
   };
 
+  var setupDefaults = function(template : TableTemplate) {
+
+    // body => head
+    var inheritFromBody = [ 'dataType',
+      'options', 'labelField', 'valueField' ];
+    var bodyDataCells : any = {};
+    template.tbody.forEach(function(tr) {
+      tr.forEach(function(cell) {
+        if (typeof cell.dataField == 'string') {
+          bodyDataCells[cell.dataField] = cell;
+        }
+      });
+    });
+    template.thead.forEach(function(tr) {
+      tr.forEach(function(cell) {
+        if (typeof cell.dataField == 'string') {
+          var bodyDataCell = bodyDataCells[cell.dataField];
+          if (bodyDataCell) {
+            inheritFromBody.forEach(function(prop) {
+              if (bodyDataCell[prop] &&
+                  typeof (<any>cell)[prop] == 'undefined') {
+                (<any>cell)[prop] = bodyDataCell[prop];
+              }
+            });
+          }
+        }
+      });
+    });
+
+    template.thead.forEach(function(row) {
+      row.forEach(function(cell) {
+        if (!cell.factory && cell.dataType) {
+          cell.factory = createDefaultHeaderCellRendererFactory(cell);
+        }
+      });
+    });
+    template.tbody.forEach(function(row) {
+      row.forEach(function(cell) {
+        if (!cell.factory && cell.dataType) {
+          cell.factory = createDefaultCellRendererFactory(cell);
+        }
+      });
+    });
+  };
+
   export var fromTemplate =
       function(template : TableTemplate) : TemplateTable {
 
@@ -319,20 +364,8 @@ namespace comfortable {
     template.thead = template.thead || [[]];
     template.tbody = template.tbody || [[]];
 
-    template.thead.forEach(function(row) {
-      row.forEach(function(cell) {
-        if (!cell.factory && cell.dataType) {
-          cell.factory = createDefaultHeaderCellRendererFactory(cell);
-        }
-      });
-    });
-    template.tbody.forEach(function(row) {
-      row.forEach(function(cell) {
-        if (!cell.factory && cell.dataType) {
-          cell.factory = createDefaultCellRendererFactory(cell);
-        }
-      });
-    });
+    // setup defaults.
+    setupDefaults(template);
 
     var columnCount = 0;
     var cellWidth : { [k : number] : number } = {};

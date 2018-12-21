@@ -208,7 +208,7 @@ window.addEventListener('load', function(event) {
           { label : 'string', dataField : 'val1' },
           { label : 'number', dataField : 'val2' },
           { label : 'boolean', dataField : 'val3', labelFunction :
-            function(value) { return value == '1'? 'On' :  'Off'; } },
+            function(value) { return value == '1'? 'On' : 'Off'; } },
           { label : 'select-one', dataField : 'val4',
             options : [ { label : 'One', value : '1' },
                         { label : 'Two', value : '2' },
