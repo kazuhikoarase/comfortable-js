@@ -13,100 +13,25 @@ namespace comfortable {
 
   'use strict';
 
-  var createTextEditor = function(opts : TextEditorOptions) : CellEditor {
-    return {
-      $el : util.createElement('input', {
-        attrs : { type : 'text', 'class' : '${prefix}-editor' }
-      }),
-      beginEdit : function(td : TdWrapper, cell : TextEditorCell) {
-        var cs = window.getComputedStyle(td.$el, null);
-        var opts : util.ElementOptions = {
-            props : {},
-            style : {
-              textAlign : cs.textAlign,
-              verticalAlign : cs.verticalAlign,
-              color : cs.color,
-              backgroundColor : cs.backgroundColor,
-              fontFamily : cs.fontFamily,
-              fontSize : cs.fontSize,
-              fontWeight : cs.fontWeight
-            }
-          };
-        if (typeof cell.maxLength == 'number') {
-          (<any>opts.props).maxLength = cell.maxLength;
-        }
-        util.set(this.$el, opts);
-      },
-      focus : function() {
-        this.$el.focus();
-        this.$el.select();
-      },
-      blur : function() {
-        this.$el.blur();
-      },
-      setValue : function(value) {
-        this.$el.value = value;
-        this.valueType = typeof value;
-      },
-      getValue : function() {
-        if (opts.dataType == 'number') {
-          var value = NumUtil.format(
-              NumUtil.toNarrow(this.$el.value),
-              opts.decimalDigits, '');
-          return this.valueType == 'number'? +value : value;
-        }
-        return this.$el.value;
-      },
-      isValid : function() {
-        if (opts.dataType == 'number') {
-          return !!NumUtil.toNarrow(this.getValue() ).match(NumUtil.re);
-        }
-        return true;
-      }
-    };
-  };
+  class TextEditor implements CellEditor {
 
-  var createCheckBox = function(opts : CheckBoxOptions) : CellEditor {
-    var booleanValues : any[] = null;
-    return {
-      $el : util.createElement('input', {
-        attrs : { type : 'checkbox', 'class' : '${prefix}-editor' }
-      }),
-      beginEdit : function(td : TdWrapper, cell : CheckBoxCell) {
-        var cs = window.getComputedStyle(td.$el, null);
-        util.set(this.$el, {
-          style : {
-          }
-        });
-        booleanValues = cell.booleanValues || [false, true];
-      },
-      focus : function() {
-        this.$el.focus();
-      },
-      blur : function() {
-        this.$el.blur();
-      },
-      setValue : function(value) {
-        this.$el.checked = (value === booleanValues[1]);
-      },
-      getValue : function() {
-        return booleanValues[this.$el.checked? 1 : 0];
-      },
-      isValid : function() {
-        return true;
-      }
-    };
-  };
+    private opts : TextEditorOptions;
+    private valueType : string;
 
-  var createSelectBox = function(opts : SelectBoxOptions) : CellEditor {
-    var select = util.createElement('select', {
-      attrs : { 'class' : '${prefix}-editor' }
+    constructor(opts : TextEditorOptions) {
+      this.opts = opts;
+    }
+
+    public $el = util.createElement('input', {
+      attrs : { type : 'text', 'class' : '${prefix}-editor' }
     });
-    return {
-      $el : select,
-      beginEdit : function(td : TdWrapper, cell : SelectBoxCell) {
-        var cs = window.getComputedStyle(td.$el, null);
-        util.set(this.$el, {
+
+    private _$el = <HTMLInputElement>this.$el;
+
+    public beginEdit(td : TdWrapper, cell : TextEditorCell) {
+      var cs = window.getComputedStyle(td.$el, null);
+      var opts : util.ElementOptions = {
+          props : {},
           style : {
             textAlign : cs.textAlign,
             verticalAlign : cs.verticalAlign,
@@ -116,73 +41,184 @@ namespace comfortable {
             fontSize : cs.fontSize,
             fontWeight : cs.fontWeight
           }
-        });
-        var options = getOptions(cell);
-        while (select.childNodes.length < options.length) {
-          select.appendChild(util.createElement('option') );
-        }
-        var labelField = cell.labelField || 'label';
-        var valueField = cell.valueField || 'value';
-        var i = 0;
-        for (; i < options.length; i += 1) {
-          var option = options[i];
-          util.set(select.childNodes[i], {
-            style : { display : '' },
-            props : { textContent : option[labelField],
-              value : option[valueField] }
-          });
-        }
-        while (select.childNodes.length > options.length) {
-          select.removeChild(select.lastChild);
-        }
-        // IE9 does not support style.display=none.
-        /*
-        for (;i < select.childNodes.length; i += 1) {
-          select.childNodes[i].style.display = 'none';
-        }
-        */
-      },
-      focus : function() {
-        this.$el.focus();
-      },
-      blur : function() {
-        this.$el.blur();
-      },
-      setValue : function(value) {
-        this.$el.value = value;
-      },
-      getValue : function() {
-        return this.$el.value;
-      },
-      isValid : function() {
-        return true;
+        };
+      if (typeof cell.maxLength == 'number') {
+        (<any>opts.props).maxLength = cell.maxLength;
       }
-    };
-  };
-
-  var getOptions = function(cell : SelectBoxCell) : any[] {
-    var options : any = cell.options;
-    if (typeof options == 'function') {
-      options = options(cell.row, cell.col);
+      util.set(this.$el, opts);
     }
-    return options || [];
-  };
+    public focus() {
+      this.$el.focus();
+      this._$el.select();
+    }
+    public blur() {
+      this.$el.blur();
+    }
+    public setValue(value : any) {
+      this._$el.value = value;
+      this.valueType = typeof value;
+    }
+    public getValue() {
+      if (this.opts.dataType == 'number') {
+        var value = util.formatNumber(
+            util.toNarrowNumber(this._$el.value),
+            this.opts.decimalDigits, '');
+        return this.valueType == 'number'? +value : value;
+      }
+      return this._$el.value;
+    }
+    public isValid() {
+      if (this.opts.dataType == 'number') {
+        return !!util.toNarrowNumber(
+          <string>this.getValue() ).match(util.numRe);
+      }
+      return true;
+    }
+  }
 
-  export var createDefaultCellRendererFactoryOpts = function() : CellRendererFactoryOpts {
+  class CheckBox implements CellEditor {
+
+    private opts : CheckBoxOptions;
+    private booleanValues : any[] = null;
+
+    constructor(opts : CheckBoxOptions) {
+      this.opts = opts;
+    }
+
+    public $el = util.createElement('input', {
+      attrs : { type : 'checkbox', 'class' : '${prefix}-editor' }
+    });
+
+    private _$el = <HTMLInputElement>this.$el;
+
+    public beginEdit(td : TdWrapper, cell : CheckBoxCell) {
+      var cs = window.getComputedStyle(td.$el, null);
+      util.set(this.$el, {
+        style : {
+        }
+      });
+      this.booleanValues = cell.booleanValues || [false, true];
+    }
+    public focus() {
+      this.$el.focus();
+    }
+    public blur() {
+      this.$el.blur();
+    }
+    public setValue(value : any) {
+      this._$el.checked = (value === this.booleanValues[1]);
+    }
+    public getValue() {
+      return this.booleanValues[this._$el.checked? 1 : 0];
+    }
+    public isValid() {
+      return true;
+    }
+  }
+
+  class SelectBox implements CellEditor {
+
+    private opts : SelectBoxOptions;
+
+    constructor(opts : SelectBoxOptions) {
+      this.opts = opts;
+    }
+
+    public $el = util.createElement('select', {
+      attrs : { 'class' : '${prefix}-editor' }
+    });
+
+    private _$el = <HTMLSelectElement>this.$el;
+
+    public beginEdit(td : TdWrapper, cell : SelectBoxCell) {
+      var cs = window.getComputedStyle(td.$el, null);
+      util.set(this.$el, {
+        style : {
+          textAlign : cs.textAlign,
+          verticalAlign : cs.verticalAlign,
+          color : cs.color,
+          backgroundColor : cs.backgroundColor,
+          fontFamily : cs.fontFamily,
+          fontSize : cs.fontSize,
+          fontWeight : cs.fontWeight
+        }
+      });
+      var options = SelectBox.getOptions(cell);
+      while (this.$el.childNodes.length < options.length) {
+        this.$el.appendChild(util.createElement('option') );
+      }
+      var labelField = cell.labelField || 'label';
+      var valueField = cell.valueField || 'value';
+      var i = 0;
+      for (; i < options.length; i += 1) {
+        var option = options[i];
+        util.set(this.$el.childNodes[i], {
+          style : { display : '' },
+          props : { textContent : option[labelField],
+            value : option[valueField] }
+        });
+      }
+      while (this.$el.childNodes.length > options.length) {
+        this.$el.removeChild(this.$el.lastChild);
+      }
+      // IE9 does not support style.display=none.
+      /*
+      for (;i < select.childNodes.length; i += 1) {
+        select.childNodes[i].style.display = 'none';
+      }
+      */
+    }
+    public focus() {
+      this.$el.focus();
+    }
+    public blur() {
+      this.$el.blur();
+    }
+    public setValue(value : any) {
+      this._$el.value = value;
+    }
+    public getValue() {
+      return this._$el.value;
+    }
+    public isValid() {
+      return true;
+    }
+
+    public static getOptions(cell : SelectBoxCell) : any[] {
+      var options : any = cell.options;
+      if (typeof options == 'function') {
+        options = options(cell.row, cell.col);
+      }
+      return options || [];
+    }
+  }
+
+  export var createDefaultCellRendererFactoryOpts =
+      function() : CellRendererFactoryOpts {
     return {
       // value to label
       labelFunction : function(value, cell) {
-        if (cell.labelFunction) {
+
+        if (typeof cell.labelFunction == 'function') {
+
           return cell.labelFunction(value);
+
         } else if (value === null || typeof value == 'undefined') {
+
           return '';
+
         } else if (this.dataType == 'number') {
-          return NumUtil.format(value, this.decimalDigits);
+
+          return util.formatNumber(value, this.decimalDigits);
+
         } else if (this.dataType == 'select-one') {
-          var options = getOptions(cell);
+
+          var options = SelectBox.getOptions(cell);
           if (typeof options.splice != 'function') {
+            // not an Array.
             return options[value] || '';
           }
+
           var labelField = (<SelectBoxCell>cell).labelField || 'label';
           var valueField = (<SelectBoxCell>cell).valueField || 'value';
           for (var i = 0; i < options.length; i += 1) {
@@ -192,18 +228,22 @@ namespace comfortable {
             }
           }
           return '';
+ 
         } else {
+
+          // by default, to string.
           return '' + value;
+
         }
       },
       // create a editor
       createEditor : function() {
         if (this.dataType == 'select-one') {
-          return createSelectBox(this);
+          return new SelectBox(this);
         } else if (this.dataType == 'boolean') {
-          return createCheckBox(this);
+          return new CheckBox(this);
         }
-        return createTextEditor(this);
+        return new TextEditor(this);
       }
     };
   };
@@ -273,6 +313,7 @@ namespace comfortable {
   };
 
   var linesRe = /\r?\n/g;
+
   export var createMultiLineLabelRenderer = function(parent : HTMLElement) {
     var elms : HTMLElement[] = null;
     return {
@@ -308,5 +349,6 @@ namespace comfortable {
         }
       }
     };
-  };
+  }
+
 }

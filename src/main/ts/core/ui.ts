@@ -21,7 +21,7 @@ namespace comfortable.ui {
       on : { mousedown : function(event : Event) {
         event.preventDefault();
       }, click : function(event : Event) { action(event); } } });
-  };
+  }
 
   export var createDialog = function(children : HTMLElement[]) {
     var dialog = util.extend(new EventTargetImpl(), {
@@ -52,7 +52,7 @@ namespace comfortable.ui {
       }
     };
     return dialog;
-  };
+  }
 
   export interface Menu {
     dispose : () => void;
@@ -108,6 +108,6 @@ namespace comfortable.ui {
     util.$(document).on('mousedown', mousedownHandler);
     document.body.appendChild(menu);
     return { dispose : dispose };
-  };
+  }
 
 }

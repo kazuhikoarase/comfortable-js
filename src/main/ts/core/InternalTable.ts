@@ -85,7 +85,8 @@ namespace comfortable {
          this.view.scrollLeft = 0;  this.view.scrollTop = 0; } }
     }, [ this.table ]);
 
-    private getOrCrt(tagName : string, index : number, parent : ElmCache, init? : (elm : ElmCache) => void ) {
+    private getOrCrt(tagName : string, index : number,
+        parent : ElmCache, init? : (elm : ElmCache) => void ) {
       if (parent.children && index < parent.children.length) {
         return parent.children[index];
       }
@@ -133,9 +134,9 @@ namespace comfortable {
 
       // offset cache
       if (this.beforeCellSizeChangeHandler == null) {
-        this.beforeCellSizeChangeHandler = function(event : Event, detail : any) {
+        this.beforeCellSizeChangeHandler = (event : Event, detail : any) => {
           this.offsetCache = null;
-        }.bind(this);
+        };
       }
       tableModel.off('beforecellsizechange', this.beforeCellSizeChangeHandler);
       tableModel.on('beforecellsizechange', this.beforeCellSizeChangeHandler);

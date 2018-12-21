@@ -176,7 +176,7 @@ declare namespace comfortable {
 }
 declare namespace comfortable {
     interface List<T, C extends ListCell> extends UIEventTarget {
-        $el: Element;
+        $el: HTMLElement;
         getItemAt: (index: number) => T;
         getItemCount: () => number;
         createCell: () => C;
@@ -203,15 +203,6 @@ declare namespace comfortable {
         cellHeight: number;
         render(): void;
     }
-}
-declare namespace comfortable {
-}
-declare namespace comfortable {
-    var NumUtil: {
-        re: RegExp;
-        format: (value: string, digits?: number, s1?: string, s2?: string) => string;
-        toNarrow: (value: string) => string;
-    };
 }
 declare namespace comfortable {
     var classNamePrefix: string;
@@ -318,6 +309,9 @@ declare namespace comfortable.util {
     var moveSublist: (list: any[], from: number, length: number, to: number) => any[];
     var getCellId: (row: number, col: number) => string;
     var translate: (val1: number, min1: number, max1: number, min2: number, max2: number, log?: string) => number;
+    var numRe: RegExp;
+    var formatNumber: (value: string, digits?: number, s1?: string, s2?: string) => string;
+    var toNarrowNumber: (value: string) => string;
 }
 declare namespace comfortable {
     interface Editor {
@@ -434,6 +428,8 @@ declare namespace comfortable {
         getValue: () => any;
         isValid: () => boolean;
     }
+}
+declare namespace comfortable {
 }
 declare namespace comfortable {
     var SortOrder: {

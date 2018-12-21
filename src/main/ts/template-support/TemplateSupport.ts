@@ -337,6 +337,7 @@ namespace comfortable {
     var cellHeight : { [k : number] : number } = {};
     var columnDraggable : { [k : number] : boolean } = {};
     var columnResizable : { [k : number] : boolean } = {};
+
     var styles = function() {
       var spaned : { [ id : string ] : boolean } = {};
       var setSpaned = function(row : number, col : number, cell : TableCell) {

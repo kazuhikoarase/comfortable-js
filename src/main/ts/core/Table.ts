@@ -750,4 +750,5 @@ namespace comfortable {
     public editor = this.createInternalEditor();
     public model : TableModel = null;
   }
+
 }

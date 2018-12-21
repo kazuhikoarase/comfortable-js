@@ -1,5 +1,5 @@
 //
-// comfortable - list
+// comfortable - List
 //
 // Copyright (c) 2018 Kazuhiko Arase
 //
@@ -16,7 +16,7 @@ namespace comfortable {
   'use strict';
 
   export interface List<T,C extends ListCell> extends UIEventTarget {
-    $el : Element;
+    $el : HTMLElement;
     getItemAt : (index : number) => T;
     getItemCount : () => number;
     createCell : () => C;
@@ -136,4 +136,5 @@ namespace comfortable {
         listState : { minRow : minRow, maxRow : maxRow } } );
     }
   }
+
 }
