@@ -13,6 +13,16 @@ namespace comfortable.ui {
 
   'use strict';
 
+  export interface Menu {
+    dispose : () => void;
+  }
+
+  export interface MenuItem {
+    label : string;
+    action? : (event? : Event) => void;
+    children? : () => MenuItem[];
+  }
+
   export var createButton = function(
       label : string, action : (event : Event) => void) {
     return util.createElement('button',{
@@ -54,17 +64,8 @@ namespace comfortable.ui {
     return dialog;
   }
 
-  export interface Menu {
-    dispose : () => void;
-  }
-
-  export interface MenuItem {
-    label : string;
-    action? : (event? : Event) => void;
-    children? : () => MenuItem[];
-  }
-
-  export var showMenu = function(left : number, top : number, menuItems : MenuItem[]) : Menu {
+  export var showMenu = function(
+      left : number, top : number, menuItems : MenuItem[]) : Menu {
     var subMenu : Menu = null;
     var menu = util.createElement('div', {
       attrs : { 'class' : '${prefix}-contextmenu' },

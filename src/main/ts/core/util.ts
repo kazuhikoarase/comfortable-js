@@ -93,16 +93,14 @@ namespace comfortable.util {
     }
     return elm;
   };
-/*
-  :
-    ((tagName : string, opts? : ElementOptions, children? : HTMLElement[]) => HTMLElement) |
-    ((tagName : string, children? : HTMLElement[], opts? : ElementOptions) => HTMLElement) =
-*/
+
   export interface CreateElement {
-    (tagName : string, opts? : ElementOptions, children? : HTMLElement[]) : HTMLElement;
-    (tagName : string, children? : HTMLElement[], opts? : ElementOptions) : HTMLElement;
+    (tagName : string,
+        opts? : ElementOptions, children? : HTMLElement[]) : HTMLElement;
+    (tagName : string,
+        children? : HTMLElement[], opts? : ElementOptions) : HTMLElement;
   }
-  
+
   export var createElement : CreateElement = function(tagName : string) {
     var args = parseArguments(arguments);
     var elm = document.createElement(tagName);

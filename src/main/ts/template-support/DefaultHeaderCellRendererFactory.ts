@@ -46,7 +46,10 @@ namespace comfortable {
 
   interface FilterDialog extends EventTarget {
     render : (cell : TableCell) => void;
-    beginEdit : (cell : TableCell) => { focus : () => void; endEdit : () => void; };
+    beginEdit : (cell : TableCell) => {
+      focus : () => void;
+      endEdit : () => void;
+    };
     dispose : () => void;
   }
 
@@ -145,8 +148,9 @@ namespace comfortable {
     var sortAscButton = createSortButton(messages.SORT_ASC);
     var sortDescButton = createSortButton(messages.SORT_DESC);
 
-    var filterItems : FilterItem[] = [ messages.SELECT_ALL ].concat(opts.filterValues).
-      map(function(value, i) {
+    var filterItems : FilterItem[] = [ messages.SELECT_ALL ]
+      .concat(opts.filterValues)
+      .map(function(value, i) {
         return {
           index : i,
           label : (i > 0)? opts.labelFunction(value, cell) : value,
