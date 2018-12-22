@@ -350,8 +350,6 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable.ui {
-    var createButton: (label: string, action: (event: Event) => void) => HTMLElement;
-    var createDialog: (children: HTMLElement[]) => any;
     interface Menu {
         dispose: () => void;
     }
@@ -360,6 +358,8 @@ declare namespace comfortable.ui {
         action?: (event?: Event) => void;
         children?: () => MenuItem[];
     }
+    var createButton: (label: string, action: (event: Event) => void) => HTMLElement;
+    var createDialog: (children: HTMLElement[]) => any;
     var showMenu: (left: number, top: number, menuItems: MenuItem[]) => Menu;
 }
 /*!
