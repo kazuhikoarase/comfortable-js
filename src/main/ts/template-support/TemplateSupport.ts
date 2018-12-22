@@ -30,8 +30,10 @@ namespace comfortable {
 
     var messages = i18n.getMessages();
     var tableModel = <TemplateTableModel>table.model;
-    var lockColumn : number = (<any>table).lockColumn;
+    var lockLeft : number = (<any>table).lockLeft;
 
+    var ColumnType = { LOCK_COLUMN : 'lockColumn', COLUMN : 'column' };
+    
     interface ColumnItem {
       type : string;
       label : string;
@@ -44,14 +46,16 @@ namespace comfortable {
       var columns : ColumnItem[] = [];
       var columnCount = tableModel.getColumnCount();
       for (var col = 0; col <= columnCount;) {
-        if (col == lockColumn) {
-          columns.push({ type : 'lockColumn', label : messages.LOCK_COLUMN,
+        if (col == lockLeft) {
+          columns.push({ type : ColumnType.LOCK_COLUMN,
+            label : messages.LOCK_COLUMN,
             hidden : !table.enableLockColumn });
         }
         if (col < columnCount) {
           var cell = tableModel.getCellAt(0, col);
           var orderedCol = tableModel.getOrderedColumnIndexAt(col);
-          columns.push({ type : 'column', label : tableModel.getValueAt(0, col),
+          columns.push({ type : ColumnType.COLUMN,
+            label : tableModel.getValueAt(0, col),
             hidden : !!tableModel.hiddenColumns[orderedCol],
             col : orderedCol, colSpan : cell.colSpan });
           col += cell.colSpan;
@@ -65,7 +69,7 @@ namespace comfortable {
     var columnItems = columns.map(function(column) {
       return util.createElement('div', {
           attrs : { 'class' : '${prefix}-listitem ${prefix}-clickable' +
-            (column.type == 'lockColumn'?
+            (column.type == ColumnType.LOCK_COLUMN?
                 ' ${prefix}-column-edit-lock-column' : '') },
           on : { mousedown : function(event) {
             event.preventDefault();
@@ -163,7 +167,7 @@ namespace comfortable {
           tableModel.orderedColumnIndices = null;
           tableModel.hiddenColumns = {};
           tableModel.trigger('beforecellsizechange');
-          table.setLockColumn(table.defaultLockColumn);
+          table.setLockLeft(table.defaultLockColumn);
           table.enableLockColumn = true;
           table.invalidate();
         }),
@@ -181,7 +185,7 @@ namespace comfortable {
               if (column.hidden) {
                 hiddenColumns[tableModel.getOrderedColumnIndexAt(column.col)] = true;
               }
-            } else if (column.type == 'lockColumn') {
+            } else if (column.type == ColumnType.LOCK_COLUMN) {
               lockColumn = col < columns.length - 1? col : 0;
               enableLockColumn = !column.hidden;
             }
@@ -189,7 +193,7 @@ namespace comfortable {
           tableModel.orderedColumnIndices = orderedColumnIndices;
           tableModel.hiddenColumns = hiddenColumns;
           tableModel.trigger('beforecellsizechange');
-          table.setLockColumn(lockColumn);
+          table.setLockLeft(lockColumn);
           table.enableLockColumn = enableLockColumn;
           table.invalidate();
         }),
@@ -428,17 +432,17 @@ namespace comfortable {
     var bodyLength = template.tbody.length;
 
     class TemplateTableImpl extends TableImpl implements TemplateTable {
-      public lockColumn = template.lockColumn || 0;
+      public lockLeft = template.lockColumn || 0;
       public enableLockColumn = true;
       // keep default value for restore.
-      public defaultLockColumn = this.lockColumn;
-      public setLockColumn(lockColumn : number) {
-        this.lockColumn = lockColumn;
+      public defaultLockColumn = this.lockLeft;
+      public setLockLeft(lockLeft : number) {
+        this.lockLeft = lockLeft;
       }
-      public getLockColumn() {
-        return !this.enableLockColumn? 0 : this.lockColumn;
+      public getLockLeft() {
+        return !this.enableLockColumn? 0 : this.lockLeft;
       }
-      public getLockRow() { return headLength; }
+      public getLockTop() { return headLength; }
       public getContextMenuItems() {
         var messages = i18n.getMessages();
         var tableModel = table.model as TemplateTableModel;
@@ -590,14 +594,14 @@ namespace comfortable {
         new TemplateTableModelImpl() );
 
     table.on('mousedown', function(event : Event, detail : any) {
-      if (detail.row < this.getLockRow() ) {
+      if (detail.row < this.getLockTop() ) {
         // on header.
         this.editor.endEdit();
         this.invalidate();
       }
     }).on('contextmenu', function(event : Event, detail : any) {
 
-      if (!(detail.row < table.getLockRow() ) ) {
+      if (!(detail.row < table.getLockTop() ) ) {
         return;
       }
 
@@ -625,10 +629,10 @@ namespace comfortable {
     }).on('columndragged', function(event : Event, detail : any) {
       this.orderedColumnIndices = util.moveSublist(
           this.orderedColumnIndices, detail.colFrom, detail.colSpan, detail.colTo);
-      if (detail.colFrom < table.lockColumn && table.lockColumn <= detail.colTo) {
-        table.lockColumn -= detail.colSpan;
-      } else if (detail.colTo < table.lockColumn && table.lockColumn <= detail.colFrom) {
-        table.lockColumn += detail.colSpan;
+      if (detail.colFrom < table.lockLeft && table.lockLeft <= detail.colTo) {
+        table.lockLeft -= detail.colSpan;
+      } else if (detail.colTo < table.lockLeft && table.lockLeft <= detail.colFrom) {
+        table.lockLeft += detail.colSpan;
       }
     }).on('filterchange', function() {
 

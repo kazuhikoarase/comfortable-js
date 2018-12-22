@@ -38,11 +38,11 @@ namespace comfortable {
       getModel : function() {
         return this.$options.table.model;
       },
-      getLockRow : function() {
-        return this.$options.table.getLockRow();
+      getLockTop : function() {
+        return this.$options.table.getLockTop();
       },
-      getLockColumn : function() {
-        return this.$options.table.getLockColumn();
+      getLockLeft : function() {
+        return this.$options.table.getLockLeft();
       }
     },
     mounted : function() {

@@ -242,8 +242,8 @@ declare namespace comfortable {
         }): void;
         private createInternalEditor;
         $el: HTMLElement;
-        getLockRow(): number;
-        getLockColumn(): number;
+        getLockTop(): number;
+        getLockLeft(): number;
         forEachCells(callback: any): void;
         editor: InternalEditor;
         model: TableModel;
@@ -319,8 +319,8 @@ declare namespace comfortable {
         $el: HTMLElement;
         model: TableModel;
         editor: Editor;
-        getLockRow: () => number;
-        getLockColumn: () => number;
+        getLockTop: () => number;
+        getLockLeft: () => number;
         forEachCells: (callback: (cell: {
             $el: HTMLElement;
             row: number;
@@ -428,6 +428,32 @@ declare namespace comfortable {
 declare namespace comfortable {
 }
 declare namespace comfortable {
+    var vueComponents: {
+        table: {
+            template: string;
+            props: {
+                template: {
+                    'default': () => {
+                        thead: {
+                            label: string;
+                        }[][];
+                    };
+                };
+            };
+            methods: {
+                invalidate: () => any;
+                setItems: (items: any[]) => any;
+                getItems: () => any;
+                getModel: () => any;
+                getLockTop: () => any;
+                getLockLeft: () => any;
+            };
+            mounted: () => void;
+            beforeDestroy: () => void;
+        };
+    };
+}
+declare namespace comfortable {
     var SortOrder: {
         ASC: string;
         DESC: string;
@@ -510,34 +536,8 @@ declare namespace comfortable {
     interface TemplateTable extends Table {
         enableLockColumn: boolean;
         defaultLockColumn: number;
-        setLockColumn: (lockColumn: number) => void;
+        setLockLeft: (lockLeft: number) => void;
     }
-}
-declare namespace comfortable {
-    var vueComponents: {
-        table: {
-            template: string;
-            props: {
-                template: {
-                    'default': () => {
-                        thead: {
-                            label: string;
-                        }[][];
-                    };
-                };
-            };
-            methods: {
-                invalidate: () => any;
-                setItems: (items: any[]) => any;
-                getItems: () => any;
-                getModel: () => any;
-                getLockRow: () => any;
-                getLockColumn: () => any;
-            };
-            mounted: () => void;
-            beforeDestroy: () => void;
-        };
-    };
 }
 declare namespace comfortable.i18n {
     var en: I18N;

@@ -11,8 +11,8 @@ namespace comfortable {
     $el : HTMLElement;
     model : TableModel;
     editor : Editor;
-    getLockRow : () => number;
-    getLockColumn : () => number;
+    getLockTop : () => number;
+    getLockLeft : () => number;
     forEachCells : (callback : (cell : {
       $el : HTMLElement, row : number, col : number }) => void) => void;
   }

@@ -25,10 +25,10 @@ var tableCustomized = function(targetId) {
   table.$el.style.height  = '400px';
   table.$el.setAttribute('class', 'my-table');
 
-  table.getLockRow = function() { return headers.length; };
-  table.lockColumn = 2;
-  table.getLockColumn = function() { return this.lockColumn; };
-  table.setLockColumn = function(lockColumn) { this.lockColumn = lockColumn; };
+  table.getLockTop = function() { return headers.length; };
+  table.lockLeft = 2;
+  table.getLockLeft = function() { return this.lockLeft; };
+  table.setLockLeft = function(lockLeft) { this.lockLeft = lockLeft; };
 
   table.model = $c.util.extend(table.model, {
     cellWidth : { 4 : 60 },
@@ -124,10 +124,10 @@ var tableCustomized = function(targetId) {
   }).on('columndragged', function(event, detail) {
     this.columnIndices = $c.util.moveSublist(
         this.columnIndices, detail.colFrom, detail.colSpan, detail.colTo);
-    if (detail.colFrom < table.getLockColumn() && table.getLockColumn() <= detail.colTo) {
-      table.setLockColumn(table.getLockColumn() - detail.colSpan);
-    } else if (detail.colTo < table.getLockColumn() && table.getLockColumn() <= detail.colFrom) {
-      table.setLockColumn(table.getLockColumn() + detail.colSpan);
+    if (detail.colFrom < table.getLockLeft() && table.getLockLeft() <= detail.colTo) {
+      table.setLockLeft(table.getLockLeft() - detail.colSpan);
+    } else if (detail.colTo < table.getLockLeft() && table.getLockLeft() <= detail.colFrom) {
+      table.setLockLeft(table.getLockLeft() + detail.colSpan);
     }
   });
 

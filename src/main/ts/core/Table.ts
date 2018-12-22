@@ -28,8 +28,8 @@ namespace comfortable {
     rects : CellRect[];
     rowCount : number;
     columnCount :number;
-    lockRow : number;
-    lockColumn : number;
+    lockTop : number;
+    lockLeft : number;
     width : number;
     height : number;
   }
@@ -117,7 +117,7 @@ namespace comfortable {
               if (event.which != 1) {
                 return;
               }
-              if (td.row < this.getLockRow() &&
+              if (td.row < this.getLockTop() &&
                   this.model.isColumnDraggableAt(td.col) &&
                   !event.defaultPrevented) {
                 event.preventDefault();
@@ -312,10 +312,10 @@ namespace comfortable {
             cornerRect.height + renderParams.viewHeight - this.viewPane.clientHeight,
             0, renderParams.scrHeight - this.viewPane.clientHeight, 'scroll.top') : 0
       };
-      if (row >= this.getLockRow() ) {
+      if (row >= this.getLockTop() ) {
         this.viewPane.scrollTop = scroll.top;
       }
-      if (col >= this.getLockColumn() ) {
+      if (col >= this.getLockLeft() ) {
         this.viewPane.scrollLeft = scroll.left;
       }
     }
@@ -337,17 +337,17 @@ namespace comfortable {
       //
       var rowCount = tableModel.getRowCount();
       var columnCount = tableModel.getColumnCount();
-      var lockRow = this.getLockRow();
-      var lockColumn = this.getLockColumn();
+      var lockTop = this.getLockTop();
+      var lockLeft = this.getLockLeft();
       if (!this.cellSizeCache ||
           this.cellSizeCache.rowCount != rowCount ||
           this.cellSizeCache.columnCount != columnCount ||
-          this.cellSizeCache.lockRow != lockRow ||
-          this.cellSizeCache.lockColumn != lockColumn ||
+          this.cellSizeCache.lockTop != lockTop ||
+          this.cellSizeCache.lockLeft != lockLeft ||
           this.cellSizeCache.width != width ||
           this.cellSizeCache.height != height) {
-        var rowPos = [ 0, lockRow, rowCount ];
-        var colPos = [ 0, lockColumn, columnCount ];
+        var rowPos = [ 0, lockTop, rowCount ];
+        var colPos = [ 0, lockLeft, columnCount ];
         var cw = colPos.slice(1).map(function() { return 0; });
         var ch = rowPos.slice(1).map(function() { return 0; });;
         var idx : number, count : number;
@@ -380,7 +380,7 @@ namespace comfortable {
           viewHeight : ch[ch.length - 1],
           rects : rects,
           rowCount : rowCount, columnCount : columnCount,
-          lockRow : lockRow, lockColumn : lockColumn,
+          lockTop : lockTop, lockLeft : lockLeft,
           width : width, height : height
         };
       }
@@ -407,8 +407,8 @@ namespace comfortable {
     }
     private getTargetTable(row : number, col : number) {
       return this.tables.filter( (table) => {
-        return table.row == (row < this.getLockRow()? 0 : 1) &&
-          table.col == (col < this.getLockColumn()? 0 : 1);
+        return table.row == (row < this.getLockTop()? 0 : 1) &&
+          table.col == (col < this.getLockLeft()? 0 : 1);
       })[0];
     }
     private isEditableAt(row : number, col : number) {
@@ -677,20 +677,20 @@ namespace comfortable {
         util.set(this.lockLines[0], {
           attrs :{ 'class' : '${prefix}-h-lock-line' },
           style : {
-            display : this.getLockRow() == 0? 'none' : '', left : '0px',
+            display : this.getLockTop() == 0? 'none' : '', left : '0px',
             top : (cornerRect.height - 1) + 'px', width : width + 'px'
           } });
         // vertical
         util.set(this.lockLines[1], {
           attrs :{ 'class' : '${prefix}-v-lock-line' },
           style : {
-            display : this.getLockColumn() == 0? 'none' : '', top : '0px',
+            display : this.getLockLeft() == 0? 'none' : '', top : '0px',
             left : (cornerRect.width - 1) + 'px', height : height + 'px'
           } });
       } )();
 
       // resize handles.
-      if (this.getLockRow() > 0) {
+      if (this.getLockTop() > 0) {
         this.renderColumnResizeHandlers(renderParams);
       }
 
@@ -737,8 +737,8 @@ namespace comfortable {
     }
 
     public $el = this.frame;
-    public getLockRow() { return 0; }
-    public getLockColumn() { return 0; }
+    public getLockTop() { return 0; }
+    public getLockLeft() { return 0; }
     public forEachCells(callback : any) {
       this.tables.forEach(function(table) {
         (table.tbody.children || []).forEach(function(tr) {

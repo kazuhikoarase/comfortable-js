@@ -316,8 +316,8 @@ window.addEventListener('load', function(event) {
         table.on('rendered', function(event, detail) {
           // detail.tableStates indicates what cells are rendered.
           // it's useful to request to get data to server on demand.
-          var minRow = detail.tableStates[3].minRow - this.getLockRow();
-          var maxRow = detail.tableStates[3].maxRow - this.getLockRow();
+          var minRow = detail.tableStates[3].minRow - this.getLockTop();
+          var maxRow = detail.tableStates[3].maxRow - this.getLockTop();
           // remove rows that is not visible.
           model.requestedRows = model.requestedRows.filter(function(row) {
             return minRow <= row && row <= maxRow;
