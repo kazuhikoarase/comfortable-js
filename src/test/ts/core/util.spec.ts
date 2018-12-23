@@ -60,6 +60,6 @@ describe('util', function() {
     expect(util.formatNumber('12345678901234567890') ).
       toEqual('12,345,678,901,234,567,890');
     
-  });
+  })
 
-});
+})

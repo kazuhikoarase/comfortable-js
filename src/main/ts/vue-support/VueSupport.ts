@@ -98,10 +98,10 @@ namespace comfortable {
       // stop observing
       this.$options.alive = false;
     }
-  };
+  }
 
   export var vueComponents = {
     table : table
-  };
+  }
 
 }

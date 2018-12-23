@@ -41,7 +41,7 @@ namespace comfortable {
       }
     }
     return { children : children, opts : opts };
-  };
+  }
 
   var classNamePrefixRe = /\$\{prefix\}/g;
   var replaceClassNamePrefix = function(className : string) {
@@ -52,6 +52,43 @@ namespace comfortable {
   var narrowNumChars = '0123456789+-.,';
   if (wideNumChars.length != narrowNumChars.length) {
     throw wideNumChars + ',' + narrowNumChars;
+  }
+
+  export class $ {
+
+    private elm : HTMLElement|Document;
+
+    constructor(elm : HTMLElement|Document) {
+      this.elm = elm;
+    }
+
+    public on(type : string, listener : EventListener) {
+      this.elm.addEventListener(type, listener);
+      return this;
+    }
+    public off(type : string, listener : EventListener) {
+      this.elm.removeEventListener(type, listener);
+      return this;
+    }
+    public addClass(className : string, remove? : boolean) {
+      className = replaceClassNamePrefix(className);
+      var classes = '';
+      ((<HTMLElement>this.elm).getAttribute('class') || '').split(/\s+/g).
+          forEach(function(c : string) {
+        if (c != className) {
+          classes += ' ' + c;
+          return;
+        }
+      } );
+      if (!remove) {
+        classes += ' ' + className;
+      }
+      (<HTMLElement>this.elm).setAttribute('class', classes);
+      return this;
+    }
+    public removeClass(className : string) {
+      return this.addClass(className, true);
+    }
   }
 
   export var util = {
@@ -123,37 +160,7 @@ namespace comfortable {
       return this.set(elm, args.opts);
     } as CreateElement,
 
-    $ : function(elm : HTMLElement|Document) {
-      return {
-        on : function(type : string, listener : EventListener) {
-          elm.addEventListener(type, listener);
-          return this;
-        },
-        off : function(type : string, listener : EventListener) {
-          elm.removeEventListener(type, listener);
-          return this;
-        },
-        addClass : function(className : string, remove? : boolean) {
-          className = replaceClassNamePrefix(className);
-          var classes = '';
-          ((<HTMLElement>elm).getAttribute('class') || '').split(/\s+/g).
-              forEach(function(c : string) {
-            if (c != className) {
-              classes += ' ' + c;
-              return;
-            }
-          } );
-          if (!remove) {
-            classes += ' ' + className;
-          }
-          (<HTMLElement>elm).setAttribute('class', classes);
-          return this;
-        },
-        removeClass : function(className : string) {
-          return this.addClass(className, true);
-        }
-      };
-    },
+    $ : function(elm : HTMLElement|Document) { return new $(elm); },
 
     closest : function(elm : HTMLElement,
         opts : { className? : string,

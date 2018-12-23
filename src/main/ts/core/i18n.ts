@@ -43,4 +43,5 @@ namespace comfortable.i18n {
         this.getInstance('en').messages,
         this.getInstance().messages);
   }
+
 }

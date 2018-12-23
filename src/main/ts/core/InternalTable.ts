@@ -348,4 +348,5 @@ namespace comfortable {
       this.tableState = tableState;
     }
   }
+
 }

@@ -18,4 +18,5 @@ namespace comfortable {
   if (typeof exports === 'object') {
     module.exports = comfortable;
   }
+
 }

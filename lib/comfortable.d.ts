@@ -9,122 +9,6 @@
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
-    var SortOrder: {
-        ASC: string;
-        DESC: string;
-    };
-    var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
-    var fromTemplate: (template: TableTemplate) => TemplateTable;
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
-    interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
-        width?: number;
-        height?: number;
-        columnDraggable?: boolean;
-        columnResizable?: boolean;
-        dataField?: string;
-        /** one of 'string(default)', 'number', 'boolean', 'select-one' */
-        dataType?: string;
-        /** dataType : 'string', 'number' */
-        maxLength?: number;
-        /** dataType : 'number' */
-        decimalDigits?: number;
-        /** dataType : 'boolean',
-          2 elements array like [falseValue, trueValue].
-         */
-        booleanValues?: any[];
-        /** dataType : 'select-one' */
-        options?: (any[] | ((row: number, col: number) => any[]));
-        labelField?: string;
-        valueField?: string;
-        factory?: TableCellRendererFactory;
-    }
-    interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
-        label?: string;
-        /** dataType : 'number' */
-        comparator?: (v1: any, v2: any) => number;
-    }
-    interface TableTemplate {
-        lockColumn?: number;
-        thead?: TableTemplateHeaderCellStyle[][];
-        tbody?: TableTemplateCellStyle[][];
-    }
-    interface ItemIndex {
-        row: number;
-        /** col will be string if dataField is defined. */
-        col: (number | string);
-    }
-    interface TemplateTableModel extends TableModel {
-        filterContext: FilterContext;
-        defaultHeaderCellRendererFactory: TableCellRendererFactory;
-        items: any[];
-        filteredItems: any[];
-        resetFilter: () => void;
-        getItemAt: (row: number) => any;
-        getItemCount: () => number;
-        getItemIndexAt: (row: number, col: number) => ItemIndex;
-        getOrderedColumnIndexAt: (col: number) => number;
-        orderedColumnIndices: number[];
-        hiddenColumns: {
-            [orderedCol: number]: boolean;
-        };
-        hoverRow: number;
-    }
-    interface TemplateTableCell extends TableCell {
-        dataField?: string;
-        comparator?: (a: any, b: any) => number;
-    }
-    type Rejects = {
-        [value: string]: boolean;
-    };
-    interface FilterContext {
-        sort?: {
-            dataField: string;
-            sortOrder: string;
-        };
-        filters: {
-            [dataField: string]: Rejects;
-        };
-    }
-    interface TemplateTable extends Table {
-        enableLockColumn: boolean;
-        defaultLockColumn: number;
-        setLockLeft: (lockLeft: number) => void;
-    }
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
     var createDefaultCellRendererFactoryOpts: () => CellRendererFactoryOpts;
     var createDefaultCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
     var createMultiLineLabelRenderer: (parent: HTMLElement) => {
@@ -509,18 +393,21 @@ declare namespace comfortable {
         (tagName: string, opts?: ElementOptions, children?: HTMLElement[]): HTMLElement;
         (tagName: string, children?: HTMLElement[], opts?: ElementOptions): HTMLElement;
     }
+    class $ {
+        private elm;
+        constructor(elm: HTMLElement | Document);
+        on(type: string, listener: EventListener): this;
+        off(type: string, listener: EventListener): this;
+        addClass(className: string, remove?: boolean): this;
+        removeClass(className: string): this;
+    }
     var util: {
         extend: (arg: any, ...args: any[]) => any;
         callLater: (cb: () => void) => void;
         set: (elm: Node, opts: ElementOptions) => Node;
         createElement: CreateElement;
         createSVGElement: CreateElement;
-        $: (elm: HTMLElement | Document) => {
-            on: (type: string, listener: EventListener) => any;
-            off: (type: string, listener: EventListener) => any;
-            addClass: (className: string, remove?: boolean) => any;
-            removeClass: (className: string) => any;
-        };
+        $: (elm: HTMLElement | Document) => $;
         closest: (elm: HTMLElement, opts: {
             className?: string;
             tagName?: string;
@@ -675,6 +562,122 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
+    var SortOrder: {
+        ASC: string;
+        DESC: string;
+    };
+    var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
+    var fromTemplate: (template: TableTemplate) => TemplateTable;
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
+    interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
+        width?: number;
+        height?: number;
+        columnDraggable?: boolean;
+        columnResizable?: boolean;
+        dataField?: string;
+        /** one of 'string(default)', 'number', 'boolean', 'select-one' */
+        dataType?: string;
+        /** dataType : 'string', 'number' */
+        maxLength?: number;
+        /** dataType : 'number' */
+        decimalDigits?: number;
+        /** dataType : 'boolean',
+          2 elements array like [falseValue, trueValue].
+         */
+        booleanValues?: any[];
+        /** dataType : 'select-one' */
+        options?: (any[] | ((row: number, col: number) => any[]));
+        labelField?: string;
+        valueField?: string;
+        factory?: TableCellRendererFactory;
+    }
+    interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
+        label?: string;
+        /** dataType : 'number' */
+        comparator?: (v1: any, v2: any) => number;
+    }
+    interface TableTemplate {
+        lockColumn?: number;
+        thead?: TableTemplateHeaderCellStyle[][];
+        tbody?: TableTemplateCellStyle[][];
+    }
+    interface ItemIndex {
+        row: number;
+        /** col will be string if dataField is defined. */
+        col: (number | string);
+    }
+    interface TemplateTableModel extends TableModel {
+        filterContext: FilterContext;
+        defaultHeaderCellRendererFactory: TableCellRendererFactory;
+        items: any[];
+        filteredItems: any[];
+        resetFilter: () => void;
+        getItemAt: (row: number) => any;
+        getItemCount: () => number;
+        getItemIndexAt: (row: number, col: number) => ItemIndex;
+        getOrderedColumnIndexAt: (col: number) => number;
+        orderedColumnIndices: number[];
+        hiddenColumns: {
+            [orderedCol: number]: boolean;
+        };
+        hoverRow: number;
+    }
+    interface TemplateTableCell extends TableCell {
+        dataField?: string;
+        comparator?: (a: any, b: any) => number;
+    }
+    type Rejects = {
+        [value: string]: boolean;
+    };
+    interface FilterContext {
+        sort?: {
+            dataField: string;
+            sortOrder: string;
+        };
+        filters: {
+            [dataField: string]: Rejects;
+        };
+    }
+    interface TemplateTable extends Table {
+        enableLockColumn: boolean;
+        defaultLockColumn: number;
+        setLockLeft: (lockLeft: number) => void;
+    }
 }
 /*!
  * comfortable
