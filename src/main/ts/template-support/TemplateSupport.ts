@@ -706,6 +706,6 @@ namespace comfortable {
     enableRowSelect(table);
 
     return table;
-  };
+  }
 
 }

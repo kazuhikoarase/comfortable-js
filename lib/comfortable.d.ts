@@ -9,6 +9,122 @@
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
+    var SortOrder: {
+        ASC: string;
+        DESC: string;
+    };
+    var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
+    var fromTemplate: (template: TableTemplate) => TemplateTable;
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
+    interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
+        width?: number;
+        height?: number;
+        columnDraggable?: boolean;
+        columnResizable?: boolean;
+        dataField?: string;
+        /** one of 'string(default)', 'number', 'boolean', 'select-one' */
+        dataType?: string;
+        /** dataType : 'string', 'number' */
+        maxLength?: number;
+        /** dataType : 'number' */
+        decimalDigits?: number;
+        /** dataType : 'boolean',
+          2 elements array like [falseValue, trueValue].
+         */
+        booleanValues?: any[];
+        /** dataType : 'select-one' */
+        options?: (any[] | ((row: number, col: number) => any[]));
+        labelField?: string;
+        valueField?: string;
+        factory?: TableCellRendererFactory;
+    }
+    interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
+        label?: string;
+        /** dataType : 'number' */
+        comparator?: (v1: any, v2: any) => number;
+    }
+    interface TableTemplate {
+        lockColumn?: number;
+        thead?: TableTemplateHeaderCellStyle[][];
+        tbody?: TableTemplateCellStyle[][];
+    }
+    interface ItemIndex {
+        row: number;
+        /** col will be string if dataField is defined. */
+        col: (number | string);
+    }
+    interface TemplateTableModel extends TableModel {
+        filterContext: FilterContext;
+        defaultHeaderCellRendererFactory: TableCellRendererFactory;
+        items: any[];
+        filteredItems: any[];
+        resetFilter: () => void;
+        getItemAt: (row: number) => any;
+        getItemCount: () => number;
+        getItemIndexAt: (row: number, col: number) => ItemIndex;
+        getOrderedColumnIndexAt: (col: number) => number;
+        orderedColumnIndices: number[];
+        hiddenColumns: {
+            [orderedCol: number]: boolean;
+        };
+        hoverRow: number;
+    }
+    interface TemplateTableCell extends TableCell {
+        dataField?: string;
+        comparator?: (a: any, b: any) => number;
+    }
+    type Rejects = {
+        [value: string]: boolean;
+    };
+    interface FilterContext {
+        sort?: {
+            dataField: string;
+            sortOrder: string;
+        };
+        filters: {
+            [dataField: string]: Rejects;
+        };
+    }
+    interface TemplateTable extends Table {
+        enableLockColumn: boolean;
+        defaultLockColumn: number;
+        setLockLeft: (lockLeft: number) => void;
+    }
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
     var createDefaultCellRendererFactoryOpts: () => CellRendererFactoryOpts;
     var createDefaultCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
     var createMultiLineLabelRenderer: (parent: HTMLElement) => {
@@ -349,7 +465,7 @@ declare namespace comfortable {
  * Licensed under the MIT license:
  *  http://www.opensource.org/licenses/mit-license.php
  */
-declare namespace comfortable.ui {
+declare namespace comfortable {
     interface Menu {
         dispose: () => void;
     }
@@ -358,9 +474,11 @@ declare namespace comfortable.ui {
         action?: (event?: Event) => void;
         children?: () => MenuItem[];
     }
-    var createButton: (label: string, action: (event: Event) => void) => HTMLElement;
-    var createDialog: (children: HTMLElement[]) => any;
-    var showMenu: (left: number, top: number, menuItems: MenuItem[]) => Menu;
+    var ui: {
+        createButton: (label: string, action: (event: Event) => void) => HTMLElement;
+        createDialog: (children: HTMLElement[]) => any;
+        showMenu: (left: number, top: number, menuItems: MenuItem[]) => Menu;
+    };
 }
 /*!
  * comfortable
@@ -372,10 +490,7 @@ declare namespace comfortable.ui {
  * Licensed under the MIT license:
  *  http://www.opensource.org/licenses/mit-license.php
  */
-declare namespace comfortable.util {
-    var extend: (arg: any, ...args: any[]) => any;
-    var callLater: (cb: () => void) => void;
-    var replaceClassNamePrefix: (className: string) => string;
+declare namespace comfortable {
     interface ElementOptions {
         attrs?: {
             [key: string]: string;
@@ -390,36 +505,40 @@ declare namespace comfortable.util {
             [type: string]: (event: any) => void;
         };
     }
-    var set: (elm: Node, opts: ElementOptions) => Node;
     interface CreateElement {
         (tagName: string, opts?: ElementOptions, children?: HTMLElement[]): HTMLElement;
         (tagName: string, children?: HTMLElement[], opts?: ElementOptions): HTMLElement;
     }
-    var createElement: CreateElement;
-    var createSVGElement: CreateElement;
-    var $: (elm: HTMLElement | Document) => {
-        on: (type: string, listener: EventListener) => any;
-        off: (type: string, listener: EventListener) => any;
-        addClass: (className: string, remove?: boolean) => any;
-        removeClass: (className: string) => any;
+    var util: {
+        extend: (arg: any, ...args: any[]) => any;
+        callLater: (cb: () => void) => void;
+        set: (elm: Node, opts: ElementOptions) => Node;
+        createElement: CreateElement;
+        createSVGElement: CreateElement;
+        $: (elm: HTMLElement | Document) => {
+            on: (type: string, listener: EventListener) => any;
+            off: (type: string, listener: EventListener) => any;
+            addClass: (className: string, remove?: boolean) => any;
+            removeClass: (className: string) => any;
+        };
+        closest: (elm: HTMLElement, opts: {
+            className?: string;
+            tagName?: string;
+            root?: HTMLElement;
+            $el?: HTMLElement;
+        }) => HTMLElement;
+        indexOf: (elm: Node) => any;
+        offset: (elm: HTMLElement) => {
+            left: number;
+            top: number;
+        };
+        moveSublist: (list: any[], from: number, length: number, to: number) => any[];
+        getCellId: (row: number, col: number) => string;
+        translate: (val1: number, min1: number, max1: number, min2: number, max2: number, log?: string) => number;
+        numRe: RegExp;
+        formatNumber: (value: string, digits?: number, s1?: string, s2?: string) => string;
+        toNarrowNumber: (value: string) => string;
     };
-    var closest: (elm: HTMLElement, opts: {
-        className?: string;
-        tagName?: string;
-        root?: HTMLElement;
-        $el?: HTMLElement;
-    }) => HTMLElement;
-    var indexOf: (elm: Node) => any;
-    var offset: (elm: HTMLElement) => {
-        left: number;
-        top: number;
-    };
-    var moveSublist: (list: any[], from: number, length: number, to: number) => any[];
-    var getCellId: (row: number, col: number) => string;
-    var translate: (val1: number, min1: number, max1: number, min2: number, max2: number, log?: string) => number;
-    var numRe: RegExp;
-    var formatNumber: (value: string, digits?: number, s1?: string, s2?: string) => string;
-    var toNarrowNumber: (value: string) => string;
 }
 /*!
  * comfortable
@@ -556,122 +675,6 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
-    var SortOrder: {
-        ASC: string;
-        DESC: string;
-    };
-    var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
-    var fromTemplate: (template: TableTemplate) => TemplateTable;
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
-    interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
-        width?: number;
-        height?: number;
-        columnDraggable?: boolean;
-        columnResizable?: boolean;
-        dataField?: string;
-        /** one of 'string(default)', 'number', 'boolean', 'select-one' */
-        dataType?: string;
-        /** dataType : 'string', 'number' */
-        maxLength?: number;
-        /** dataType : 'number' */
-        decimalDigits?: number;
-        /** dataType : 'boolean',
-          2 elements array like [falseValue, trueValue].
-         */
-        booleanValues?: any[];
-        /** dataType : 'select-one' */
-        options?: (any[] | ((row: number, col: number) => any[]));
-        labelField?: string;
-        valueField?: string;
-        factory?: TableCellRendererFactory;
-    }
-    interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
-        label?: string;
-        /** dataType : 'number' */
-        comparator?: (v1: any, v2: any) => number;
-    }
-    interface TableTemplate {
-        lockColumn?: number;
-        thead?: TableTemplateHeaderCellStyle[][];
-        tbody?: TableTemplateCellStyle[][];
-    }
-    interface ItemIndex {
-        row: number;
-        /** col will be string if dataField is defined. */
-        col: (number | string);
-    }
-    interface TemplateTableModel extends TableModel {
-        filterContext: FilterContext;
-        defaultHeaderCellRendererFactory: TableCellRendererFactory;
-        items: any[];
-        filteredItems: any[];
-        resetFilter: () => void;
-        getItemAt: (row: number) => any;
-        getItemCount: () => number;
-        getItemIndexAt: (row: number, col: number) => ItemIndex;
-        getOrderedColumnIndexAt: (col: number) => number;
-        orderedColumnIndices: number[];
-        hiddenColumns: {
-            [orderedCol: number]: boolean;
-        };
-        hoverRow: number;
-    }
-    interface TemplateTableCell extends TableCell {
-        dataField?: string;
-        comparator?: (a: any, b: any) => number;
-    }
-    type Rejects = {
-        [value: string]: boolean;
-    };
-    interface FilterContext {
-        sort?: {
-            dataField: string;
-            sortOrder: string;
-        };
-        filters: {
-            [dataField: string]: Rejects;
-        };
-    }
-    interface TemplateTable extends Table {
-        enableLockColumn: boolean;
-        defaultLockColumn: number;
-        setLockLeft: (lockLeft: number) => void;
-    }
 }
 /*!
  * comfortable

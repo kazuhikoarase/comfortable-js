@@ -102,7 +102,7 @@ namespace comfortable {
       return elm;
     }
 
-    private getCellStyle(cell : TableCellStyle) : util.ElementOptions {
+    private getCellStyle(cell : TableCellStyle) : ElementOptions {
       return {
         attrs : { 'class' : cell.className },
         style : {

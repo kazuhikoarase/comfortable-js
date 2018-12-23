@@ -30,7 +30,7 @@ namespace comfortable {
 
     public beginEdit(td : TdWrapper, cell : TextEditorCell) {
       var cs = window.getComputedStyle(td.$el, null);
-      var opts : util.ElementOptions = {
+      var opts : ElementOptions = {
           props : {},
           style : {
             textAlign : cs.textAlign,
