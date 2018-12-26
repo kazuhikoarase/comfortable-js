@@ -277,6 +277,8 @@ namespace comfortable {
           opts.dataType == 'select-one';
       }
 
+      var editing = false;
+
       return {
         render : function(cell) {
           if (!renderIsEditor) {
@@ -285,16 +287,21 @@ namespace comfortable {
               td.$el.style.textAlign = 'right';
             }
           } else {
-            beginEdit(cell);
+            // render is editor.
+            if (!editing) {
+              beginEdit(cell);
+            }
           }
         },
         beginEdit : function(cell) {
+          editing = true;
           beginEdit(cell);
           return {
             focus : function() {
               editor.focus();
             },
             endEdit : function() {
+              editing =false;
               if (!renderIsEditor) {
                 labelRenderer.setVisible(true);
                 editor.$el.style.display = 'none';
