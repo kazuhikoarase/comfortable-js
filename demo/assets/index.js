@@ -384,13 +384,14 @@ window.addEventListener('load', function(event) {
               var currentCell = null;
               var oldValue = null;
               var newValue = null;
+              var editing = false;
               var updateLabel = function() {
-                button.textContent = 'Clicked: ' + newValue;
+                var value = editing? newValue : cell.value;
+                button.textContent = 'Clicked: ' + value;
               };
               var button = comfortable.util.createElement('button', {
                   style : { width: '100%', height: '100%', padding: '0px' },
                   on : { click : function(event) {
-                      console.log(currentCell);
                       newValue += 1;
                       updateLabel();
                     }
@@ -400,15 +401,17 @@ window.addEventListener('load', function(event) {
               return {
                 render : function(cell) {
                   currentCell = cell;
-                  oldValue = newValue = cell.value;
                   updateLabel();
                 },
                 beginEdit : function(cell) {
+                  editing = true;
+                  oldValue = newValue = cell.value;
                   return {
                     focus : function() {
                       button.focus();
                     },
                     endEdit : function() {
+                      editing = false;
                       button.blur();
                       return { oldValue : oldValue, newValue : newValue };
                     }
