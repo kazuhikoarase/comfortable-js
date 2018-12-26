@@ -1,0 +1,4 @@
+*.tgz
+.project
+.settings
+demo
