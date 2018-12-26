@@ -1,4 +1,9 @@
 
+if (!window.console) {
+  // IE9 does not have a console object without devmode.
+  window.console = { log : function() {} };
+}
+
 window.addEventListener('load', function(event) {
 
   tableCustomized('customizedSample');
