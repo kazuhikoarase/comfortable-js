@@ -58,12 +58,18 @@ namespace comfortable {
     left? : number;
   }
 
+  /**
+   * @internal
+   */
   export interface InternalEditor extends Editor {
     cell? : { row : number, col : number };
     beginEdit : (row : number, col : number, makeVisible? : boolean) => void;
     endEdit : () => void;
   }
 
+  /**
+   * @internal
+   */
   export var tableEventTypes = [
     'mousedown', 'mouseover', 'mouseout',
     'click', 'dblclick', 'contextmenu' ];
@@ -72,6 +78,9 @@ namespace comfortable {
     return new TableImpl(new DefaultTableModel() );
   }
 
+  /**
+   * @internal
+   */
   export class TableImpl extends UIEventTargetImpl implements Table {
 
     constructor(model : TableModel) {

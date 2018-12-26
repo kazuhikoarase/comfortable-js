@@ -22,6 +22,7 @@ var build = 'lib';
 var mainTsProject = ts.createProject({
   noImplicitAny : true,
   declaration : true,
+  stripInternal : true,
   outFile : `${targetName}.js`
 });
 

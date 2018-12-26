@@ -43,13 +43,6 @@ declare namespace comfortable {
         on: (type: string, listener: EventListener) => EventTarget;
         off: (type: string, listener: EventListener) => EventTarget;
     }
-    class EventTargetImpl implements EventTarget {
-        private map;
-        private listeners;
-        trigger(type: string, detail?: any): this;
-        on(type: string, listener: EventListener): this;
-        off(type: string, listener: EventListener): this;
-    }
 }
 /*!
  * comfortable
@@ -62,35 +55,6 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
-    class DefaultTableModel extends EventTargetImpl implements TableModel {
-        defaultCellWidth: number;
-        defaultCellHeight: number;
-        defaultCellStyle: {
-            rowSpan: number;
-            colSpan: number;
-            editable: boolean;
-        };
-        defaultCellRendererFactory: TableCellRendererFactory;
-        maxRowSpan: number;
-        maxColSpan: number;
-        minCellWidth: number;
-        getRowCount(): number;
-        getColumnCount(): number;
-        getLineRowAt(row: number): number;
-        getLineRowCountAt(row: number): number;
-        getValueAt(row: number, col: number): string;
-        getCellStyleAt(row: number, col: number): {};
-        getCellRendererFactoryAt(row: number, col: number): TableCellRendererFactory;
-        getCellWidthAt(col: number): number;
-        getCellHeightAt(row: number): number;
-        getCellAt(row: number, col: number): any;
-        checkSpaned(row: number, col: number): {
-            row: number;
-            col: number;
-        };
-        isColumnResizableAt(col: number): boolean;
-        isColumnDraggableAt(col: number): boolean;
-    }
 }
 /*!
  * comfortable
@@ -137,11 +101,6 @@ declare namespace comfortable {
         invalidate: () => void;
         render: () => void;
     }
-    class UIEventTargetImpl extends EventTargetImpl implements UIEventTarget {
-        valid: boolean;
-        invalidate(): void;
-        render(): void;
-    }
 }
 /*!
  * comfortable
@@ -154,85 +113,6 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
-    interface ElmCache {
-        $el: HTMLElement;
-        tableModel?: TableModel;
-        row?: number;
-        col?: number;
-        children?: ElmCache[];
-        renderer?: TableCellRenderer;
-        factory?: TableCellRendererFactory;
-    }
-    interface TableState {
-        left: number;
-        top: number;
-        width: number;
-        height: number;
-        minRow: number;
-        maxRow: number;
-        minCol: number;
-        maxCol: number;
-        indexById: {
-            [id: string]: {
-                trIndex: number;
-                tdIndex: number;
-            };
-        };
-    }
-    interface OffsetCache {
-        left: {
-            [i: number]: number;
-        };
-        top: {
-            [i: number]: number;
-        };
-    }
-    interface InternalTable {
-        $el: HTMLElement;
-        left: number;
-        top: number;
-        colgroup: ElmCache;
-        tbody: ElmCache;
-        row?: number;
-        col?: number;
-        model: TableModel;
-        tableState: TableState;
-        beforeCellSizeChangeHandler: EventListener;
-        offsetCache: OffsetCache;
-        calcCellPosition: (left: number, top: number) => {
-            left: number;
-            top: number;
-            row: number;
-            col: number;
-        };
-        preRender: () => TableState;
-        render: () => void;
-    }
-    class InternalTableImpl implements InternalTable {
-        private _colgroup;
-        private _tbody;
-        private table;
-        private view;
-        private getOrCrt;
-        private getCellStyle;
-        $el: HTMLElement;
-        colgroup: ElmCache;
-        tbody: ElmCache;
-        left: number;
-        top: number;
-        model: TableModel;
-        tableState: TableState;
-        offsetCache: OffsetCache;
-        beforeCellSizeChangeHandler: EventListener;
-        calcCellPosition(left: number, top: number): {
-            left: number;
-            col: number;
-            top: number;
-            row: number;
-        };
-        preRender(): TableState;
-        render(): void;
-    }
 }
 /*!
  * comfortable
@@ -256,22 +136,6 @@ declare namespace comfortable {
     interface ListCell {
         $el: HTMLElement;
         row: number;
-    }
-    class ListImpl<T, C extends ListCell> extends UIEventTargetImpl implements List<T, C> {
-        private listContent;
-        private list;
-        private scr;
-        private viewPane;
-        private frame;
-        private cells;
-        private getOrCrt;
-        $el: HTMLElement;
-        getItemAt(index: number): T;
-        getItemCount(): number;
-        createCell(): C;
-        renderCell(cell: C, item: T): void;
-        cellHeight: number;
-        render(): void;
     }
 }
 /*!
@@ -298,46 +162,7 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
-    interface InternalEditor extends Editor {
-        cell?: {
-            row: number;
-            col: number;
-        };
-        beginEdit: (row: number, col: number, makeVisible?: boolean) => void;
-        endEdit: () => void;
-    }
-    var tableEventTypes: string[];
     var createTable: () => Table;
-    class TableImpl extends UIEventTargetImpl implements Table {
-        constructor(model: TableModel);
-        private tables;
-        private scr;
-        private viewPane;
-        private frame;
-        private lockLines;
-        private colResizeHandles;
-        private getCellRect;
-        private makeVisible;
-        private cellSizeCache;
-        private beforeCellSizeChangeHandler;
-        private getCellSizeCache;
-        private getRenderParams;
-        private getTargetTable;
-        private isEditableAt;
-        private move;
-        private renderColumnResizeHandlers;
-        render(visibleCell?: {
-            row: number;
-            col: number;
-        }): void;
-        private createInternalEditor;
-        $el: HTMLElement;
-        getLockTop(): number;
-        getLockLeft(): number;
-        forEachCells(callback: any): void;
-        editor: InternalEditor;
-        model: TableModel;
-    }
 }
 /*!
  * comfortable
@@ -726,7 +551,6 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable.i18n {
-    var en: I18N;
 }
 /*!
  * comfortable
@@ -739,5 +563,4 @@ declare namespace comfortable.i18n {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable.i18n {
-    var ja: I18N;
 }

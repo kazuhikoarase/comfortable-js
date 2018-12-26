@@ -32,6 +32,9 @@ namespace comfortable {
     off : (type : string, listener : EventListener) => EventTarget;
   }
 
+  /**
+   * @internal
+   */
   export class EventTargetImpl implements EventTarget {
     private map : { [ type : string ] : EventListener[] } = {};
     private listeners(type : string) : EventListener[] {

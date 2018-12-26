@@ -15,6 +15,9 @@ namespace comfortable {
 
   'use strict';
 
+  /**
+   * @internal
+   */
   export class DefaultTableModel extends EventTargetImpl implements TableModel {
     public defaultCellWidth = 100;
     public defaultCellHeight = 28;

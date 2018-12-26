@@ -20,6 +20,9 @@ namespace comfortable {
     render : () => void;
   }
 
+  /**
+   * @internal
+   */
   export class UIEventTargetImpl
   extends EventTargetImpl implements UIEventTarget {
     public valid = true;

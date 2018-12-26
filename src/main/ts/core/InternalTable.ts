@@ -15,6 +15,9 @@ namespace comfortable {
 
   'use strict';
 
+  /**
+   * @internal
+   */
   export interface ElmCache {
     $el : HTMLElement;
     tableModel? : TableModel; 
@@ -25,6 +28,9 @@ namespace comfortable {
     factory? : TableCellRendererFactory;
   }
 
+  /**
+   * @internal
+   */
   export interface TableState {
     left : number;
     top : number;
@@ -37,11 +43,17 @@ namespace comfortable {
     indexById : { [id : string] : { trIndex : number, tdIndex : number} };
   }
 
+  /**
+   * @internal
+   */
   export interface OffsetCache {
     left : { [i : number] : number };
     top : { [i : number] : number };
   }
 
+  /**
+   * @internal
+   */
   export interface InternalTable {
     $el : HTMLElement;
     left : number;
@@ -68,6 +80,9 @@ namespace comfortable {
     };
   }
 
+  /**
+   * @internal
+   */
   export class InternalTableImpl implements InternalTable {
 
     private _colgroup = util.createElement('colgroup');

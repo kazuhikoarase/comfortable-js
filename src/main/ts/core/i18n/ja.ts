@@ -13,6 +13,9 @@ namespace comfortable.i18n {
 
   'use strict';
 
+  /**
+   * @internal
+   */
   export var ja : I18N = {
     messages : {
       RESET_FILTER : '並び替えとフィルタをクリア',

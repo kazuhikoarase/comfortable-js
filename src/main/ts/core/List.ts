@@ -29,6 +29,9 @@ namespace comfortable {
     row : number;
   }
 
+  /**
+   * @internal
+   */
   export class ListImpl<T,C extends ListCell>
   extends UIEventTargetImpl implements List<T,C> {
 

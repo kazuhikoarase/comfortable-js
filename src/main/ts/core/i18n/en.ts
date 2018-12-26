@@ -13,6 +13,9 @@ namespace comfortable.i18n {
 
   'use strict';
 
+  /**
+   * @internal
+   */
   export var en : I18N = {
     messages : {
       RESET_FILTER : 'Clear Sort and Filters',
