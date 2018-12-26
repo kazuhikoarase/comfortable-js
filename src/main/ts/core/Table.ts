@@ -62,7 +62,8 @@ namespace comfortable {
    * @internal
    */
   export interface InternalEditor extends Editor {
-    cell? : { row : number, col : number };
+    impl : any;
+    cell : { row : number, col : number };
     beginEdit : (row : number, col : number, makeVisible? : boolean) => void;
     endEdit : () => void;
   }
@@ -713,6 +714,8 @@ namespace comfortable {
     private createInternalEditor() : InternalEditor {
       var table = this;
       return {
+        impl : null,
+        cell : null,
         beginEdit : function(row, col, makeVisible) {
           this.endEdit();
           if (makeVisible) {

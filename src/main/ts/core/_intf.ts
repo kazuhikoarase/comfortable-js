@@ -58,6 +58,13 @@ namespace comfortable {
     borderTop? : string;
     borderRight? : string;
     borderBottom? : string;
+    labelFunction? : (value : any, cell : EditorCell) => string;
+  }
+
+  export interface TableCell extends TableCellStyle {
+    row : number;
+    col : number;
+    value : any;
   }
 
   export interface TableModel extends EventTarget {
@@ -81,13 +88,6 @@ namespace comfortable {
     checkSpaned : (row : number, col : number) => { row : number, col : number };
     isColumnResizableAt : (col : number) => boolean;
     isColumnDraggableAt : (col : number) => boolean;
-  }
-
-  export interface TableCell extends TableCellStyle {
-    row : number;
-    col : number;
-    value : any;
-    labelFunction : (value : any) => string;
   }
 
   export interface TextEditorOptions {

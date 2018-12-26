@@ -201,7 +201,7 @@ namespace comfortable {
 
         if (typeof cell.labelFunction == 'function') {
 
-          return cell.labelFunction(value);
+          return cell.labelFunction(value, cell);
 
         } else if (value === null || typeof value == 'undefined') {
 
@@ -236,7 +236,7 @@ namespace comfortable {
 
         }
       },
-      // create a editor
+      // create an editor
       createEditor : function() {
         if (this.dataType == 'select-one') {
           return new SelectBox(this);
