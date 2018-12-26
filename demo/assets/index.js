@@ -386,7 +386,7 @@ window.addEventListener('load', function(event) {
               var newValue = null;
               var editing = false;
               var updateLabel = function() {
-                var value = editing? newValue : cell.value;
+                var value = editing? newValue : currentCell.value;
                 button.textContent = 'Clicked: ' + value;
               };
               var button = comfortable.util.createElement('button', {
