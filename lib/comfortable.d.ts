@@ -308,6 +308,12 @@ declare namespace comfortable {
         borderTop?: string;
         borderRight?: string;
         borderBottom?: string;
+        labelFunction?: (value: any, cell: EditorCell) => string;
+    }
+    interface TableCell extends TableCellStyle {
+        row: number;
+        col: number;
+        value: any;
     }
     interface TableModel extends EventTarget {
         defaultCellWidth: number;
@@ -333,12 +339,6 @@ declare namespace comfortable {
         };
         isColumnResizableAt: (col: number) => boolean;
         isColumnDraggableAt: (col: number) => boolean;
-    }
-    interface TableCell extends TableCellStyle {
-        row: number;
-        col: number;
-        value: any;
-        labelFunction: (value: any) => string;
     }
     interface TextEditorOptions {
         dataType: string;
