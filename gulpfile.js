@@ -45,6 +45,7 @@ gulp.task('build-main', function() {
       })
     }) )
     .pipe(sourcemaps.init() )
+    .pipe(order([ '**/*.ts' ]) )
     .pipe(mainTsProject() )
     .pipe(sourcemaps.write('.') )
     .pipe(gulp.dest(build) );
@@ -52,7 +53,7 @@ gulp.task('build-main', function() {
 
 gulp.task('concat-main-css', function() {
   return gulp.src(mainCssSrc)
-    .pipe(order([ '**/*.css']) )
+    .pipe(order([ '**/*.css' ]) )
     .pipe(concat(targetName + '.css') )
     .pipe(gulp.dest(`${build}/`) );
 });
@@ -66,12 +67,14 @@ gulp.task('build-test', function() {
       })
     }) )
     .pipe(sourcemaps.init() )
+    .pipe(order([ '**/*.ts' ]) )
     .pipe(testTsProject() )
     .pipe(sourcemaps.write('.') )
     .pipe(gulp.dest(build) );
 });
 
-gulp.task('build', gulp.series('build-main', 'concat-main-css',
+gulp.task('build', gulp.series(
+    'build-main', 'concat-main-css',
     'build-test') );
 
 gulp.task('compress', gulp.series('build', function () {

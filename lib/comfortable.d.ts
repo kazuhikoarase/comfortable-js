@@ -9,6 +9,142 @@
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
+    interface Editor {
+        endEdit: () => void;
+    }
+    interface Table extends UIEventTarget {
+        $el: HTMLElement;
+        model: TableModel;
+        editor: Editor;
+        getLockTop: () => number;
+        getLockLeft: () => number;
+        forEachCells: (callback: (cell: {
+            $el: HTMLElement;
+            row: number;
+            col: number;
+        }) => void) => void;
+    }
+    interface TableCellRenderer {
+        render: (cell: any) => void;
+        beginEdit: (cell: any) => {
+            focus(): void;
+            endEdit: () => ({
+                newValue: any;
+                oldValue?: any;
+            } | void);
+        };
+        dispose: () => void;
+    }
+    interface TdWrapper {
+        $el: HTMLElement;
+        tableModel: TableModel;
+    }
+    type TableCellRendererFactory = (td: TdWrapper) => TableCellRenderer;
+    interface TableCellStyle {
+        rowSpan?: number;
+        colSpan?: number;
+        editable?: boolean;
+        fontWeight?: string;
+        className?: string;
+        textAlign?: string;
+        verticalAlign?: string;
+        color?: string;
+        backgroundColor?: string;
+        borderLeft?: string;
+        borderTop?: string;
+        borderRight?: string;
+        borderBottom?: string;
+        labelFunction?: (value: any, cell: EditorCell) => string;
+    }
+    interface TableCell extends TableCellStyle {
+        row: number;
+        col: number;
+        value: any;
+    }
+    interface TableModel extends EventTarget {
+        defaultCellWidth: number;
+        defaultCellHeight: number;
+        defaultCellStyle: TableCellStyle;
+        defaultCellRendererFactory: TableCellRendererFactory;
+        maxRowSpan: number;
+        maxColSpan: number;
+        minCellWidth: number;
+        getRowCount: () => number;
+        getColumnCount: () => number;
+        getLineRowAt: (row: number) => any;
+        getLineRowCountAt: (row: number) => number;
+        getValueAt: (row: number, col: number) => any;
+        getCellStyleAt: (row: number, col: number) => TableCellStyle;
+        getCellRendererFactoryAt: (row: number, col: number) => TableCellRendererFactory;
+        getCellWidthAt: (col: number) => number;
+        getCellHeightAt: (row: number) => number;
+        getCellAt: (row: number, col: number) => TableCell;
+        checkSpaned: (row: number, col: number) => {
+            row: number;
+            col: number;
+        };
+        isColumnResizableAt: (col: number) => boolean;
+        isColumnDraggableAt: (col: number) => boolean;
+    }
+    interface TextEditorOptions {
+        dataType: string;
+        decimalDigits?: number;
+    }
+    interface TextEditorCell extends TableCell {
+        maxLength?: number;
+    }
+    interface CheckBoxOptions {
+    }
+    interface CheckBoxCell extends TableCell {
+        booleanValues: any[];
+    }
+    interface SelectBoxOptions {
+    }
+    interface SelectBoxCell extends TableCell {
+        valueField?: string;
+        labelField?: string;
+        options?: any[] | ((row: number, col: number) => any[]);
+    }
+    interface CellRendererFactoryOpts {
+        labelFunction?: (value: any, cell: EditorCell) => string;
+        createEditor?: () => CellEditor;
+        renderIsEditor?: boolean;
+        dataType?: string;
+    }
+    type EditorCell = TextEditorCell | CheckBoxCell | SelectBoxCell;
+    interface CellEditor {
+        $el: HTMLElement;
+        beginEdit: (td: TdWrapper, cell: EditorCell) => void;
+        focus: () => void;
+        blur: () => void;
+        setValue: (value: any) => void;
+        getValue: () => any;
+        isValid: () => boolean;
+    }
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
     var createDefaultCellRendererFactoryOpts: () => CellRendererFactoryOpts;
     var createDefaultCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
     var createMultiLineLabelRenderer: (parent: HTMLElement) => {
@@ -85,6 +221,30 @@ declare namespace comfortable.i18n {
     }
     var getInstance: (lang: string) => I18N;
     var getMessages: () => Messages;
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable.i18n {
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable.i18n {
 }
 /*!
  * comfortable
@@ -263,172 +423,6 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
-    interface Editor {
-        endEdit: () => void;
-    }
-    interface Table extends UIEventTarget {
-        $el: HTMLElement;
-        model: TableModel;
-        editor: Editor;
-        getLockTop: () => number;
-        getLockLeft: () => number;
-        forEachCells: (callback: (cell: {
-            $el: HTMLElement;
-            row: number;
-            col: number;
-        }) => void) => void;
-    }
-    interface TableCellRenderer {
-        render: (cell: any) => void;
-        beginEdit: (cell: any) => {
-            focus(): void;
-            endEdit: () => ({
-                newValue: any;
-                oldValue?: any;
-            } | void);
-        };
-        dispose: () => void;
-    }
-    interface TdWrapper {
-        $el: HTMLElement;
-        tableModel: TableModel;
-    }
-    type TableCellRendererFactory = (td: TdWrapper) => TableCellRenderer;
-    interface TableCellStyle {
-        rowSpan?: number;
-        colSpan?: number;
-        editable?: boolean;
-        fontWeight?: string;
-        className?: string;
-        textAlign?: string;
-        verticalAlign?: string;
-        color?: string;
-        backgroundColor?: string;
-        borderLeft?: string;
-        borderTop?: string;
-        borderRight?: string;
-        borderBottom?: string;
-        labelFunction?: (value: any, cell: EditorCell) => string;
-    }
-    interface TableCell extends TableCellStyle {
-        row: number;
-        col: number;
-        value: any;
-    }
-    interface TableModel extends EventTarget {
-        defaultCellWidth: number;
-        defaultCellHeight: number;
-        defaultCellStyle: TableCellStyle;
-        defaultCellRendererFactory: TableCellRendererFactory;
-        maxRowSpan: number;
-        maxColSpan: number;
-        minCellWidth: number;
-        getRowCount: () => number;
-        getColumnCount: () => number;
-        getLineRowAt: (row: number) => any;
-        getLineRowCountAt: (row: number) => number;
-        getValueAt: (row: number, col: number) => any;
-        getCellStyleAt: (row: number, col: number) => TableCellStyle;
-        getCellRendererFactoryAt: (row: number, col: number) => TableCellRendererFactory;
-        getCellWidthAt: (col: number) => number;
-        getCellHeightAt: (row: number) => number;
-        getCellAt: (row: number, col: number) => TableCell;
-        checkSpaned: (row: number, col: number) => {
-            row: number;
-            col: number;
-        };
-        isColumnResizableAt: (col: number) => boolean;
-        isColumnDraggableAt: (col: number) => boolean;
-    }
-    interface TextEditorOptions {
-        dataType: string;
-        decimalDigits?: number;
-    }
-    interface TextEditorCell extends TableCell {
-        maxLength?: number;
-    }
-    interface CheckBoxOptions {
-    }
-    interface CheckBoxCell extends TableCell {
-        booleanValues: any[];
-    }
-    interface SelectBoxOptions {
-    }
-    interface SelectBoxCell extends TableCell {
-        valueField?: string;
-        labelField?: string;
-        options?: any[] | ((row: number, col: number) => any[]);
-    }
-    interface CellRendererFactoryOpts {
-        labelFunction?: (value: any, cell: EditorCell) => string;
-        createEditor?: () => CellEditor;
-        renderIsEditor?: boolean;
-        dataType?: string;
-    }
-    type EditorCell = TextEditorCell | CheckBoxCell | SelectBoxCell;
-    interface CellEditor {
-        $el: HTMLElement;
-        beginEdit: (td: TdWrapper, cell: EditorCell) => void;
-        focus: () => void;
-        blur: () => void;
-        setValue: (value: any) => void;
-        getValue: () => any;
-        isValid: () => boolean;
-    }
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
-    var SortOrder: {
-        ASC: string;
-        DESC: string;
-    };
-    var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
-    var fromTemplate: (template: TableTemplate) => TemplateTable;
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable {
     interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
         width?: number;
         height?: number;
@@ -515,6 +509,36 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
+    var SortOrder: {
+        ASC: string;
+        DESC: string;
+    };
+    var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
+    var fromTemplate: (template: TableTemplate) => TemplateTable;
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
     var vueComponents: {
         table: {
             template: string;
@@ -539,28 +563,4 @@ declare namespace comfortable {
             beforeDestroy: () => void;
         };
     };
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable.i18n {
-}
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
-declare namespace comfortable.i18n {
 }
