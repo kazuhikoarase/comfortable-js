@@ -1,7 +1,51 @@
 
+const triggerMouseEvent = function(node, type) {
+  var event = document.createEvent('MouseEvents');
+  event.initEvent(type, true, true);
+  node.dispatchEvent(event);
+};
+
+const nextTick = function(cb, timeout) {
+  (nextTick.queue || (nextTick.queue = []) ).
+    push({ cb : cb, timeout : timeout || 0 });
+  var tick = function() {
+    var qitem = nextTick.queue.shift();
+    setTimeout(function() {
+      qitem.cb();
+      if (nextTick.queue.length) {
+        tick();
+      }
+    }, qitem.timeout);
+  };
+  tick();
+  return nextTick;
+};
+
+/*
+const nextTick = function(cb) {
+  var tick = function() {
+    cb();
+    if (tick.next) {
+      tick.next();
+    }
+  }
+  window.setTimeout(tick, 0);
+  return function(cb) {
+    tick.next = cb;
+  }
+};
+*/
 describe('basic', function() {
 
-  it('first table', function() {
+  it('direct table', function() {
+
+    var table = comfortable.createTable();
+    expect(table.getLockLeft() ).toBe(0);
+    expect(table.getLockTop() ).toBe(0);
+
+  });
+
+  it('template table', function(done) {
 
     var cols = [];
     for (var i = 0; i < 100; i += 1) {
@@ -39,7 +83,32 @@ describe('basic', function() {
     
     expect(table.getLockLeft() ).toBe(0);
     expect(table.getLockTop() ).toBe(1);
+
+    nextTick(function() {
+
+      expect($('.ctj-filter-button').length).toBe(8);
+      triggerMouseEvent($('.ctj-filter-button')[0], 'mousedown');
+
+    })(function() {
+   
+//      triggerMouseEvent($('.ctj-dialog > .ctj-clickable-op')[1], 'click');
+
+    })(function() {
+
+      triggerMouseEvent($('.ctj-filter-button')[0], 'mousedown');
+
+    })(function() {
+   
+//      triggerMouseEvent($('.ctj-dialog > .ctj-clickable-op')[0], 'click');
   
+    })(function() {
+
+      done();
+
+    });
+
+
+
   });
 
 });
