@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "out": "compile-into-one.js",
+    "noImplicitAny": true,
+    "inlineSourceMap": true
+  }
+}

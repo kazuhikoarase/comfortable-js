@@ -1,0 +1,26 @@
+BODY {
+  font-family : sans-serif;
+}
+
+.my-table {
+  border : 1px solid silver;
+}
+
+.my-table TD {
+  border-right : 1px solid silver;
+  border-bottom : 1px solid silver;
+  font-size : 14px;
+}
+
+.my-table .header {
+  color : #ffffff;
+  background-color : #666699;
+  font-weight : bold;
+}
+
+.my-table .even {
+  background-color : rgba(0,0,0,0.1)
+}
+
+.my-table .readonly {
+}
