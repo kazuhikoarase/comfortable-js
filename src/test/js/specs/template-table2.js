@@ -61,6 +61,10 @@ var createTemplateTable = function() {
 
 describe('template-table2', function() {
 
+  beforeEach(function() {
+    document.body.innerHTML = '';
+  });
+
   it('sort asc, desc', function(done) {
 
     var table = createTemplateTable();
@@ -79,16 +83,24 @@ describe('template-table2', function() {
 
     })(200, function() {
 
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
+
+    })(200, function() {
+
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
 
       SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
-    })(1000, function() {
+    })(200, function() {
  
       var $flts = $('.ctj-filter-button'); 
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[3], 'mousedown'); 
+
+    })(200, function() {
+
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
 
     })(200, function() {
    
@@ -99,7 +111,6 @@ describe('template-table2', function() {
   
     })(1000, function() {
 
-      $('BODY').children().remove();
       done(); 
 
     });
@@ -123,27 +134,43 @@ describe('template-table2', function() {
 
     })(200, function() {
 
-      var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
-      expect($sortChks.length).toBe(2);
-
-      SpecUtil.triggerMouseEvent($sortChks[1], 'click');
-
-    })(1000, function() {
- 
-      var $flts = $('.ctj-filter-button'); 
-      expect($flts.length).toBe(8);
-      SpecUtil.triggerMouseEvent($flts[3], 'mousedown'); 
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
 
     })(200, function() {
-   
+ 
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
+      SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
-      SpecUtil.triggerMouseEvent($sortChks[0], 'click');
-  
+    })(200, function() { 
+
+      var $heads = $('.ctj-header'); 
+      expect($heads.length).toBe(8);
+//      SpecUtil.triggerContextMenu($heads[0]);
+      if ($heads.length == 8) {
+        var target = $heads[2];
+        var off = $(target).offset();
+        var event = document.createEvent('HTMLEvents');
+        event.initEvent('contextmenu', true, false);
+        event.pageX = off.left + 8;
+        event.pageY = off.top + 8;
+        target.dispatchEvent(event);
+      }
+ 
+    })(200, function() {
+
+      var $menuitem = $('.ctj-menuitem');
+      expect($menuitem.length).toBe(2);
+      if ($menuitem.length == 2) {
+         SpecUtil.triggerMouseEvent($menuitem[0], 'mousedown');
+      }
+
+    })(200, function() {
+
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
+
     })(1000, function() {
 
-      $('BODY').children().remove();
       done(); 
 
     });

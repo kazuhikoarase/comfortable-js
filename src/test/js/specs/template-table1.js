@@ -5,7 +5,8 @@ var createTemplateTable = function() {
   for (var i = 0; i < 50; i += 1) {
     cols.push({
       label: 'Label#' + i,
-      dataField: 'field' + i
+      dataField: 'field' + i,
+      backgroundColor: '#ffcccc',
     });
   }
 
@@ -24,7 +25,7 @@ var createTemplateTable = function() {
     var record = {};
     for (var c = 0; c < tmpl.thead[0].length; c += 1) {
       var dataField = tmpl.thead[0][c].dataField;
-      record[dataField] = '' + ~~(rand() * 10000);
+      record[dataField] = SpecUtil.nextAlp(rand) + ~~(rand() * 10000);
     }
     items.push(record);
   }
@@ -39,6 +40,9 @@ var createTemplateTable = function() {
 
 describe('template-table1', function() {
 
+  beforeEach(function() {
+    document.body.innerHTML = '';
+  });
 
   it('sort asc, desc', function(done) {
 
@@ -57,6 +61,10 @@ describe('template-table1', function() {
 
     })(200, function() {
 
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
+
+    })(200, function() {
+
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
 
@@ -69,7 +77,11 @@ describe('template-table1', function() {
       SpecUtil.triggerMouseEvent($flts[0], 'mousedown');
 
     })(200, function() {
-   
+
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
+
+    })(200, function() {
+
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
 
@@ -77,7 +89,6 @@ describe('template-table1', function() {
   
     })(1000, function() {
 
-      $('BODY').children().remove();
       done(); 
 
     });

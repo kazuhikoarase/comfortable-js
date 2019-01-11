@@ -5,10 +5,19 @@ window.SpecUtil = {
   /**
    * 
    */
-  triggerMouseEvent: function(node, type) {
+  triggerMouseEvent: function(elm, type) {
     var event = document.createEvent('MouseEvents');
     event.initEvent(type, true, true);
-    node.dispatchEvent(event);
+    elm.dispatchEvent(event);
+  },
+
+  /**
+   * 
+   */
+  triggerContextMenu: function(elm) {
+    var event = document.createEvent('HTMLEvents');
+    event.initEvent('contextmenu', true, false);
+    elm.dispatchEvent(event);
   },
 
   /**
@@ -56,6 +65,10 @@ window.SpecUtil = {
       val = (seed1 * val + seed2) % 1;
       return val;
     }
-  }
+  },
+
+  nextAlp : function(rand) {
+    return String.fromCharCode('A'.charCodeAt(0) + ~~(rand() * 26) );
+  },
 };
 

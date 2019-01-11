@@ -1,6 +1,10 @@
 
 describe('table1', function() {
 
+  beforeEach(function() {
+    document.body.innerHTML = '';
+  });
+
   it('raw table', function(done) {
 
     var table = comfortable.createTable();
@@ -11,8 +15,8 @@ describe('table1', function() {
     expect(table.getLockTop() ).toBe(0);
 
     SpecUtil.nextTick(function() {
-      $('BODY').children().remove();
       done();
+
     }, 1000);
 
   });
