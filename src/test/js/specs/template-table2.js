@@ -33,8 +33,9 @@ var createTemplateTable = function() {
     tmpl.tbody[0].push(cell);
   });
 
-  var table = comfortable.fromTemplate(tmpl);
   var rand = SpecUtil.rand();
+
+  var table = comfortable.fromTemplate(tmpl);
 
   var items = [];
   for (var r = 0; r < 100; r += 1) {

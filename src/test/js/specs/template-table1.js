@@ -17,8 +17,9 @@ var createTemplateTable = function() {
     tmpl.thead[0].push(col);
   });
 
-  var table = comfortable.fromTemplate(tmpl);
   var rand = SpecUtil.rand();
+
+  var table = comfortable.fromTemplate(tmpl);
 
   var items = [];
   for (var r = 0; r < 100; r += 1) {
@@ -32,7 +33,13 @@ var createTemplateTable = function() {
 
   $('BODY').append($(table.$el).addClass('my-table').
       css({ width : '800px', height : '600px'}) );
+
+  // before items
+  table.model.setValueAt(1, 0, 'QWERT');
   table.model.items = items;
+  // after items
+  table.model.setValueAt(1, 0, 'ABCDE');
+
   table.invalidate();
 
   return table;
@@ -70,7 +77,7 @@ describe('template-table1', function() {
 
       SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
-    })(1000, function() {
+    })(200, function() {
  
       var $flts = $('.ctj-filter-button');
       expect($flts.length).toBe(8);
