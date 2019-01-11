@@ -1,22 +1,51 @@
 
+//https://stackoverflow.com/questions/26596123/internet-explorer-9-10-11-event-constructor-doesnt-work
+
+(function () {
+  if ( typeof window.CustomEvent === "function" ) return false; //If not IE
+
+  function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+   }
+
+  CustomEvent.prototype = window.Event.prototype;
+
+  window.CustomEvent = CustomEvent;
+})();
 
 window.SpecUtil = {
 
   /**
    * 
    */
+  _triggerMouseEvent: function(elm, type, init) {
+    var params ={ bubbles: true, cancelable: true/*,
+        view: window*/ };
+    if (init) {
+      init(params);
+    }
+    var event = new CustomEvent(type, params);
+    elm.dispatchEvent(event);
+  },
+
   triggerMouseEvent: function(elm, type) {
     var event = document.createEvent('MouseEvents');
     event.initEvent(type, true, true);
     elm.dispatchEvent(event);
   },
 
-  /**
+  /** 
    * 
    */
-  triggerContextMenu: function(elm) {
+  triggerContextMenu: function(elm, init) {
     var event = document.createEvent('HTMLEvents');
     event.initEvent('contextmenu', true, false);
+    if (init) {
+      init(event);
+    }
     elm.dispatchEvent(event);
   },
 
@@ -27,6 +56,7 @@ window.SpecUtil = {
 
     var tasks = [];
     var alive = false;
+    var ctx = {};
 
     var push = function(cb, timeout) {
       if (typeof timeout == 'function') {
@@ -44,7 +74,7 @@ window.SpecUtil = {
       var task = tasks.shift();
       alive = true;
       window.setTimeout(function() {
-        task.cb();
+        task.cb.apply(ctx);
         alive = false;
         notify();
       }, task.timeout);

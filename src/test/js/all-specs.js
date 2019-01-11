@@ -15,5 +15,7 @@ require('./spec-util.js');
 require('./specs/misc.js');
 
 require('./specs/table1.js');
+
 require('./specs/template-table1.js');
 require('./specs/template-table2.js');
+//require('./specs/template-table3.js');

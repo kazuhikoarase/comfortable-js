@@ -256,15 +256,14 @@ describe('template-table2', function() {
 
       var $heads = $('.ctj-header'); 
       expect($heads.length).toBe(8);
-//      SpecUtil.triggerContextMenu($heads[0]);
+
       if ($heads.length == 8) {
         var target = $heads[2];
         var off = $(target).offset();
-        var event = document.createEvent('HTMLEvents');
-        event.initEvent('contextmenu', true, false);
-        event.pageX = off.left + 8;
-        event.pageY = off.top + 8;
-        target.dispatchEvent(event);
+        SpecUtil.triggerContextMenu(target, function(event) {
+          event.pageX = off.left + 8;
+          event.pageY = off.top + 8;
+        });
       }
  
     })(200, function() {
