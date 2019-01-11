@@ -12,12 +12,12 @@ var createTemplateTable = function() {
   }
 
   var dataTypes = [
-    '',       // 0
-    'string', // 1
-    'number', // 2
-    'number', // 3
-    'boolean',
-    'select-one'
+    '',           // 0
+    'string',     // 1
+    'number',     // 2
+    'number',     // 3
+    'boolean',    // 4
+    'select-one'  // 5
     ];
 
   var tmpl = {
@@ -82,7 +82,7 @@ describe('template-table2', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[2], 'mousedown');
 
-    })(200, function() {
+    })(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
@@ -99,7 +99,7 @@ describe('template-table2', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[3], 'mousedown'); 
 
-    })(200, function() {
+    })(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
@@ -118,7 +118,116 @@ describe('template-table2', function() {
 
   });
 
-  it('ctx', function(done) {
+  it('filter check', function(done) {
+
+    var table = createTemplateTable();
+
+    // test
+
+    expect(table.getLockLeft() ).toBe(0);
+    expect(table.getLockTop() ).toBe(1);
+
+
+    SpecUtil.nextTick(200, function() {
+
+      //---------------------------------------------------------
+      // open filter
+
+      var $flts = $('.ctj-filter-button');
+      expect($flts.length).toBe(8);
+      SpecUtil.triggerMouseEvent($flts[4], 'mousedown');
+
+    })(50, function() {
+
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
+
+    })(200, function() {
+
+      var $sortChks = $('.ctj-dialog .ctj-clickable-op');
+      expect($sortChks.length).toBe(5);
+
+      // checked.
+      SpecUtil.triggerMouseEvent($sortChks[3], 'click');
+
+    }.bind(this) )(200, function() {
+
+      var $btn = $('.ctj-dialog .ctj-button'); 
+      expect($btn.length).toBe(2);
+      SpecUtil.triggerMouseEvent($btn[0], 'click'); 
+
+      // click ok.
+      //---------------------------------------------------------
+
+    })(200, function() {
+
+      //---------------------------------------------------------
+      // open filter
+
+      var $flts = $('.ctj-filter-button');
+      expect($flts.length).toBe(8);
+      SpecUtil.triggerMouseEvent($flts[4], 'mousedown');
+
+    })(50, function() {
+
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
+
+    })(200, function() {
+
+      var $sortChks = $('.ctj-dialog .ctj-clickable-op');
+      expect($sortChks.length).toBe(5);
+
+      // checked.
+      SpecUtil.triggerMouseEvent($sortChks[3], 'click');
+      SpecUtil.triggerMouseEvent($sortChks[4], 'click');
+
+    }.bind(this) )(200, function() {
+
+      var $btn = $('.ctj-dialog .ctj-button'); 
+      expect($btn.length).toBe(2);
+      SpecUtil.triggerMouseEvent($btn[0], 'click'); 
+
+      // click ok.
+      //---------------------------------------------------------
+
+    })(200, function() {
+
+      //---------------------------------------------------------
+      // open filter
+
+      var $flts = $('.ctj-filter-button');
+      expect($flts.length).toBe(8);
+      SpecUtil.triggerMouseEvent($flts[4], 'mousedown');
+
+    })(50, function() {
+
+      SpecUtil.triggerMouseEvent(document, 'mouseup');
+
+    })(200, function() {
+
+      var $sortChks = $('.ctj-dialog .ctj-clickable-op');
+      expect($sortChks.length).toBe(5);
+
+      // select all
+      SpecUtil.triggerMouseEvent($sortChks[2], 'click');
+
+    }.bind(this) )(200, function() {
+
+      var $btn = $('.ctj-dialog .ctj-button'); 
+      expect($btn.length).toBe(2);
+      SpecUtil.triggerMouseEvent($btn[0], 'click'); 
+
+      // click ok.
+      //---------------------------------------------------------
+
+    })(1000, function() {
+
+      done(); 
+
+    });
+
+  });
+
+  it('context-menu(clear filter)', function(done) {
 
     var table = createTemplateTable();
 
@@ -133,7 +242,7 @@ describe('template-table2', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[2], 'mousedown');
 
-    })(200, function() {
+    })(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
@@ -166,7 +275,7 @@ describe('template-table2', function() {
          SpecUtil.triggerMouseEvent($menuitem[0], 'mousedown');
       }
 
-    })(200, function() {
+    })(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 

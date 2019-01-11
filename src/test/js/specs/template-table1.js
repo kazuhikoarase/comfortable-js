@@ -66,7 +66,7 @@ describe('template-table1', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[0], 'mousedown');
 
-    })(200, function() {
+    })(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
@@ -83,7 +83,7 @@ describe('template-table1', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[0], 'mousedown');
 
-    })(200, function() {
+    })(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
