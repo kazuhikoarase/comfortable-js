@@ -25,6 +25,12 @@ module.exports = function(config) {
 
     frameworks: [ 'jasmine' ],
 
+    client : {
+      jasmine: {
+        random: false
+      }
+    },
+
     // observe entry point and references.
     files: function() {
       return [
