@@ -9,7 +9,7 @@ var createTemplateTable = function() {
       backgroundColor: '#ccffcc',
     });
   }
- 
+
   var tmpl = {
     thead : [[]],
   };
@@ -64,7 +64,7 @@ describe('template-table3', function() {
 
     }).nextTick(100, function() {
 
-      var $heads = $('.ctj-header'); 
+      var $heads = $('.ctj-header');
       expect($heads.length).toBe(8);
       var target = $heads[1];
       var off = $(target).offset();
@@ -89,20 +89,20 @@ describe('template-table3', function() {
           event.pageY = off.top + h / 2;
         });
       };
- 
+
     }).nextTick(100, function() {
 
       this.mousemove();
 
-    }).nextTick(100, function() { 
+    }).nextTick(100, function() {
 
       this.mouseup();
- 
+
     }).nextTick(100, function() {
 
       var targetIndex = 1;
 
-      var $heads = $('.ctj-header'); 
+      var $heads = $('.ctj-header');
       expect($heads.length).toBe(8);
       var target = $heads[targetIndex];
       var off = $(target).offset();
@@ -116,13 +116,13 @@ describe('template-table3', function() {
           'mousedown', function(event) {
         event.pageX = off.left + w;
         event.pageY = off.top + h / 2;
-      }); 
+      });
 
       this.mousemove = function() {
         SpecUtil.triggerMouseEvent(document, 'mousemove', function(event) {
           event.pageX = off.left + w + w * 0.5;
           event.pageY = off.top + h / 2;
-        }); 
+        });
       };
 
       this.mouseup = function() {
@@ -131,18 +131,18 @@ describe('template-table3', function() {
           event.pageY = off.top + h / 2;
         });
       };
- 
+
     }).nextTick(100, function() {
 
       this.mousemove();
 
-    }).nextTick(100, function() { 
+    }).nextTick(100, function() {
 
       this.mouseup();
- 
+
     }).nextTick(1000, function() {
 
-      done(); 
+      done();
 
     });
 

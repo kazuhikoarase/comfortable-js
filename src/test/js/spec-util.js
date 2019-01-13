@@ -5,21 +5,21 @@ window.SpecUtil = {
   /*
   (function () {
     if ( typeof window.CustomEvent === "function" ) return false; //If not IE
-  
+
     function CustomEvent ( event, params ) {
       params = params || { bubbles: false, cancelable: false, detail: undefined };
       var evt = document.createEvent( 'CustomEvent' );
       evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
       return evt;
      }
-  
+
     CustomEvent.prototype = window.Event.prototype;
-  
+
     window.CustomEvent = CustomEvent;
   })();
-  */ 
+  */
   /**
-   * 
+   *
    */
   _triggerMouseEvent: function(elm, type, init) {
     var params ={ bubbles: true, cancelable: true, view: window };
@@ -44,7 +44,7 @@ window.SpecUtil = {
       detail, screenX, screenY, clientX, clientY,
       ctrlKey, altKey, shiftKey, metaKey,
       button, relatedTarget)
-     */ 
+     */
     event.initMouseEvent(
       type, true, true, window,
       0, 0, 0, params.pageX || 0, params.pageY || 0,
@@ -53,8 +53,8 @@ window.SpecUtil = {
     elm.dispatchEvent(event);
   },
 
-  /** 
-   * 
+  /**
+   *
    */
   triggerContextMenu: function(elm, init) {
     var event = document.createEvent('HTMLEvents');
@@ -66,7 +66,7 @@ window.SpecUtil = {
   },
 
   /**
-   * 
+   *
    */
   nextTick: function() {
 

@@ -94,25 +94,25 @@ describe('template-table2', function() {
       SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
     }).nextTick(200, function() {
- 
-      var $flts = $('.ctj-filter-button'); 
+
+      var $flts = $('.ctj-filter-button');
       expect($flts.length).toBe(8);
-      SpecUtil.triggerMouseEvent($flts[3], 'mousedown'); 
+      SpecUtil.triggerMouseEvent($flts[3], 'mousedown');
 
     }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
     }).nextTick(200, function() {
-   
+
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
 
       SpecUtil.triggerMouseEvent($sortChks[0], 'click');
-  
+
     }).nextTick(1000, function() {
 
-      done(); 
+      done();
 
     });
 
@@ -151,9 +151,9 @@ describe('template-table2', function() {
 
     }).nextTick(200, function() {
 
-      var $btn = $('.ctj-dialog .ctj-button'); 
+      var $btn = $('.ctj-dialog .ctj-button');
       expect($btn.length).toBe(2);
-      SpecUtil.triggerMouseEvent($btn[0], 'click'); 
+      SpecUtil.triggerMouseEvent($btn[0], 'click');
 
       // click ok.
       //---------------------------------------------------------
@@ -182,9 +182,9 @@ describe('template-table2', function() {
 
     }).nextTick(200, function() {
 
-      var $btn = $('.ctj-dialog .ctj-button'); 
+      var $btn = $('.ctj-dialog .ctj-button');
       expect($btn.length).toBe(2);
-      SpecUtil.triggerMouseEvent($btn[0], 'click'); 
+      SpecUtil.triggerMouseEvent($btn[0], 'click');
 
       // click ok.
       //---------------------------------------------------------
@@ -212,16 +212,16 @@ describe('template-table2', function() {
 
     }).nextTick(200, function() {
 
-      var $btn = $('.ctj-dialog .ctj-button'); 
+      var $btn = $('.ctj-dialog .ctj-button');
       expect($btn.length).toBe(2);
-      SpecUtil.triggerMouseEvent($btn[0], 'click'); 
+      SpecUtil.triggerMouseEvent($btn[0], 'click');
 
       // click ok.
       //---------------------------------------------------------
 
     }).nextTick(1000, function() {
 
-      done(); 
+      done();
 
     });
 
@@ -247,14 +247,14 @@ describe('template-table2', function() {
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
     }).nextTick(200, function() {
- 
+
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
       SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
-    }).nextTick(200, function() { 
+    }).nextTick(200, function() {
 
-      var $heads = $('.ctj-header'); 
+      var $heads = $('.ctj-header');
       expect($heads.length).toBe(8);
 
       if ($heads.length == 8) {
@@ -265,7 +265,7 @@ describe('template-table2', function() {
           event.pageY = off.top + 8;
         });
       }
- 
+
     }).nextTick(200, function() {
 
       var $menuitem = $('.ctj-menuitem');
@@ -280,7 +280,7 @@ describe('template-table2', function() {
 
     }).nextTick(1000, function() {
 
-      done(); 
+      done();
 
     });
 

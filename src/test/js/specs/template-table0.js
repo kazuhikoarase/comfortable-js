@@ -64,7 +64,7 @@ describe('template-table0', function() {
 
     }).nextTick(1000, function() {
 
-      done(); 
+      done();
 
     });
 

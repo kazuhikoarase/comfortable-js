@@ -78,7 +78,7 @@ describe('template-table1', function() {
       SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
     }).nextTick(200, function() {
- 
+
       var $flts = $('.ctj-filter-button');
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[0], 'mousedown');
@@ -93,10 +93,10 @@ describe('template-table1', function() {
       expect($sortChks.length).toBe(2);
 
       SpecUtil.triggerMouseEvent($sortChks[0], 'click');
-  
+
     }).nextTick(1000, function() {
 
-      done(); 
+      done();
 
     });
 
