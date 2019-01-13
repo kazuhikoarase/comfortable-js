@@ -18,4 +18,4 @@ require('./specs/table1.js');
 
 require('./specs/template-table1.js');
 require('./specs/template-table2.js');
-//require('./specs/template-table3.js');
+require('./specs/template-table3.js');

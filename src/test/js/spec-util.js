@@ -1,29 +1,28 @@
 
-//https://stackoverflow.com/questions/26596123/internet-explorer-9-10-11-event-constructor-doesnt-work
-
-(function () {
-  if ( typeof window.CustomEvent === "function" ) return false; //If not IE
-
-  function CustomEvent ( event, params ) {
-    params = params || { bubbles: false, cancelable: false, detail: undefined };
-    var evt = document.createEvent( 'CustomEvent' );
-    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
-    return evt;
-   }
-
-  CustomEvent.prototype = window.Event.prototype;
-
-  window.CustomEvent = CustomEvent;
-})();
-
 window.SpecUtil = {
 
+    //https://stackoverflow.com/questions/26596123/internet-explorer-9-10-11-event-constructor-doesnt-work
+    /*
+    (function () {
+      if ( typeof window.CustomEvent === "function" ) return false; //If not IE
+    
+      function CustomEvent ( event, params ) {
+        params = params || { bubbles: false, cancelable: false, detail: undefined };
+        var evt = document.createEvent( 'CustomEvent' );
+        evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+        return evt;
+       }
+    
+      CustomEvent.prototype = window.Event.prototype;
+    
+      window.CustomEvent = CustomEvent;
+    })();
+    */
   /**
    * 
    */
   _triggerMouseEvent: function(elm, type, init) {
-    var params ={ bubbles: true, cancelable: true/*,
-        view: window*/ };
+    var params ={ bubbles: true, cancelable: true, view: window };
     if (init) {
       init(params);
     }
@@ -31,9 +30,26 @@ window.SpecUtil = {
     elm.dispatchEvent(event);
   },
 
-  triggerMouseEvent: function(elm, type) {
+  triggerMouseEvent: function(elm, type, init) {
     var event = document.createEvent('MouseEvents');
-    event.initEvent(type, true, true);
+    var params = {};
+    if (init) {
+      init(params);
+    }
+
+    /*
+     * !! IE11 does not support instantiate a MouseEvent. !!
+     *
+      type, canBubble, cancelable, view,
+      detail, screenX, screenY, clientX, clientY,
+      ctrlKey, altKey, shiftKey, metaKey,
+      button, relatedTarget)
+     */ 
+    event.initMouseEvent(
+      type, true, true, window,
+      0, 0, 0, params.pageX || 0, params.pageY || 0,
+      false, false, false, false,
+      0, null );
     elm.dispatchEvent(event);
   },
 

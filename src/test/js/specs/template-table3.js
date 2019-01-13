@@ -45,7 +45,7 @@ var createTemplateTable = function() {
   return table;
 };
 
-describe('template-table0', function() {
+describe('template-table3', function() {
 
   beforeEach(function() {
     document.body.innerHTML = '';
@@ -70,26 +70,13 @@ describe('template-table0', function() {
       var off = $(target).offset();
       var w = $(target).outerWidth();
       var h = $(target).outerHeight();
- $(document).on('mousemove mouseup',function(event) {
-   console.log('ja,', event.type, event.which, event.pageX, event.pageY);
- });
- 
-      console.log('mousedown', w, h);
+
       SpecUtil.triggerMouseEvent(target, 'mousedown', function(event) {
         event.pageX = off.left + w / 2;
         event.pageY = off.top + h / 2;
       });
 
-      this.mousemove1 = function() {
-        console.log('mousemove');
-        SpecUtil.triggerMouseEvent(document, 'mousemove', function(event) {
-          event.pageX = off.left + w / 2 + w * 1;
-          event.pageY = off.top + h / 2;
-          console.log('page::', event.pageX, event.pageY);
-        });
-      };
-      this.mousemove2 = function() {
-        console.log('mousemove');
+      this.mousemove = function() {
         SpecUtil.triggerMouseEvent(document, 'mousemove', function(event) {
           event.pageX = off.left + w / 2 + w * 2;
           event.pageY = off.top + h / 2;
@@ -97,7 +84,6 @@ describe('template-table0', function() {
       };
 
       this.mouseup = function() {
-        console.log('mouseup');
         SpecUtil.triggerMouseEvent(document, 'mouseup', function(event) {
           event.pageX = off.left + w / 2 + w * 2;
           event.pageY = off.top + h / 2;
@@ -106,18 +92,56 @@ describe('template-table0', function() {
  
     })(100, function() {
 
-      this.mousemove1();
-
-    })(100, function() {
-
-      this.mousemove2();
+      this.mousemove();
 
     })(100, function() { 
 
       this.mouseup();
  
-    })(2000, function() {
-console.log('goal');
+    })(100, function() {
+
+      var targetIndex = 1;
+
+      var $heads = $('.ctj-header'); 
+      expect($heads.length).toBe(8);
+      var target = $heads[targetIndex];
+      var off = $(target).offset();
+      var w = $(target).outerWidth();
+      var h = $(target).outerHeight();
+
+      var $resizeHandles = $('.ctj-v-resize-line').parent();
+      expect($resizeHandles.length).toBe(8);
+
+      SpecUtil.triggerMouseEvent($resizeHandles[targetIndex],
+          'mousedown', function(event) {
+        event.pageX = off.left + w;
+        event.pageY = off.top + h / 2;
+      }); 
+
+      this.mousemove = function() {
+        SpecUtil.triggerMouseEvent(document, 'mousemove', function(event) {
+          event.pageX = off.left + w + w * 0.5;
+          event.pageY = off.top + h / 2;
+        }); 
+      };
+
+      this.mouseup = function() {
+        SpecUtil.triggerMouseEvent(document, 'mouseup', function(event) {
+          event.pageX = off.left + w + w * 0.5;
+          event.pageY = off.top + h / 2;
+        });
+      };
+ 
+    })(100, function() {
+
+      this.mousemove();
+
+    })(100, function() { 
+
+      this.mouseup();
+ 
+    })(1000, function() {
+
       done(); 
 
     });
