@@ -82,35 +82,35 @@ describe('template-table2', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[2], 'mousedown');
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(200, function() {
+    }).nextTick(200, function() {
 
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
 
       SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
-    })(200, function() {
+    }).nextTick(200, function() {
  
       var $flts = $('.ctj-filter-button'); 
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[3], 'mousedown'); 
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(200, function() {
+    }).nextTick(200, function() {
    
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
 
       SpecUtil.triggerMouseEvent($sortChks[0], 'click');
   
-    })(1000, function() {
+    }).nextTick(1000, function() {
 
       done(); 
 
@@ -137,11 +137,11 @@ describe('template-table2', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[4], 'mousedown');
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(200, function() {
+    }).nextTick(200, function() {
 
       var $sortChks = $('.ctj-dialog .ctj-clickable-op');
       expect($sortChks.length).toBe(5);
@@ -149,7 +149,7 @@ describe('template-table2', function() {
       // checked.
       SpecUtil.triggerMouseEvent($sortChks[3], 'click');
 
-    }.bind(this) )(200, function() {
+    }).nextTick(200, function() {
 
       var $btn = $('.ctj-dialog .ctj-button'); 
       expect($btn.length).toBe(2);
@@ -158,7 +158,7 @@ describe('template-table2', function() {
       // click ok.
       //---------------------------------------------------------
 
-    })(200, function() {
+    }).nextTick(200, function() {
 
       //---------------------------------------------------------
       // open filter
@@ -167,11 +167,11 @@ describe('template-table2', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[4], 'mousedown');
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(200, function() {
+    }).nextTick(200, function() {
 
       var $sortChks = $('.ctj-dialog .ctj-clickable-op');
       expect($sortChks.length).toBe(5);
@@ -180,7 +180,7 @@ describe('template-table2', function() {
       SpecUtil.triggerMouseEvent($sortChks[3], 'click');
       SpecUtil.triggerMouseEvent($sortChks[4], 'click');
 
-    }.bind(this) )(200, function() {
+    }).nextTick(200, function() {
 
       var $btn = $('.ctj-dialog .ctj-button'); 
       expect($btn.length).toBe(2);
@@ -189,7 +189,7 @@ describe('template-table2', function() {
       // click ok.
       //---------------------------------------------------------
 
-    })(200, function() {
+    }).nextTick(200, function() {
 
       //---------------------------------------------------------
       // open filter
@@ -198,11 +198,11 @@ describe('template-table2', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[4], 'mousedown');
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(200, function() {
+    }).nextTick(200, function() {
 
       var $sortChks = $('.ctj-dialog .ctj-clickable-op');
       expect($sortChks.length).toBe(5);
@@ -210,7 +210,7 @@ describe('template-table2', function() {
       // select all
       SpecUtil.triggerMouseEvent($sortChks[2], 'click');
 
-    }.bind(this) )(200, function() {
+    }).nextTick(200, function() {
 
       var $btn = $('.ctj-dialog .ctj-button'); 
       expect($btn.length).toBe(2);
@@ -219,7 +219,7 @@ describe('template-table2', function() {
       // click ok.
       //---------------------------------------------------------
 
-    })(1000, function() {
+    }).nextTick(1000, function() {
 
       done(); 
 
@@ -242,17 +242,17 @@ describe('template-table2', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[2], 'mousedown');
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(200, function() {
+    }).nextTick(200, function() {
  
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
       SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
-    })(200, function() { 
+    }).nextTick(200, function() { 
 
       var $heads = $('.ctj-header'); 
       expect($heads.length).toBe(8);
@@ -266,7 +266,7 @@ describe('template-table2', function() {
         });
       }
  
-    })(200, function() {
+    }).nextTick(200, function() {
 
       var $menuitem = $('.ctj-menuitem');
       expect($menuitem.length).toBe(2);
@@ -274,11 +274,11 @@ describe('template-table2', function() {
          SpecUtil.triggerMouseEvent($menuitem[0], 'mousedown');
       }
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(1000, function() {
+    }).nextTick(1000, function() {
 
       done(); 
 

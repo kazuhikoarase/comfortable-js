@@ -62,7 +62,7 @@ describe('template-table0', function() {
 
     SpecUtil.nextTick(200, function() {
 
-    })(1000, function() {
+    }).nextTick(1000, function() {
 
       done(); 
 

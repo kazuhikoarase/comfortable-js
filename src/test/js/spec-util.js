@@ -98,7 +98,9 @@ window.SpecUtil = {
 
     var nextTick = function(cb, timeout) {
       push(cb, timeout);
-      return nextTick;
+      return {
+        nextTick: nextTick
+      };
     };
     return nextTick;
   }(),

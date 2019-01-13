@@ -62,7 +62,7 @@ describe('template-table3', function() {
 
     SpecUtil.nextTick(200, function() {
 
-    })(100, function() {
+    }).nextTick(100, function() {
 
       var $heads = $('.ctj-header'); 
       expect($heads.length).toBe(8);
@@ -90,15 +90,15 @@ describe('template-table3', function() {
         });
       };
  
-    })(100, function() {
+    }).nextTick(100, function() {
 
       this.mousemove();
 
-    })(100, function() { 
+    }).nextTick(100, function() { 
 
       this.mouseup();
  
-    })(100, function() {
+    }).nextTick(100, function() {
 
       var targetIndex = 1;
 
@@ -132,15 +132,15 @@ describe('template-table3', function() {
         });
       };
  
-    })(100, function() {
+    }).nextTick(100, function() {
 
       this.mousemove();
 
-    })(100, function() { 
+    }).nextTick(100, function() { 
 
       this.mouseup();
  
-    })(1000, function() {
+    }).nextTick(1000, function() {
 
       done(); 
 

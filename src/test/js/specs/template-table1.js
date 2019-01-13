@@ -66,35 +66,35 @@ describe('template-table1', function() {
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[0], 'mousedown');
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(200, function() {
+    }).nextTick(200, function() {
 
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
 
       SpecUtil.triggerMouseEvent($sortChks[1], 'click');
 
-    })(200, function() {
+    }).nextTick(200, function() {
  
       var $flts = $('.ctj-filter-button');
       expect($flts.length).toBe(8);
       SpecUtil.triggerMouseEvent($flts[0], 'mousedown');
 
-    })(50, function() {
+    }).nextTick(50, function() {
 
       SpecUtil.triggerMouseEvent(document, 'mouseup');
 
-    })(200, function() {
+    }).nextTick(200, function() {
 
       var $sortChks = $('.ctj-dialog > .ctj-clickable-op');
       expect($sortChks.length).toBe(2);
 
       SpecUtil.triggerMouseEvent($sortChks[0], 'click');
   
-    })(1000, function() {
+    }).nextTick(1000, function() {
 
       done(); 
 
