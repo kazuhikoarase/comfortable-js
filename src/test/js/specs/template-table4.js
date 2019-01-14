@@ -108,6 +108,16 @@ describe('template-table2', function() {
 
       this.mouseup();
 
+    }).nextTick(100, function() {
+/*
+      var event = document.createEvent('KeyboardEvent');
+      event.initKeyboardEvent('keydown', true, true, window, 'Tab');
+*/
+
+      var event = new KeyboardEvent('keydown', {
+        bubbles: true, cancelable: true, keyCode: 9 });
+      table.$el.dispatchEvent(event);
+
     }).nextTick(2000, function() {
 
       done();
