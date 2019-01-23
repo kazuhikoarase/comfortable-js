@@ -606,8 +606,8 @@ namespace comfortable {
             position : 'absolute', left : '0px', top : '0px',
             backgroundColor : handleStyle.backgroundColor,
             cursor : handleStyle.cursor,
-            width : (scrollRect.left + scrollRect.width) + 'px',
-            height : (scrollRect.top + scrollRect.height) + 'px'
+            width : clientWidth + 'px',
+            height : clientHeight + 'px'
           }
         });
         this.frame.appendChild(block);
@@ -646,7 +646,10 @@ namespace comfortable {
       };
       var handleIndex = 0;
       var tableModel = this.model;
-      var scrollRect = renderParams.rects[CM_INDEX];
+      var cmRect = renderParams.rects[CM_INDEX];
+      var rbRect = renderParams.rects[CM_INDEX];
+      var clientWidth = cmRect.left + cmRect.width + rbRect.width;
+      var clientHeight = cmRect.top + cmRect.height + rbRect.height;
       this.tables.forEach( (table, i) => {
         if (table.row == 0) {
           // header
@@ -655,8 +658,6 @@ namespace comfortable {
           var left = tableState.left + rect.left -
             handleStyle.offset - handleStyle.lineWidth;
           var height = rect.height;
-          var clientWidth = scrollRect.left + scrollRect.width;
-          var clientHeight = scrollRect.top + scrollRect.height;
           for (var col = tableState.minCol; col <= tableState.maxCol;
               col += 1, handleIndex += 1) {
             var handle = getOrCrt();
