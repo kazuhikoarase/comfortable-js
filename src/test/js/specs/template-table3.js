@@ -32,7 +32,7 @@ var createTemplateTable = function() {
   }
 
   $('BODY').append($(table.$el).addClass('my-table').
-      css({ width : '800px', height : '600px'}) );
+      css({ width : '800px', height : '400px'}) );
 
   // before items
   table.model.setValueAt(1, 0, 'QWERT');

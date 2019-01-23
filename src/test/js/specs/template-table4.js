@@ -53,7 +53,7 @@ var createTemplateTable = function() {
   }
 
   $('BODY').append($(table.$el).addClass('my-table').
-      css({ width : '800px', height : '600px'}) );
+      css({ width : '800px', height : '400px'}) );
   table.model.items = items;
   table.invalidate();
 
