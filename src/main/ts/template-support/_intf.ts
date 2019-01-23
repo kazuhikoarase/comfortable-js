@@ -44,18 +44,15 @@ namespace comfortable {
     valueField? : string;
 
     factory? : TableCellRendererFactory;
-  }
 
-  export interface TableTemplateHeaderCellStyle
-  extends TableTemplateCellStyle {
-    label? : string;
+    label? : (string | (() => string) );
     /** dataType : 'number' */
     comparator? : (v1 : any, v2 : any) => number;
   }
 
   export interface TableTemplate {
     lockColumn? : number;
-    thead? : TableTemplateHeaderCellStyle[][];
+    thead? : TableTemplateCellStyle[][];
     tbody? : TableTemplateCellStyle[][];
     tfoot? : TableTemplateCellStyle[][];
   }

@@ -412,7 +412,7 @@ namespace comfortable {
       return template.thead
           .concat(template.tbody)
           .concat(template.tfoot).map(function(tr, row) {
-        var style : { [ col : number ] : TableTemplateHeaderCellStyle } = {};
+        var style : { [ col : number ] : TableTemplateCellStyle } = {};
         var col = 0;
         var c = 0;
         while (c < tr.length) {
@@ -633,10 +633,9 @@ namespace comfortable {
       }
       public getValueAt(row : number, col : number) : any {
         var orderedCol = this.getOrderedColumnIndexAt(col);
-        if (row < headLength) {
-          return getCellStyleAt(this, row, orderedCol).label || '';
-        } else if (row >= this.getRowCount() - footLength) {
-          return getCellStyleAt(this, row, orderedCol).label || '';
+        if (row < headLength || row >= this.getRowCount() - footLength) {
+          var label : any = getCellStyleAt(this, row, orderedCol).label || '';
+          return typeof label == 'function'? label() : label;
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
           var value = this.getItemAt(itemIndex.row)[itemIndex.col];
