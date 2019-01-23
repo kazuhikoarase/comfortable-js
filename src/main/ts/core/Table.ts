@@ -85,6 +85,8 @@ namespace comfortable {
   var LT_INDEX = 0;
   // Center-Middle
   var CM_INDEX = 4;
+  // Right-Bottom
+  var RB_INDEX = 8;
 
   /**
    * @internal
@@ -344,7 +346,7 @@ namespace comfortable {
         height : tableModel.getCellHeightAt(row) };
     }
     private makeVisible(renderParams : RenderParams, row : number, col : number) {
-      var cornerRect = renderParams.rects[LT_INDEX];
+      var ltRect = renderParams.rects[LT_INDEX];
       var scrollRect = renderParams.rects[CM_INDEX];
       var delta = { left : 0, top : 0 };
       var cellRect = this.getCellRect(row, col);
@@ -363,13 +365,13 @@ namespace comfortable {
       var scroll = {
         left : renderParams.viewWidth > this.hViewPane.clientWidth?
             util.translate(-this.tables[CM_INDEX].left + delta.left,
-            cornerRect.width,
-            cornerRect.width + renderParams.viewWidth - this.hViewPane.clientWidth,
+            ltRect.width,
+            ltRect.width + renderParams.viewWidth - this.hViewPane.clientWidth,
             0, renderParams.scrWidth - this.hViewPane.clientWidth, 'scroll.left') : 0,
         top : renderParams.viewHeight > this.vViewPane.clientHeight?
             util.translate(-this.tables[CM_INDEX].top + delta.top,
-            cornerRect.height,
-            cornerRect.height + renderParams.viewHeight - this.vViewPane.clientHeight,
+            ltRect.height,
+            ltRect.height + renderParams.viewHeight - this.vViewPane.clientHeight,
             0, renderParams.scrHeight - this.vViewPane.clientHeight, 'scroll.top') : 0
       };
       if (row >= this.getLockTop() ) {
@@ -435,10 +437,26 @@ namespace comfortable {
           for (var col = 0; col <= table.col; col += 1) {
             (<any>rect)[col < table.col? 'left' : 'width'] += cw[col];
           }
-          rect.width = Math.max(0, Math.min(rect.width, width - rect.left) );
-          rect.height = Math.max(0, Math.min(rect.height, height - rect.top) );
           return rect;
         });
+
+        var rbRect = rects[RB_INDEX];
+        this.tables.forEach(function(table, i) {
+          var rect = rects[i];
+          if (table.col == 1) {
+            rect.width = Math.max(0,
+              Math.min(rect.width, width - rect.left - rbRect.width) );
+          } else if (table.col == 2) {
+            rect.left = width - rbRect.width;
+          }
+          if (table.row == 1) {
+            rect.height = Math.max(0,
+              Math.min(rect.height, height - rect.top - rbRect.height) );
+          } else if (table.row == 2) {
+            rect.top = height - rbRect.height;
+          }
+        });
+
         this.cellSizeCache = {
           viewWidth : cw[1],
           viewHeight : ch[1],
@@ -471,11 +489,13 @@ namespace comfortable {
       };
     }
     private getTargetTable(row : number, col : number) {
+      var t = this.getLockTop();
+      var b = this.model.getRowCount() - this.getLockBottom();
+      var l = this.getLockLeft();
+      var r = this.model.getColumnCount() - this.getLockRight();
       return this.tables.filter( (table) => {
-        return table.row == (row < this.getLockTop()? 0 :
-            row < this.model.getRowCount() - this.getLockBottom()? 1 : 2) &&
-          table.col == (col < this.getLockLeft()? 0 :
-            col < this.model.getColumnCount() - this.getLockRight()? 1 : 2);
+        return table.row == (row < t? 0 : row >= b? 2 : 1) &&
+          table.col == (col < l? 0 : col >= r? 2 : 1);
       })[0];
     }
     private isEditableAt(row : number, col : number) {
@@ -664,26 +684,27 @@ namespace comfortable {
     public render(visibleCell? : { row : number, col : number }) {
 
       var renderParams = this.getRenderParams();
-      var cornerRect = renderParams.rects[LT_INDEX];
+      var ltRect = renderParams.rects[LT_INDEX];
+      var rbRect = renderParams.rects[RB_INDEX];
 
-      var viewWidth = renderParams.width - cornerRect.width;
-      var viewHeight = renderParams.height - cornerRect.height;
+      var viewWidth = renderParams.width - ltRect.width;
+      var viewHeight = renderParams.height - ltRect.height;
 
       var barSize = this.measureBarSize();
 
       util.extend(this.hScr.style, {
         width : renderParams.scrWidth + 'px', height : '1px' });
       util.extend(this.hViewPane.style, {
-        left : cornerRect.width + 'px', top : cornerRect.height + 'px',
-        width : (viewWidth - barSize.width) + 'px',
+        left : ltRect.width + 'px', top : ltRect.height + 'px',
+        width : (viewWidth - barSize.width - rbRect.width) + 'px',
         height : viewHeight + 'px' });
 
       util.extend(this.vScr.style, {
         width : '1px', height : renderParams.scrHeight + 'px' });
       util.extend(this.vViewPane.style, {
-        left : cornerRect.width + 'px', top : cornerRect.height + 'px',
+        left : ltRect.width + 'px', top : ltRect.height + 'px',
         width : viewWidth + 'px',
-        height : (viewHeight - barSize.height) + 'px' });
+        height : (viewHeight - barSize.height - rbRect.height) + 'px' });
 
       var hViewPane = this.hViewPane;
       var vViewPane = this.vViewPane;
@@ -692,11 +713,13 @@ namespace comfortable {
 
       this.tables.forEach( (table, i) => {
         var rect = renderParams.rects[i];
-        if (table.col == 1 &&
+        if ( (this.getLockRight() == 0 && table.col == 1 ||
+              this.getLockRight() != 0 && table.col == 2) &&
             rect.width + barWidth > renderParams.width - rect.left) {
           rect.width = renderParams.width - rect.left - barWidth;
         }
-        if (table.row == 1 &&
+        if ( (this.getLockBottom() == 0 && table.row == 1 ||
+              this.getLockBottom() != 0 && table.row == 2) &&
             rect.height + barHeight > renderParams.height - rect.top) {
           rect.height = renderParams.height - rect.top - barHeight;
         }
@@ -712,20 +735,27 @@ namespace comfortable {
           table.left = -(renderParams.scrWidth > hViewPane.clientWidth?
                 util.translate(hViewPane.scrollLeft,
                 0, renderParams.scrWidth - hViewPane.clientWidth,
-                cornerRect.width,
-                cornerRect.width +
+                ltRect.width,
+                ltRect.width +
                   renderParams.viewWidth - hViewPane.clientWidth,
-                'table.left') : cornerRect.width);
+                'table.left') : ltRect.width);
         }
         if (table.row == 1) {
           table.top = -(renderParams.scrHeight > vViewPane.clientHeight?
                 util.translate(vViewPane.scrollTop,
                 0, renderParams.scrHeight - vViewPane.clientHeight,
-                cornerRect.height,
-                cornerRect.height +
+                ltRect.height,
+                ltRect.height +
                   renderParams.viewHeight - vViewPane.clientHeight,
-                'table.top') : cornerRect.height);
+                'table.top') : ltRect.height);
         }
+        if (table.col == 2) {
+          table.left = -(ltRect.width + renderParams.viewWidth);
+        }
+        if (table.row == 2) {
+          table.top = -(ltRect.height + renderParams.viewHeight);
+        }
+
         table.model = this.model;
         util.extend(table.$el.style, {
           left : rect.left + 'px', top : rect.top + 'px',
@@ -740,7 +770,7 @@ namespace comfortable {
 
       // lock lines.
       ( () => {
-        while (this.lockLines.length < 2) {
+        while (this.lockLines.length < 4) {
           var line = util.createElement('div', {
             style : { position : 'absolute' } });
           this.frame.appendChild(line);
@@ -753,19 +783,33 @@ namespace comfortable {
           if (table.row == 0) { width += rect.width; }
           if (table.col == 0) { height += rect.height; }
         });
-        // horizontal
+        // top
         util.set(this.lockLines[0], {
           attrs :{ 'class' : '${prefix}-h-lock-line' },
           style : {
             display : this.getLockTop() == 0? 'none' : '', left : '0px',
-            top : (cornerRect.height - 1) + 'px', width : width + 'px'
+            top : (ltRect.height - 1) + 'px', width : width + 'px'
           } });
-        // vertical
+        // left
         util.set(this.lockLines[1], {
           attrs :{ 'class' : '${prefix}-v-lock-line' },
           style : {
             display : this.getLockLeft() == 0? 'none' : '', top : '0px',
-            left : (cornerRect.width - 1) + 'px', height : height + 'px'
+            left : (ltRect.width - 1) + 'px', height : height + 'px'
+          } });
+        // bottom
+        util.set(this.lockLines[2], {
+          attrs :{ 'class' : '${prefix}-h-lock-line' },
+          style : {
+            display : this.getLockBottom() == 0? 'none' : '', left : '0px',
+            top : (height - rbRect.height - 1) + 'px', width : width + 'px'
+          } });
+        // right
+        util.set(this.lockLines[3], {
+          attrs :{ 'class' : '${prefix}-v-lock-line' },
+          style : {
+            display : this.getLockRight() == 0? 'none' : '', top : '0px',
+            left : (width - rbRect.width - 1) + 'px', height : height + 'px'
           } });
       } )();
 
