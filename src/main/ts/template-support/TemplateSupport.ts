@@ -302,7 +302,7 @@ namespace comfortable {
 
   var setupDefaults = function(template : TableTemplate) {
 
-    // body => head
+    // body => head,foot
     var inheritFromBody = [ 'dataType',
       'options', 'labelField', 'valueField' ];
     var bodyDataCells : any = {};
@@ -328,6 +328,21 @@ namespace comfortable {
         }
       });
     });
+    template.tfoot.forEach(function(tr) {
+      tr.forEach(function(cell) {
+        if (typeof cell.dataField == 'string') {
+          var bodyDataCell = bodyDataCells[cell.dataField];
+          if (bodyDataCell) {
+            inheritFromBody.forEach(function(prop) {
+              if (bodyDataCell[prop] &&
+                  typeof (<any>cell)[prop] == 'undefined') {
+                (<any>cell)[prop] = bodyDataCell[prop];
+              }
+            });
+          }
+        }
+      });
+    });
 
     template.thead.forEach(function(row) {
       row.forEach(function(cell) {
@@ -337,6 +352,13 @@ namespace comfortable {
       });
     });
     template.tbody.forEach(function(row) {
+      row.forEach(function(cell) {
+        if (!cell.factory && cell.dataType) {
+          cell.factory = createDefaultCellRendererFactory(cell);
+        }
+      });
+    });
+    template.tfoot.forEach(function(row) {
       row.forEach(function(cell) {
         if (!cell.factory && cell.dataType) {
           cell.factory = createDefaultCellRendererFactory(cell);
@@ -367,6 +389,7 @@ namespace comfortable {
 
     template.thead = template.thead || [[]];
     template.tbody = template.tbody || [[]];
+    template.tfoot = template.tfoot || [];
 
     // setup defaults.
     setupDefaults(template);
@@ -386,7 +409,9 @@ namespace comfortable {
           }
         }
       };
-      return template.thead.concat(template.tbody).map(function(tr, row) {
+      return template.thead
+          .concat(template.tbody)
+          .concat(template.tfoot).map(function(tr, row) {
         var style : { [ col : number ] : TableTemplateHeaderCellStyle } = {};
         var col = 0;
         var c = 0;
@@ -420,9 +445,13 @@ namespace comfortable {
       });
     }();
 
-    var getCellStyleAt = function(row : number, col : number) {
+    var getCellStyleAt = function(
+        model : TemplateTableModel, row : number, col : number) {
       if (row < headLength) {
         return styles[row][col] || {};
+      } else if (footLength > 0 && row >= model.getRowCount() - footLength) {
+        return styles[row -
+          (model.getRowCount() - footLength) + headLength + bodyLength][col] || {};
       } else {
         return styles[headLength + (row - headLength) % bodyLength][col] || {};
       }
@@ -430,12 +459,15 @@ namespace comfortable {
 
     var headLength = template.thead.length;
     var bodyLength = template.tbody.length;
+    var footLength = template.tfoot.length;
 
     class TemplateTableImpl extends TableImpl implements TemplateTable {
       public lockLeft = template.lockColumn || 0;
+      public lockRight = 0;
       public enableLockColumn = true;
       // keep default value for restore.
       public defaultLockColumn = this.lockLeft;
+
       public setLockLeft(lockLeft : number) {
         this.lockLeft = lockLeft;
       }
@@ -443,6 +475,15 @@ namespace comfortable {
         return !this.enableLockColumn? 0 : this.lockLeft;
       }
       public getLockTop() { return headLength; }
+
+      public setLockRight(lockRight : number) {
+        this.lockRight = lockRight;
+      }
+      public getLockRight() {
+        return this.lockRight;
+      }
+      public getLockBottom() { return footLength; }
+
       public getContextMenuItems() {
         var messages = i18n.getMessages();
         var tableModel = table.model as TemplateTableModel;
@@ -497,12 +538,14 @@ namespace comfortable {
         }
         return this.orderedColumnIndices[col];
       }
-      public getItemIndexAt(row : number, col : number) {
+      public getItemIndexAt(row : number, col : number) : ItemIndex {
         if (row < headLength) {
+          return { row : -1, col : -1 };
+        } else if (footLength > 0 && row >= this.getRowCount() - footLength) {
           return { row : -1, col : -1 };
         } else {
           var orderedCol = this.getOrderedColumnIndexAt(col);
-          var style = getCellStyleAt(row, orderedCol);
+          var style = getCellStyleAt(this, row, orderedCol);
           row -= headLength;
           return {
             row : ~~(row / bodyLength),
@@ -513,6 +556,7 @@ namespace comfortable {
       }
       public setValueAt(row : number, col : number, value : any) {
         if (row < headLength) {
+        } else if (footLength > 0 && row >= this.getRowCount() - footLength) {
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
           var item = this.getItemAt(itemIndex.row);
@@ -523,12 +567,19 @@ namespace comfortable {
       }
       // overrides
       public getRowCount() { return headLength +
-        bodyLength * this.getItemCount(); }
+        bodyLength * this.getItemCount() + footLength; }
       public getColumnCount() { return columnCount; }
       public getLineRowCountAt(row : number) {
-        return row < headLength? headLength : bodyLength; }
+        return row < headLength? headLength :
+          (footLength > 0 &&
+            row >= this.getRowCount() - footLength)? footLength :
+          bodyLength; }
       public getLineRowAt(row : number) {
-        return row < headLength? row : (row - headLength) % bodyLength; }
+        return row < headLength? row :
+          (footLength > 0 &&
+            row >= this.getRowCount() - footLength)?
+              row - (this.getRowCount() - footLength) :
+          (row - headLength) % bodyLength; }
       public getCellWidthAt(col : number) {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (this.hiddenColumns[orderedCol]) {
@@ -551,18 +602,23 @@ namespace comfortable {
         var v = this.columnResizable[orderedCol];
         return typeof v == 'boolean'? v : true;
       }
-      public getCellRendererFactoryAt(row : number, col : number) {
+      public getCellRendererFactoryAt(row : number, col : number) :
+          TableCellRendererFactory {
         var orderedCol = this.getOrderedColumnIndexAt(col);
-        return getCellStyleAt(row, orderedCol).factory || (row < headLength?
+        return getCellStyleAt(this, row, orderedCol).factory ||
+          (row < headLength?
             this.defaultHeaderCellRendererFactory :
             this.defaultCellRendererFactory);
       }
-      public getCellStyleAt(row : number, col : number) {
+      public getCellStyleAt(row : number, col : number) : TableCellStyle {
         var orderedCol = this.getOrderedColumnIndexAt(col);
-        var style = util.extend({}, getCellStyleAt(row, orderedCol) );
+        var style = util.extend({}, getCellStyleAt(this, row, orderedCol) );
         style.className = style.className || '';
         if (row < headLength) {
           style.className += ' ${prefix}-header';
+          style.editable = false;
+        } else if (footLength > 0 && row >= this.getRowCount() - footLength) {
+          style.className += ' ${prefix}-footer';
           style.editable = false;
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
@@ -578,10 +634,12 @@ namespace comfortable {
         }
         return style;
       }
-      public getValueAt(row : number, col : number) {
+      public getValueAt(row : number, col : number) : any {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (row < headLength) {
-          return getCellStyleAt(row, orderedCol).label || '';
+          return getCellStyleAt(this, row, orderedCol).label || '';
+        } else if (footLength > 0 && row >= this.getRowCount() - footLength) {
+          return getCellStyleAt(this, row, orderedCol).label || '';
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
           var value = this.getItemAt(itemIndex.row)[itemIndex.col];

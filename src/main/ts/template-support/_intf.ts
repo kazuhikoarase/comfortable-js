@@ -57,6 +57,7 @@ namespace comfortable {
     lockColumn? : number;
     thead? : TableTemplateHeaderCellStyle[][];
     tbody? : TableTemplateCellStyle[][];
+    tfoot? : TableTemplateCellStyle[][];
   }
 
   export interface ItemIndex {
