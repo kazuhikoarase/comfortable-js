@@ -721,15 +721,21 @@ namespace comfortable {
 
       this.tables.forEach( (table, i) => {
         var rect = renderParams.rects[i];
-        if ( (this.getLockRight() == 0 && table.col == 1 ||
-              this.getLockRight() != 0 && table.col == 2) &&
-            rect.width + barWidth > renderParams.width - rect.left) {
-          rect.width = renderParams.width - rect.left - barWidth;
+        if (rbRect.width + barWidth > renderParams.width - rbRect.left) {
+          if (table.col == 1) {
+            rect.width -= barWidth;
+          }
+          if (table.col == 2) {
+            rect.left -= barWidth;
+          }
         }
-        if ( (this.getLockBottom() == 0 && table.row == 1 ||
-              this.getLockBottom() != 0 && table.row == 2) &&
-            rect.height + barHeight > renderParams.height - rect.top) {
-          rect.height = renderParams.height - rect.top - barHeight;
+        if (rbRect.height + barHeight > renderParams.height - rbRect.top) {
+          if (table.row == 1) {
+            rect.height -= barWidth;
+          }
+          if (table.row == 2) {
+            rect.top -= barWidth;
+          }
         }
       });
 

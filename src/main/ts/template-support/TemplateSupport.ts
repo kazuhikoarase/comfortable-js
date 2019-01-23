@@ -387,8 +387,8 @@ namespace comfortable {
       });
     }
 
-    template.thead = template.thead || [[]];
-    template.tbody = template.tbody || [[]];
+    template.thead = template.thead || [];
+    template.tbody = template.tbody || [];
     template.tfoot = template.tfoot || [];
 
     // setup defaults.
@@ -449,9 +449,8 @@ namespace comfortable {
         model : TemplateTableModel, row : number, col : number) {
       if (row < headLength) {
         return styles[row][col] || {};
-      } else if (footLength > 0 && row >= model.getRowCount() - footLength) {
-        return styles[row -
-          (model.getRowCount() - footLength) + headLength + bodyLength][col] || {};
+      } else if (row >= model.getRowCount() - footLength) {
+        return styles[row - bodyLength * (this.getItemCount() - 1)][col] || {};
       } else {
         return styles[headLength + (row - headLength) % bodyLength][col] || {};
       }
@@ -541,7 +540,7 @@ namespace comfortable {
       public getItemIndexAt(row : number, col : number) : ItemIndex {
         if (row < headLength) {
           return { row : -1, col : -1 };
-        } else if (footLength > 0 && row >= this.getRowCount() - footLength) {
+        } else if (row >= this.getRowCount() - footLength) {
           return { row : -1, col : -1 };
         } else {
           var orderedCol = this.getOrderedColumnIndexAt(col);
@@ -556,7 +555,7 @@ namespace comfortable {
       }
       public setValueAt(row : number, col : number, value : any) {
         if (row < headLength) {
-        } else if (footLength > 0 && row >= this.getRowCount() - footLength) {
+        } else if (row >= this.getRowCount() - footLength) {
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
           var item = this.getItemAt(itemIndex.row);
@@ -571,13 +570,11 @@ namespace comfortable {
       public getColumnCount() { return columnCount; }
       public getLineRowCountAt(row : number) {
         return row < headLength? headLength :
-          (footLength > 0 &&
-            row >= this.getRowCount() - footLength)? footLength :
+          row >= this.getRowCount() - footLength? footLength :
           bodyLength; }
       public getLineRowAt(row : number) {
         return row < headLength? row :
-          (footLength > 0 &&
-            row >= this.getRowCount() - footLength)?
+          row >= this.getRowCount() - footLength?
               row - (this.getRowCount() - footLength) :
           (row - headLength) % bodyLength; }
       public getCellWidthAt(col : number) {
@@ -617,7 +614,7 @@ namespace comfortable {
         if (row < headLength) {
           style.className += ' ${prefix}-header';
           style.editable = false;
-        } else if (footLength > 0 && row >= this.getRowCount() - footLength) {
+        } else if (row >= this.getRowCount() - footLength) {
           style.className += ' ${prefix}-footer';
           style.editable = false;
         } else {
@@ -638,7 +635,7 @@ namespace comfortable {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (row < headLength) {
           return getCellStyleAt(this, row, orderedCol).label || '';
-        } else if (footLength > 0 && row >= this.getRowCount() - footLength) {
+        } else if (row >= this.getRowCount() - footLength) {
           return getCellStyleAt(this, row, orderedCol).label || '';
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
