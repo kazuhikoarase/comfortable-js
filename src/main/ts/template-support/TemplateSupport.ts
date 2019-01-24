@@ -653,8 +653,8 @@ namespace comfortable {
         tableState.cellWidths = tableState.cellWidths || <any>{};
         tableState.cellHeights = tableState.cellHeights || <any>{};
         tableState.hiddenColumns = tableState.hiddenColumns || <any>{};
-        tableState.filterContext =
-          tableState.filterContext || createFilterContext();
+        tableState.sort = tableState.sort || null;
+        tableState.filters = tableState.filters || {};
         tableState.orderedColumnIndices =
           tableState.orderedColumnIndices || null;
 
@@ -672,19 +672,29 @@ namespace comfortable {
         tableState.hiddenColumns.forEach(function(orderedCol : number) {
           hiddenColumns[orderedCol] = true;
         });
-
+        var filters : { [ dataField : string ] : any } = {};
+        for (var dataField in tableState.filters) {
+          filters[dataField] = {};
+          tableState.filters[dataField].forEach(function(value) {
+            filters[dataField][value] = true;
+          });
+        }
         this.lockLeft = tableState.lockColumn;
         this.enableLockColumn = tableState.enableLockColumn;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         this.hiddenColumns = hiddenColumns;
-        this.filterContext = tableState.filterContext;
+        this.filterContext = {
+          sort : tableState.sort,
+          filters : filters
+        };
         this.orderedColumnIndices = tableState.orderedColumnIndices;
       }
       public getTableState() : TemplateTableState {
         var cellWidths : { col : number, width : number}[] = [];
         var cellHeights : { row : number, height : number}[] = [];
         var hiddenColumns : number[] = [];
+        var filters : { [ dataField : string ] : any[] } = {};
         var col : any, row : any;
         for (col in this.cellWidth) {
           cellWidths.push({ col : col, width : this.cellWidth[col] });
@@ -695,13 +705,22 @@ namespace comfortable {
         for (col in this.hiddenColumns) {
           hiddenColumns.push(col);
         }
+        for (var dataField in this.filterContext.filters) {
+          var rejects = this.filterContext.filters[dataField];
+          var values : any[] = [];
+          for (var value in rejects) {
+            values.push(value);
+          }
+          filters[dataField] = values;
+        }
         var tableState : TemplateTableState = {
           lockColumn : this.lockLeft,
           enableLockColumn : this.enableLockColumn,
           cellWidths : cellWidths,
           cellHeights : cellHeights,
           hiddenColumns : hiddenColumns,
-          filterContext : this.filterContext,
+          sort : this.filterContext.sort,
+          filters : filters,
           orderedColumnIndices : this.orderedColumnIndices
         };
         return JSON.parse(JSON.stringify(tableState) );

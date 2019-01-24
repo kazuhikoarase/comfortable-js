@@ -89,7 +89,8 @@ namespace comfortable {
     cellWidths : { col : number, width : number }[];
     cellHeights : { row : number, height : number }[];
     hiddenColumns : number[];
-    filterContext : FilterContext;
+    sort : { dataField : string; sortOrder : string; };
+    filters : { [ dataField : string ] : any[] };
     orderedColumnIndices : number[];
   }
 

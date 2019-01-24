@@ -494,7 +494,13 @@ declare namespace comfortable {
             height: number;
         }[];
         hiddenColumns: number[];
-        filterContext: FilterContext;
+        sort: {
+            dataField: string;
+            sortOrder: string;
+        };
+        filters: {
+            [dataField: string]: any[];
+        };
         orderedColumnIndices: number[];
     }
     interface TemplateTableCell extends TableCell {
