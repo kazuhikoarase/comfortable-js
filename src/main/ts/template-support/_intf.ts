@@ -84,6 +84,8 @@ namespace comfortable {
   }
 
   export interface TemplateTableState {
+    lockColumn : number;
+    enableLockColumn : boolean;
     cellWidths : { col : number, width : number }[];
     cellHeights : { row : number, height : number }[];
     hiddenColumns : number[];

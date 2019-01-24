@@ -30,7 +30,7 @@ namespace comfortable {
 
     var messages = i18n.getMessages();
     var tableModel = <TemplateTableModel>table.model;
-    var lockLeft : number = (<any>table).lockLeft;
+    var lockLeft : number = (<any>tableModel).lockLeft;
 
     var ColumnType = { LOCK_COLUMN : 'lockColumn', COLUMN : 'column' };
     
@@ -648,6 +648,8 @@ namespace comfortable {
 
         tableState = JSON.parse(JSON.stringify(tableState) );
 
+        tableState.lockColumn = tableState.lockColumn || 0;
+        tableState.enableLockColumn = !!tableState.enableLockColumn;
         tableState.cellWidths = tableState.cellWidths || <any>{};
         tableState.cellHeights = tableState.cellHeights || <any>{};
         tableState.hiddenColumns = tableState.hiddenColumns || <any>{};
@@ -671,6 +673,8 @@ namespace comfortable {
           hiddenColumns[orderedCol] = true;
         });
 
+        this.lockLeft = tableState.lockColumn;
+        this.enableLockColumn = tableState.enableLockColumn;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         this.hiddenColumns = hiddenColumns;
@@ -692,6 +696,8 @@ namespace comfortable {
           hiddenColumns.push(col);
         }
         var tableState : TemplateTableState = {
+          lockColumn : this.lockLeft,
+          enableLockColumn : this.enableLockColumn,
           cellWidths : cellWidths,
           cellHeights : cellHeights,
           hiddenColumns : hiddenColumns,

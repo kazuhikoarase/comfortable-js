@@ -483,6 +483,8 @@ declare namespace comfortable {
         getTableState: () => TemplateTableState;
     }
     interface TemplateTableState {
+        lockColumn: number;
+        enableLockColumn: boolean;
         cellWidths: {
             col: number;
             width: number;
