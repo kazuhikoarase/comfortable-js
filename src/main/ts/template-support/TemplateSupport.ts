@@ -450,7 +450,7 @@ namespace comfortable {
       if (row < headLength) {
         return styles[row][col] || {};
       } else if (row >= model.getRowCount() - footLength) {
-        return styles[row - bodyLength * (this.getItemCount() - 1)][col] || {};
+        return styles[row - bodyLength * (model.getItemCount() - 1)][col] || {};
       } else {
         return styles[headLength + (row - headLength) % bodyLength][col] || {};
       }
@@ -635,7 +635,7 @@ namespace comfortable {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (row < headLength || row >= this.getRowCount() - footLength) {
           var label : any = getCellStyleAt(this, row, orderedCol).label || '';
-          return typeof label == 'function'? label() : label;
+          return typeof label == 'function'? label(this) : label;
         } else {
           var itemIndex = this.getItemIndexAt(row, col);
           var value = this.getItemAt(itemIndex.row)[itemIndex.col];
