@@ -117,4 +117,17 @@ var tableFromTemplate = function(targetId) {
 
   document.getElementById(targetId).appendChild(table.$el);
 
+  if (document.getElementById('tableState') ) {
+    var tableState = document.getElementById('tableState');
+    document.getElementById('saveButton')
+        .addEventListener('click', function() {
+      tableState.value = JSON.stringify(
+          table.model.getTableState(), null, 2);
+    });
+    document.getElementById('restoreButton')
+        .addEventListener('click', function() {
+      table.model.setTableState(JSON.parse(tableState.value) );
+      table.invalidate();
+    });
+  }
 };
