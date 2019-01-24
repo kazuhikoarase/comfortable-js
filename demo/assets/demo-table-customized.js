@@ -26,16 +26,16 @@ var tableCustomized = function(targetId) {
   table.$el.style.height  = '400px';
   table.$el.setAttribute('class', 'my-table');
 
-  table.getLockTop = function() { return headers.length; };
-  table.getLockBottom = function() { return footers.length; };
-  table.lockLeft = 2;
-  table.lockRight = 1;
-  table.getLockLeft = function() { return this.lockLeft; };
-  table.setLockLeft = function(lockLeft) { this.lockLeft = lockLeft; };
-  table.getLockRight = function() { return this.lockRight; };
-  table.setLockRight = function(lockLeft) { this.lockRight = lockRight; };
 
   table.model = $c.util.extend(table.model, {
+    getLockTop : function() { return headers.length; },
+    getLockBottom : function() { return footers.length; },
+    lockLeft : 2,
+    lockRight : 1,
+    getLockLeft : function() { return this.lockLeft; },
+    setLockLeft : function(lockLeft) { this.lockLeft = lockLeft; },
+    getLockRight : function() { return this.lockRight; },
+    setLockRight : function(lockLeft) { this.lockRight = lockRight; },
     cellWidth : { 4 : 60 },
     cellHeight : { 8 : 50 },
     columnIndices : columns.map(function(c, i) { return i; }),
@@ -138,10 +138,10 @@ var tableCustomized = function(targetId) {
   }).on('columndragged', function(event, detail) {
     this.columnIndices = $c.util.moveSublist(
         this.columnIndices, detail.colFrom, detail.colSpan, detail.colTo);
-    if (detail.colFrom < table.getLockLeft() && table.getLockLeft() <= detail.colTo) {
-      table.setLockLeft(table.getLockLeft() - detail.colSpan);
-    } else if (detail.colTo < table.getLockLeft() && table.getLockLeft() <= detail.colFrom) {
-      table.setLockLeft(table.getLockLeft() + detail.colSpan);
+    if (detail.colFrom < table.model.getLockLeft() && table.model.getLockLeft() <= detail.colTo) {
+      table.setLockLeft(table.model.getLockLeft() - detail.colSpan);
+    } else if (detail.colTo < table.model.getLockLeft() && table.model.getLockLeft() <= detail.colFrom) {
+      table.setLockLeft(table.model.getLockLeft() + detail.colSpan);
     }
   });
 

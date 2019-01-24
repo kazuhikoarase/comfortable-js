@@ -137,7 +137,7 @@ namespace comfortable {
               if (event.which != 1) {
                 return;
               }
-              if (td.row < this.getLockTop() &&
+              if (td.row < this.model.getLockTop() &&
                   this.model.isColumnDraggableAt(td.col) &&
                   !event.defaultPrevented) {
                 event.preventDefault();
@@ -374,10 +374,10 @@ namespace comfortable {
             ltRect.height + renderParams.viewHeight - this.vViewPane.clientHeight,
             0, renderParams.scrHeight - this.vViewPane.clientHeight, 'scroll.top') : 0
       };
-      if (row >= this.getLockTop() ) {
+      if (row >= this.model.getLockTop() ) {
         this.vViewPane.scrollTop = scroll.top;
       }
-      if (col >= this.getLockLeft() ) {
+      if (col >= this.model.getLockLeft() ) {
         this.hViewPane.scrollLeft = scroll.left;
       }
     }
@@ -399,10 +399,10 @@ namespace comfortable {
       //
       var rowCount = tableModel.getRowCount();
       var columnCount = tableModel.getColumnCount();
-      var lockTop = this.getLockTop();
-      var lockLeft = this.getLockLeft();
-      var lockBottom = this.getLockBottom();
-      var lockRight = this.getLockRight();
+      var lockTop = tableModel.getLockTop();
+      var lockLeft = tableModel.getLockLeft();
+      var lockBottom = tableModel.getLockBottom();
+      var lockRight = tableModel.getLockRight();
       if (!this.cellSizeCache ||
           this.cellSizeCache.rowCount != rowCount ||
           this.cellSizeCache.columnCount != columnCount ||
@@ -489,10 +489,11 @@ namespace comfortable {
       };
     }
     private getTargetTable(row : number, col : number) {
-      var t = this.getLockTop();
-      var b = this.model.getRowCount() - this.getLockBottom();
-      var l = this.getLockLeft();
-      var r = this.model.getColumnCount() - this.getLockRight();
+      var tableModel = this.model;
+      var t = tableModel.getLockTop();
+      var b = tableModel.getRowCount() - tableModel.getLockBottom();
+      var l = tableModel.getLockLeft();
+      var r = tableModel.getColumnCount() - tableModel.getLockRight();
       return this.tables.filter( (table) => {
         return table.row == (row < t? 0 : row >= b? 2 : 1) &&
           table.col == (col < l? 0 : col >= r? 2 : 1);
@@ -801,34 +802,34 @@ namespace comfortable {
         util.set(this.lockLines[0], {
           attrs :{ 'class' : '${prefix}-h-lock-line' },
           style : {
-            display : this.getLockTop() == 0? 'none' : '', left : '0px',
+            display : this.model.getLockTop() == 0? 'none' : '', left : '0px',
             top : (ltRect.height - 1) + 'px', width : width + 'px'
           } });
         // left
         util.set(this.lockLines[1], {
           attrs :{ 'class' : '${prefix}-v-lock-line' },
           style : {
-            display : this.getLockLeft() == 0? 'none' : '', top : '0px',
+            display : this.model.getLockLeft() == 0? 'none' : '', top : '0px',
             left : (ltRect.width - 1) + 'px', height : height + 'px'
           } });
         // bottom
         util.set(this.lockLines[2], {
           attrs :{ 'class' : '${prefix}-h-lock-line' },
           style : {
-            display : this.getLockBottom() == 0? 'none' : '', left : '0px',
+            display : this.model.getLockBottom() == 0? 'none' : '', left : '0px',
             top : (height - rbRect.height - 1) + 'px', width : width + 'px'
           } });
         // right
         util.set(this.lockLines[3], {
           attrs :{ 'class' : '${prefix}-v-lock-line' },
           style : {
-            display : this.getLockRight() == 0? 'none' : '', top : '0px',
+            display : this.model.getLockRight() == 0? 'none' : '', top : '0px',
             left : (width - rbRect.width - 1) + 'px', height : height + 'px'
           } });
       } )();
 
       // resize handles.
-      if (this.getLockTop() > 0) {
+      if (this.model.getLockTop() > 0) {
         this.renderColumnResizeHandlers(renderParams);
       }
 
@@ -877,10 +878,6 @@ namespace comfortable {
     }
 
     public $el = this.frame;
-    public getLockTop() { return 0; }
-    public getLockLeft() { return 0; }
-    public getLockBottom() { return 0; }
-    public getLockRight() { return 0; }
     public forEachCells(callback : any) {
       this.tables.forEach(function(table) {
         (table.tbody.children || []).forEach(function(tr) {

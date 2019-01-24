@@ -26,6 +26,10 @@ namespace comfortable {
     public maxRowSpan = 8;
     public maxColSpan = 8;
     public minCellWidth = 8;
+    public getLockTop() { return 0; }
+    public getLockLeft() { return 0; }
+    public getLockBottom() { return 0; }
+    public getLockRight() { return 0; }
     public getRowCount() { return 1E5; }
     public getColumnCount() { return 1E5; }
     public getLineRowAt(row : number) { return row; }

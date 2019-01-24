@@ -11,8 +11,8 @@ describe('table1', function() {
     $('BODY').append(table.$el);
     table.invalidate();
 
-    expect(table.getLockLeft() ).toBe(0);
-    expect(table.getLockTop() ).toBe(0);
+    expect(table.model.getLockLeft() ).toBe(0);
+    expect(table.model.getLockTop() ).toBe(0);
 
     SpecUtil.nextTick(function() {
       done();

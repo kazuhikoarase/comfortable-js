@@ -64,6 +64,9 @@ namespace comfortable {
   }
 
   export interface TemplateTableModel extends TableModel {
+    enableLockColumn : boolean;
+    defaultLockColumn : number;
+    setLockLeft : (lockLeft : number) => void;
     filterContext : FilterContext;
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
     items : any[];
@@ -76,6 +79,16 @@ namespace comfortable {
     orderedColumnIndices : number[];
     hiddenColumns : { [ orderedCol : number ] : boolean };
     hoverRow : number;
+    setTableState : (tableState : TemplateTableState) => void;
+    getTableState : () => TemplateTableState;
+  }
+
+  export interface TemplateTableState {
+    cellWidths : { col : number, width : number }[];
+    cellHeights : { row : number, height : number }[];
+    hiddenColumns : number[];
+    filterContext : FilterContext;
+    orderedColumnIndices : number[];
   }
 
   export interface TemplateTableCell extends TableCell {
@@ -91,9 +104,6 @@ namespace comfortable {
   }
 
   export interface TemplateTable extends Table {
-    enableLockColumn : boolean;
-    defaultLockColumn : number;
-    setLockLeft : (lockLeft : number) => void;
   }
 
 }

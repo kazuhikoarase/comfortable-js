@@ -72,8 +72,8 @@ describe('template-table2', function() {
 
     // test
 
-    expect(table.getLockLeft() ).toBe(0);
-    expect(table.getLockTop() ).toBe(1);
+    expect(table.model.getLockLeft() ).toBe(0);
+    expect(table.model.getLockTop() ).toBe(1);
 
 
     SpecUtil.nextTick(200, function() {
@@ -124,8 +124,8 @@ describe('template-table2', function() {
 
     // test
 
-    expect(table.getLockLeft() ).toBe(0);
-    expect(table.getLockTop() ).toBe(1);
+    expect(table.model.getLockLeft() ).toBe(0);
+    expect(table.model.getLockTop() ).toBe(1);
 
 
     SpecUtil.nextTick(200, function() {
@@ -233,8 +233,8 @@ describe('template-table2', function() {
 
     // test
 
-    expect(table.getLockLeft() ).toBe(0);
-    expect(table.getLockTop() ).toBe(1);
+    expect(table.model.getLockLeft() ).toBe(0);
+    expect(table.model.getLockTop() ).toBe(1);
 
     SpecUtil.nextTick(200, function() {
 

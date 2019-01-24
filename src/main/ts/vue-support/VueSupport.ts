@@ -37,12 +37,6 @@ namespace comfortable {
       },
       getModel : function() {
         return this.$options.table.model;
-      },
-      getLockTop : function() {
-        return this.$options.table.getLockTop();
-      },
-      getLockLeft : function() {
-        return this.$options.table.getLockLeft();
       }
     },
     mounted : function() {

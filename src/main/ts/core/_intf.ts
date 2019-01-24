@@ -21,10 +21,6 @@ namespace comfortable {
     $el : HTMLElement;
     model : TableModel;
     editor : Editor;
-    getLockTop : () => number;
-    getLockLeft : () => number;
-    getLockBottom : () => number;
-    getLockRight : () => number;
     forEachCells : (callback : (cell : {
       $el : HTMLElement, row : number, col : number }) => void) => void;
   }
@@ -77,6 +73,10 @@ namespace comfortable {
     maxRowSpan : number;
     maxColSpan : number;
     minCellWidth : number;
+    getLockTop : () => number;
+    getLockLeft : () => number;
+    getLockBottom : () => number;
+    getLockRight : () => number;
     getRowCount : () => number;
     getColumnCount : () => number;
     getLineRowAt : (row : number) => any;

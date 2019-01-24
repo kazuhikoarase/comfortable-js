@@ -16,10 +16,6 @@ declare namespace comfortable {
         $el: HTMLElement;
         model: TableModel;
         editor: Editor;
-        getLockTop: () => number;
-        getLockLeft: () => number;
-        getLockBottom: () => number;
-        getLockRight: () => number;
         forEachCells: (callback: (cell: {
             $el: HTMLElement;
             row: number;
@@ -71,6 +67,10 @@ declare namespace comfortable {
         maxRowSpan: number;
         maxColSpan: number;
         minCellWidth: number;
+        getLockTop: () => number;
+        getLockLeft: () => number;
+        getLockBottom: () => number;
+        getLockRight: () => number;
         getRowCount: () => number;
         getColumnCount: () => number;
         getLineRowAt: (row: number) => any;
@@ -462,6 +462,9 @@ declare namespace comfortable {
         col: (number | string);
     }
     interface TemplateTableModel extends TableModel {
+        enableLockColumn: boolean;
+        defaultLockColumn: number;
+        setLockLeft: (lockLeft: number) => void;
         filterContext: FilterContext;
         defaultHeaderCellRendererFactory: TableCellRendererFactory;
         items: any[];
@@ -476,6 +479,21 @@ declare namespace comfortable {
             [orderedCol: number]: boolean;
         };
         hoverRow: number;
+        setTableState: (tableState: TemplateTableState) => void;
+        getTableState: () => TemplateTableState;
+    }
+    interface TemplateTableState {
+        cellWidths: {
+            col: number;
+            width: number;
+        }[];
+        cellHeights: {
+            row: number;
+            height: number;
+        }[];
+        hiddenColumns: number[];
+        filterContext: FilterContext;
+        orderedColumnIndices: number[];
     }
     interface TemplateTableCell extends TableCell {
         dataField?: string;
@@ -494,9 +512,6 @@ declare namespace comfortable {
         };
     }
     interface TemplateTable extends Table {
-        enableLockColumn: boolean;
-        defaultLockColumn: number;
-        setLockLeft: (lockLeft: number) => void;
     }
 }
 /*!
@@ -557,8 +572,6 @@ declare namespace comfortable {
                 setItems: (items: any[]) => any;
                 getItems: () => any;
                 getModel: () => any;
-                getLockTop: () => any;
-                getLockLeft: () => any;
             };
             mounted: () => void;
             beforeDestroy: () => void;

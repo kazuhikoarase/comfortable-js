@@ -49,7 +49,7 @@ namespace comfortable {
         if (col == lockLeft) {
           columns.push({ type : ColumnType.LOCK_COLUMN,
             label : messages.LOCK_COLUMN,
-            hidden : !table.enableLockColumn });
+            hidden : !tableModel.enableLockColumn });
         }
         if (col < columnCount) {
           var cell = tableModel.getCellAt(0, col);
@@ -167,8 +167,8 @@ namespace comfortable {
           tableModel.orderedColumnIndices = null;
           tableModel.hiddenColumns = {};
           tableModel.trigger('beforecellsizechange');
-          table.setLockLeft(table.defaultLockColumn);
-          table.enableLockColumn = true;
+          tableModel.setLockLeft(tableModel.defaultLockColumn);
+          tableModel.enableLockColumn = true;
           table.invalidate();
         }),
         ui.createButton(messages.APPLY, function() {
@@ -193,8 +193,8 @@ namespace comfortable {
           tableModel.orderedColumnIndices = orderedColumnIndices;
           tableModel.hiddenColumns = hiddenColumns;
           tableModel.trigger('beforecellsizechange');
-          table.setLockLeft(lockColumn);
-          table.enableLockColumn = enableLockColumn;
+          tableModel.setLockLeft(lockColumn);
+          tableModel.enableLockColumn = enableLockColumn;
           table.invalidate();
         }),
         ui.createButton(messages.CANCEL, function() {
@@ -461,27 +461,6 @@ namespace comfortable {
     var footLength = template.tfoot.length;
 
     class TemplateTableImpl extends TableImpl implements TemplateTable {
-      public lockLeft = template.lockColumn || 0;
-      public lockRight = 0;
-      public enableLockColumn = true;
-      // keep default value for restore.
-      public defaultLockColumn = this.lockLeft;
-
-      public setLockLeft(lockLeft : number) {
-        this.lockLeft = lockLeft;
-      }
-      public getLockLeft() {
-        return !this.enableLockColumn? 0 : this.lockLeft;
-      }
-      public getLockTop() { return headLength; }
-
-      public setLockRight(lockRight : number) {
-        this.lockRight = lockRight;
-      }
-      public getLockRight() {
-        return this.lockRight;
-      }
-      public getLockBottom() { return footLength; }
 
       public getContextMenuItems() {
         var messages = i18n.getMessages();
@@ -505,6 +484,29 @@ namespace comfortable {
 
     class TemplateTableModelImpl
     extends DefaultTableModel implements TemplateTableModel {
+
+      public lockLeft = template.lockColumn || 0;
+      public lockRight = 0;
+      public enableLockColumn = true;
+      // keep default value for restore.
+      public defaultLockColumn = this.lockLeft;
+
+      public setLockLeft(lockLeft : number) {
+        this.lockLeft = lockLeft;
+      }
+      public getLockLeft() {
+        return !this.enableLockColumn? 0 : this.lockLeft;
+      }
+      public getLockTop() { return headLength; }
+
+      public setLockRight(lockRight : number) {
+        this.lockRight = lockRight;
+      }
+      public getLockRight() {
+        return this.lockRight;
+      }
+      public getLockBottom() { return footLength; }
+
       // user defines
       public defaultHeaderCellRendererFactory =
         createDefaultHeaderCellRendererFactory();
@@ -642,20 +644,76 @@ namespace comfortable {
           return typeof value != 'undefined'? value : '';
         }
       }
+      public setTableState(tableState : TemplateTableState) {
+
+        tableState = JSON.parse(JSON.stringify(tableState) );
+
+        tableState.cellWidths = tableState.cellWidths || <any>{};
+        tableState.cellHeights = tableState.cellHeights || <any>{};
+        tableState.hiddenColumns = tableState.hiddenColumns || <any>{};
+        tableState.filterContext =
+          tableState.filterContext || createFilterContext();
+        tableState.orderedColumnIndices =
+          tableState.orderedColumnIndices || null;
+
+        var cellWidth : { [ col : number ] : number } = {};
+        var cellHeight : { [ row : number ] : number } = {};
+        var hiddenColumns : { [ orderedCol : number ] : boolean } = {};
+        tableState.cellWidths.forEach(
+            function(cw : { col : number, width : number }){
+          cellWidth[cw.col] = cw.width;
+        });
+        tableState.cellHeights.forEach(
+            function(ch : { row : number, height : number }) {
+          cellHeight[ch.row] = ch.height;
+        });
+        tableState.hiddenColumns.forEach(function(orderedCol : number) {
+          hiddenColumns[orderedCol] = true;
+        });
+
+        this.cellWidth = cellWidth;
+        this.cellHeight = cellHeight;
+        this.hiddenColumns = hiddenColumns;
+        this.filterContext = tableState.filterContext;
+        this.orderedColumnIndices = tableState.orderedColumnIndices;
+      }
+      public getTableState() : TemplateTableState {
+        var cellWidths : { col : number, width : number}[] = [];
+        var cellHeights : { row : number, height : number}[] = [];
+        var hiddenColumns : number[] = [];
+        var col : any, row : any;
+        for (col in this.cellWidth) {
+          cellWidths.push({ col : col, width : this.cellWidth[col] });
+        }
+        for (row in this.cellHeight) {
+          cellHeights.push({ row : row, height : this.cellHeight[row] });
+        }
+        for (col in this.hiddenColumns) {
+          hiddenColumns.push(col);
+        }
+        var tableState : TemplateTableState = {
+          cellWidths : cellWidths,
+          cellHeights : cellHeights,
+          hiddenColumns : hiddenColumns,
+          filterContext : this.filterContext,
+          orderedColumnIndices : this.orderedColumnIndices
+        };
+        return JSON.parse(JSON.stringify(tableState) );
+      }
     }
 
     var table = new TemplateTableImpl(
         new TemplateTableModelImpl() );
 
     table.on('mousedown', function(event : Event, detail : any) {
-      if (detail.row < this.getLockTop() ) {
+      if (detail.row < this.model.getLockTop() ) {
         // on header.
         this.editor.endEdit();
         this.invalidate();
       }
     }).on('contextmenu', function(event : Event, detail : any) {
 
-      if (!(detail.row < table.getLockTop() ) ) {
+      if (!(detail.row < table.model.getLockTop() ) ) {
         return;
       }
 
@@ -681,12 +739,15 @@ namespace comfortable {
         this.cellWidth[orderedCol] = detail.cellWidth;
       }
     }).on('columndragged', function(event : Event, detail : any) {
+      var tableModel = <TemplateTableModelImpl>table.model;
       this.orderedColumnIndices = util.moveSublist(
           this.orderedColumnIndices, detail.colFrom, detail.colSpan, detail.colTo);
-      if (detail.colFrom < table.lockLeft && table.lockLeft <= detail.colTo) {
-        table.lockLeft -= detail.colSpan;
-      } else if (detail.colTo < table.lockLeft && table.lockLeft <= detail.colFrom) {
-        table.lockLeft += detail.colSpan;
+      if (detail.colFrom < tableModel.lockLeft &&
+          tableModel.lockLeft <= detail.colTo) {
+        tableModel.lockLeft -= detail.colSpan;
+      } else if (detail.colTo < tableModel.lockLeft &&
+          tableModel.lockLeft <= detail.colFrom) {
+        tableModel.lockLeft += detail.colSpan;
       }
     }).on('filterchange', function() {
 
