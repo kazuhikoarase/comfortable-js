@@ -583,13 +583,15 @@ namespace comfortable {
           tableModel.trigger('beforecellsizechange');
           tableModel.trigger('cellsizechange', {
             col : handle.col,
-            cellWidth : Math.max(tableModel.minCellWidth, cellWidth + deltaX) });
+            cellWidth : Math.max(tableModel.minCellWidth,
+                cellWidth + deltaX) });
           this.invalidate();
         };
         var mousemoveHandler = function(event : Event) {
           var deltaX = event.pageX - dragPoint.x;
           var cellWidth = tableModel.getCellWidthAt(handle.col);
-          deltaX = Math.max(tableModel.minCellWidth, cellWidth + deltaX) - cellWidth;
+          deltaX = Math.max(tableModel.minCellWidth,
+              cellWidth + deltaX) - cellWidth;
           handle.$el.style.left = (handle.left + deltaX) + 'px';
         };
         if (event.which != 1) {
@@ -628,7 +630,7 @@ namespace comfortable {
             cursor : handleStyle.cursor
           },
           on : { mousedown : mousedownHandler }
-        }, [util.createElement('div',{
+        }, [util.createElement('div', {
           attrs : { 'class' : '${prefix}-v-resize-line' },
           style : {
             position : 'absolute',
@@ -647,10 +649,9 @@ namespace comfortable {
       };
       var handleIndex = 0;
       var tableModel = this.model;
-      var cmRect = renderParams.rects[CM_INDEX];
-      var rbRect = renderParams.rects[CM_INDEX];
-      var clientWidth = cmRect.left + cmRect.width + rbRect.width;
-      var clientHeight = cmRect.top + cmRect.height + rbRect.height;
+      var rbRect = renderParams.rects[RB_INDEX];
+      var clientWidth = rbRect.left + rbRect.width;
+      var clientHeight = rbRect.top + rbRect.height;
       this.tables.forEach( (table, i) => {
         if (table.row == 0) {
           // header
@@ -686,7 +687,9 @@ namespace comfortable {
     public render(visibleCell? : { row : number, col : number }) {
 
       var renderParams = this.getRenderParams();
+
       var ltRect = renderParams.rects[LT_INDEX];
+      var cmRect = renderParams.rects[CM_INDEX];
       var rbRect = renderParams.rects[RB_INDEX];
 
       var viewWidth = renderParams.width - ltRect.width;
@@ -722,20 +725,24 @@ namespace comfortable {
 
       this.tables.forEach( (table, i) => {
         var rect = renderParams.rects[i];
-        if (rbRect.width + barWidth > renderParams.width - rbRect.left) {
+        if (rbRect.left + rbRect.width + barWidth > renderParams.width) {
           if (table.col == 1) {
-            rect.width -= barWidth;
+            if (cmRect.left + cmRect.width > rbRect.left - barWidth) {
+              rect.width = Math.max(0, rbRect.left - barWidth - cmRect.left);
+            }
           }
           if (table.col == 2) {
             rect.left -= barWidth;
           }
         }
-        if (rbRect.height + barHeight > renderParams.height - rbRect.top) {
+        if (rbRect.top + rbRect.height + barHeight > renderParams.height) {
           if (table.row == 1) {
-            rect.height -= barWidth;
+            if (cmRect.top + cmRect.height > rbRect.top - barHeight) {
+              rect.height = Math.max(0, rbRect.top - barHeight - cmRect.top);
+            }
           }
           if (table.row == 2) {
-            rect.top -= barWidth;
+            rect.top -= barHeight;
           }
         }
       });
@@ -791,13 +798,8 @@ namespace comfortable {
           this.frame.appendChild(line);
           this.lockLines.push(line);
         }
-        var width = 0;
-        var height = 0;
-        this.tables.forEach(function(table, i) {
-          var rect = renderParams.rects[i];
-          if (table.row == 0) { width += rect.width; }
-          if (table.col == 0) { height += rect.height; }
-        });
+        var width = renderParams.width - barWidth;
+        var height = renderParams.height - barHeight;
         // top
         util.set(this.lockLines[0], {
           attrs :{ 'class' : '${prefix}-h-lock-line' },

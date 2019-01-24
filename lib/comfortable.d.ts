@@ -448,8 +448,9 @@ declare namespace comfortable {
         factory?: TableCellRendererFactory;
         label?: (string | ((model: TemplateTableModel) => string));
         /** dataType : 'number' */
-        comparator?: (v1: any, v2: any) => number;
+        comparator?: Comparator;
     }
+    type Comparator = (v1: any, v2: any) => number;
     interface TableTemplate {
         lockColumn?: number;
         thead?: TableTemplateCellStyle[][];
@@ -467,6 +468,9 @@ declare namespace comfortable {
         setLockLeft: (lockLeft: number) => void;
         filterContext: FilterContext;
         defaultHeaderCellRendererFactory: TableCellRendererFactory;
+        headerCells: {
+            [dataField: string]: TableTemplateCellStyle;
+        };
         items: any[];
         filteredItems: any[];
         resetFilter: () => void;
@@ -494,18 +498,19 @@ declare namespace comfortable {
             height: number;
         }[];
         hiddenColumns: number[];
+        filtered: boolean;
         sort: {
             dataField: string;
             sortOrder: string;
         };
         filters: {
-            [dataField: string]: any[];
+            [dataField: string]: string[];
         };
         orderedColumnIndices: number[];
     }
     interface TemplateTableCell extends TableCell {
         dataField?: string;
-        comparator?: (a: any, b: any) => number;
+        comparator?: Comparator;
     }
     type Rejects = {
         [value: string]: boolean;
