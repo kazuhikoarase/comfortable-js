@@ -18,6 +18,10 @@ BODY {
   font-weight : bold;
 }
 
+.my-table .footer {
+  background-color : #cccccc;
+}
+
 .my-table .even {
   background-color : rgba(0,0,0,0.1)
 }

@@ -18,6 +18,8 @@ declare namespace comfortable {
         editor: Editor;
         getLockTop: () => number;
         getLockLeft: () => number;
+        getLockBottom: () => number;
+        getLockRight: () => number;
         forEachCells: (callback: (cell: {
             $el: HTMLElement;
             row: number;
@@ -444,16 +446,15 @@ declare namespace comfortable {
         labelField?: string;
         valueField?: string;
         factory?: TableCellRendererFactory;
-    }
-    interface TableTemplateHeaderCellStyle extends TableTemplateCellStyle {
-        label?: string;
+        label?: (string | ((model: TemplateTableModel) => string));
         /** dataType : 'number' */
         comparator?: (v1: any, v2: any) => number;
     }
     interface TableTemplate {
         lockColumn?: number;
-        thead?: TableTemplateHeaderCellStyle[][];
+        thead?: TableTemplateCellStyle[][];
         tbody?: TableTemplateCellStyle[][];
+        tfoot?: TableTemplateCellStyle[][];
     }
     interface ItemIndex {
         row: number;

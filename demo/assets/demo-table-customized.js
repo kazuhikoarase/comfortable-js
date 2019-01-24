@@ -8,6 +8,7 @@ var tableCustomized = function(targetId) {
 
   var numCells = 10000;
   var headers = [ {},{} ];
+  var footers = [ {} ];
   var columns = [];
   var items = [];
   for (var i = 0; i < numCells; i += 1) {
@@ -26,9 +27,13 @@ var tableCustomized = function(targetId) {
   table.$el.setAttribute('class', 'my-table');
 
   table.getLockTop = function() { return headers.length; };
+  table.getLockBottom = function() { return footers.length; };
   table.lockLeft = 2;
+  table.lockRight = 1;
   table.getLockLeft = function() { return this.lockLeft; };
   table.setLockLeft = function(lockLeft) { this.lockLeft = lockLeft; };
+  table.getLockRight = function() { return this.lockRight; };
+  table.setLockRight = function(lockLeft) { this.lockRight = lockRight; };
 
   table.model = $c.util.extend(table.model, {
     cellWidth : { 4 : 60 },
@@ -37,13 +42,15 @@ var tableCustomized = function(targetId) {
     setValueAt : function(row, col, value) {
       col = this.columnIndices[col];
       if (row < headers.length) {
+      } else if (row >= headers.length + items.length) {
       } else {
         row -= headers.length;
         items[row][col] = value;
       }
     },
     //
-    getRowCount : function() { return headers.length + items.length; },
+    getRowCount : function() {
+      return headers.length + items.length + footers.length; },
     getColumnCount : function() { return columns.length; },
     getLineRowAt : function(row) { return row % 2; },
     getLineRowCountAt : function(row) { return 2; },
@@ -58,6 +65,8 @@ var tableCustomized = function(targetId) {
       col = this.columnIndices[col];
       if (row < headers.length) {
         return this.defaultCellRendererFactory;
+      } else if (row >= headers.length + items.length) {
+        return this.defaultCellRendererFactory;
       } else {
         return columns[col].factory || this.defaultCellRendererFactory;
       }
@@ -71,6 +80,9 @@ var tableCustomized = function(targetId) {
           style.colSpan = 2;
         }
         style.className = 'header';
+        style.editable = false;
+      } else if (row >= headers.length + items.length) {
+        style.className = 'footer';
         style.editable = false;
       } else {
         row -= headers.length;
@@ -98,6 +110,8 @@ var tableCustomized = function(targetId) {
       if (row < headers.length) {
         return headers[row][col]?
             headers[row][col].label || '' : '';
+      } else if (row >= headers.length + items.length) {
+        return '*';
       } else {
         row -= headers.length;
         if (typeof items[row][col] != 'undefined') {

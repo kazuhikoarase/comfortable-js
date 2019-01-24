@@ -40,6 +40,21 @@ var tableFromTemplate = function(targetId) {
 
   var table = $c.fromTemplate({
     lockColumn : 2,
+    tfoot : [[
+      {},
+      { label : 'Sum:', textAlign: 'right' },
+      {},
+      {
+        dataType: 'number',
+        label : function(model) {
+          var sum = 0;
+          model.items.forEach(function(item) {
+            sum += +item.myData4;
+          });
+          return '' + sum;
+        }
+      }
+    ]],
     thead : [[
       { label : 'A', width : 140, backgroundColor : '#ff6666', textAlign : 'center',
         dataField : 'myData1' },
@@ -72,7 +87,7 @@ var tableFromTemplate = function(targetId) {
   });
   table.model.items = function() {
     var items = [];
-    for (var i = 0; i < 10000; i += 1) {
+    for (var i = 0; i < 1000; i += 1) {
       items.push({
         myData1 : 'Data' + i,
         myData2 : options[i % options.length].grpCd,
