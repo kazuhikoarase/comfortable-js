@@ -23,6 +23,8 @@ namespace comfortable {
     editor : Editor;
     getLockTop : () => number;
     getLockLeft : () => number;
+    getLockBottom : () => number;
+    getLockRight : () => number;
     forEachCells : (callback : (cell : {
       $el : HTMLElement, row : number, col : number }) => void) => void;
   }
