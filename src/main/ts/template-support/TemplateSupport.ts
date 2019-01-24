@@ -445,6 +445,15 @@ namespace comfortable {
       });
     }();
 
+    var headerCells : { [ dataField : string ] : TableTemplateCellStyle } = {};
+    template.thead.forEach(function(row) {
+      row.forEach(function(cell) {
+        if (cell.dataField && !headerCells[cell.dataField]) {
+          headerCells[cell.dataField] = cell;
+        }
+      });
+    });
+
     var getCellStyleAt = function(
         model : TemplateTableModel, row : number, col : number) {
       if (row < headLength) {
@@ -484,7 +493,7 @@ namespace comfortable {
 
     class TemplateTableModelImpl
     extends DefaultTableModel implements TemplateTableModel {
-
+      public headerCells = headerCells;
       public lockLeft = template.lockColumn || 0;
       public lockRight = 0;
       public enableLockColumn = true;
@@ -653,6 +662,7 @@ namespace comfortable {
         tableState.cellWidths = tableState.cellWidths || <any>{};
         tableState.cellHeights = tableState.cellHeights || <any>{};
         tableState.hiddenColumns = tableState.hiddenColumns || <any>{};
+        tableState.filtered = tableState.filtered || false;
         tableState.sort = tableState.sort || null;
         tableState.filters = tableState.filters || {};
         tableState.orderedColumnIndices =
@@ -684,17 +694,17 @@ namespace comfortable {
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         this.hiddenColumns = hiddenColumns;
-        this.filterContext = {
-          sort : tableState.sort,
-          filters : filters
-        };
+        this.filterContext = { sort : tableState.sort, filters : filters };
         this.orderedColumnIndices = tableState.orderedColumnIndices;
+        if (tableState.filtered) {
+          this.trigger('filterchange');
+        }
       }
       public getTableState() : TemplateTableState {
         var cellWidths : { col : number, width : number}[] = [];
         var cellHeights : { row : number, height : number}[] = [];
         var hiddenColumns : number[] = [];
-        var filters : { [ dataField : string ] : any[] } = {};
+        var filters : { [ dataField : string ] : string[] } = {};
         var col : any, row : any;
         for (col in this.cellWidth) {
           cellWidths.push({ col : col, width : this.cellWidth[col] });
@@ -707,7 +717,7 @@ namespace comfortable {
         }
         for (var dataField in this.filterContext.filters) {
           var rejects = this.filterContext.filters[dataField];
-          var values : any[] = [];
+          var values : string[] = [];
           for (var value in rejects) {
             values.push(value);
           }
@@ -719,6 +729,7 @@ namespace comfortable {
           cellWidths : cellWidths,
           cellHeights : cellHeights,
           hiddenColumns : hiddenColumns,
+          filtered : this.filteredItems != null,
           sort : this.filterContext.sort,
           filters : filters,
           orderedColumnIndices : this.orderedColumnIndices
@@ -782,7 +793,11 @@ namespace comfortable {
       var filteredItems : any[] = this.items.filter(function(item : any) {
         var filtered = false;
         for (var dataField in filters) {
-          if (filters[dataField][item[dataField]]) {
+          var value = item[dataField];
+          if (typeof value == 'undefined') {
+            continue;
+          }
+          if (filters[dataField]['' + value]) {
             filtered = true;
             break;
           }
@@ -796,7 +811,7 @@ namespace comfortable {
         var dataField = sort.dataField;
         var indexField = '.index';
         var sortKeyField = '.sortKey';
-        var comparator = this.filterContext['.comparator'];
+        var comparator = this.headerCells[dataField].comparator;
         filteredItems.forEach(function(item, i) {
           item[indexField] = i;
           item[sortKeyField] = (item[dataField] === null ||

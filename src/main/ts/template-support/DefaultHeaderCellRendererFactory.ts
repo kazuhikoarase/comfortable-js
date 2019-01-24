@@ -374,18 +374,20 @@ namespace comfortable {
     }.update();
   };
 
-  var getFilterValues = function(tableModel : TemplateTableModel,
-      dataField : string, comparator : (a: any, b: any) => number) {
+  var getFilterValues = function(
+      tableModel : TemplateTableModel, dataField : string) {
+    var comparator = tableModel.headerCells[dataField].comparator;
     var exists : { [ value : string ] : boolean } = {};
-    var filterValues : any[] = [];
+    var filterValues : string[] = [];
     var items = tableModel.items;
     for (var i = 0; i < items.length; i += 1) {
       var value = items[i][dataField];
       if (typeof value == 'undefined') {
         continue;
       }
+      value = '' + value;
       if (!exists[value]) {
-        if (value !== '') {
+        if (value != '') {
           filterValues.push(value);
         }
         exists[value] = true;
@@ -420,8 +422,7 @@ namespace comfortable {
       var showFilterDialog = function() : FilterDialog {
         var filterContext = tableModel.filterContext;
         var dataField = filterButton.cell.dataField;
-        var filterValues = getFilterValues(tableModel, dataField,
-            filterButton.cell.comparator);
+        var filterValues = getFilterValues(tableModel, dataField);
         var dialog = createFilterDialog(util.extend({
           sortOrder : filterContext.sort &&
             filterContext.sort.dataField == dataField?
@@ -429,12 +430,10 @@ namespace comfortable {
           rejects : filterContext.filters[dataField] || {},
           filterValues : filterValues
         }, opts), filterButton.cell).on('applysort', function() {
-          (<any>filterContext)['.comparator'] = filterButton.cell.comparator;
           filterContext.sort = this.sortOrder?
               { dataField : dataField, sortOrder : this.sortOrder } :null;
           tableModel.trigger('filterchange');
         }).on('applyfilter', function() {
-          (<any>filterContext)['.comparator'] = filterButton.cell.comparator;
           filterContext.filters[dataField] = this.rejects;
           tableModel.trigger('filterchange');
         });
