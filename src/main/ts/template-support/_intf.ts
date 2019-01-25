@@ -116,7 +116,7 @@ namespace comfortable {
 
   export interface Sort {
     dataField : string;
-    sortOrder : string;
+    order : string;
   }
 
   export interface FilterContext {

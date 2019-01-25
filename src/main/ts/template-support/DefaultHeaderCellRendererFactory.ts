@@ -423,12 +423,12 @@ namespace comfortable {
         var filterValues = getFilterValues(tableModel, dataField);
         var dialog = createFilterDialog(util.extend({
           sortOrder : (sort && sort.dataField == dataField)?
-            sort.sortOrder : null,
+            sort.order : null,
           //rejects : filterContext.filters[dataField] || {},
           filterValues : filterValues
         }, opts), filterButton.cell).on('applysort', function() {
           tableModel.sort = this.sortOrder?
-              { dataField : dataField, sortOrder : this.sortOrder } :null;
+              { dataField : dataField, order : this.sortOrder } :null;
           tableModel.trigger('filterchange');
         }).on('applyfilter', function() {
  //         filterContext.filters[dataField] = this.rejects;
@@ -474,8 +474,7 @@ namespace comfortable {
             filterButton.cell = cell;
             var sort = tableModel.sort;
             filterButton.setSortOrder(
-              (sort && sort.dataField == cell.dataField)?
-                sort.sortOrder : null);
+              (sort && sort.dataField == cell.dataField)? sort.order : null);
             //ar rejects = filterContext.filters[cell.dataField] || {};
             var filtered = false;
             //TODO
