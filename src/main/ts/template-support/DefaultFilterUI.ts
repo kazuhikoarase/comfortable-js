@@ -209,20 +209,23 @@ namespace comfortable {
           filterItem.checked = !filterItem.checked;
         }
   
-        var rejects : any = {};
-        filterItems.forEach(function(filterItem, i) {
-          if (i > 0 && !filterItem.checked) {
-            rejects[filterItem.value] = true;
-          }
-        });
+        rejects = function() {
+          var rejects : any = {};
+          filterItems.forEach(function(filterItem, i) {
+            if (i > 0 && !filterItem.checked) {
+              rejects[filterItem.value] = true;
+            }
+          });
+          return rejects;
+        }();
 
-        (this.filterState || (this.filterState = {}) ).rejects = rejects;
+//        (this.filterState || (this.filterState = {}) ).rejects = rejects;
         this.trigger('filterchange');
 
       }).on('filterchange', function() {
 
         var rejectCount = 0;
-        for (var value in this.rejects) {
+        for (var value in rejects) {
           rejectCount += 1;
         }
 
