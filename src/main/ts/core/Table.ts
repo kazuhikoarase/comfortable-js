@@ -689,7 +689,6 @@ namespace comfortable {
       var renderParams = this.getRenderParams();
 
       var ltRect = renderParams.rects[LT_INDEX];
-      var cmRect = renderParams.rects[CM_INDEX];
       var rbRect = renderParams.rects[RB_INDEX];
 
       var viewWidth = renderParams.width - ltRect.width;
@@ -727,8 +726,8 @@ namespace comfortable {
         var rect = renderParams.rects[i];
         if (rbRect.left + rbRect.width + barWidth > renderParams.width) {
           if (table.col == 1) {
-            if (cmRect.left + cmRect.width > rbRect.left - barWidth) {
-              rect.width = Math.max(0, rbRect.left - barWidth - cmRect.left);
+            if (rect.left + rect.width > rbRect.left - barWidth) {
+              rect.width = Math.max(0, rbRect.left - barWidth - rect.left);
             }
           }
           if (table.col == 2) {
@@ -737,8 +736,8 @@ namespace comfortable {
         }
         if (rbRect.top + rbRect.height + barHeight > renderParams.height) {
           if (table.row == 1) {
-            if (cmRect.top + cmRect.height > rbRect.top - barHeight) {
-              rect.height = Math.max(0, rbRect.top - barHeight - cmRect.top);
+            if (rect.top + rect.height > rbRect.top - barHeight) {
+              rect.height = Math.max(0, rbRect.top - barHeight - rect.top);
             }
           }
           if (table.row == 2) {
