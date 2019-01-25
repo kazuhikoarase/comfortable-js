@@ -696,18 +696,17 @@ namespace comfortable {
 
       // check if scrollbar shown.
       var barSize = this.measureBarSize();
-      if (renderParams.scrWidth < viewWidth - rbRect.width) {
-        barSize.height = 0;
-      }
-      if (renderParams.scrHeight < viewHeight - rbRect.height) {
-        barSize.width = 0;
-      }
+      var vBarShown = renderParams.scrWidth >
+        viewWidth - rbRect.width - barSize.width;
+      var hBarShown = renderParams.scrHeight >
+        viewHeight - rbRect.height - barSize.height;
 
       util.extend(this.hScr.style, {
         width : renderParams.scrWidth + 'px', height : '1px' });
       util.extend(this.hViewPane.style, {
         left : ltRect.width + 'px', top : ltRect.height + 'px',
-        width : (viewWidth - rbRect.width - barSize.width) + 'px',
+        width : (viewWidth - rbRect.width -
+          (hBarShown? barSize.width : 0) ) + 'px',
         height : viewHeight + 'px' });
 
       util.extend(this.vScr.style, {
@@ -715,7 +714,8 @@ namespace comfortable {
       util.extend(this.vViewPane.style, {
         left : ltRect.width + 'px', top : ltRect.height + 'px',
         width : viewWidth + 'px',
-        height : (viewHeight - rbRect.height - barSize.height) + 'px' });
+        height : (viewHeight - rbRect.height -
+          (vBarShown? barSize.height : 0) ) + 'px' });
 
       var hViewPane = this.hViewPane;
       var vViewPane = this.vViewPane;
