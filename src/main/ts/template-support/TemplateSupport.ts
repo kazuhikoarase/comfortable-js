@@ -13,11 +13,6 @@ namespace comfortable {
 
   'use strict';
 
-  /*
-  var createFilterContext = function() : FilterContext {
-    return { sort : null, filters : {} };
-  };
-*/
   var createDefaultOrderedColumnIndices = function(tableModel : TableModel) {
     var orderedColumnIndices : number[] = [];
     var columnCount = tableModel.getColumnCount();
@@ -526,6 +521,13 @@ namespace comfortable {
       public columnResizable = columnResizable;
       public orderedColumnIndices : number[] = null;
       public sort : Sort = null;
+      private filters : { [ dataField : string ] : Filter } = {};
+      public getFilter(dataField : string) : Filter {
+        return this.filters[dataField] || (this.filters[dataField] = {
+          accept : (value : any) => true,
+          state : null
+        });
+      }
       public hiddenColumns : { [ orderedCol : number ] : boolean } = {};
       public items : any[] = [];
       public filteredItems : any[] = null;
@@ -534,6 +536,9 @@ namespace comfortable {
       public selectedRows : { [ row : number ] : boolean } = {};
       public resetFilter() {
         this.sort = null;
+        for (var dataField in this.headerCells) {
+          this.getFilter(dataField).state = null;
+        }
         this.filteredItems = null;
         table.invalidate();
       }
@@ -663,9 +668,8 @@ namespace comfortable {
         tableState.cellWidths = tableState.cellWidths || <any>{};
         tableState.cellHeights = tableState.cellHeights || <any>{};
         tableState.hiddenColumns = tableState.hiddenColumns || <any>{};
-        tableState.filtered = tableState.filtered || false;
         tableState.sort = tableState.sort || null;
-//        tableState.filters = tableState.filters || {};
+        tableState.filters = tableState.filters || {};
         tableState.orderedColumnIndices =
           tableState.orderedColumnIndices || null;
 
@@ -683,24 +687,22 @@ namespace comfortable {
         tableState.hiddenColumns.forEach(function(orderedCol : number) {
           hiddenColumns[orderedCol] = true;
         });
-        /*
-        var filters : { [ dataField : string ] : any } = {};
-        for (var dataField in tableState.filters) {
-          filters[dataField] = {};
-          tableState.filters[dataField].forEach(function(value) {
-            filters[dataField][value] = true;
-          });
-        }
-        */
         this.lockLeft = tableState.lockColumn;
         this.enableLockColumn = tableState.enableLockColumn;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         this.hiddenColumns = hiddenColumns;
         this.sort = tableState.sort;
-        //this.filterContext = { sort : tableState.sort, filters : filters };
+        var filtered = false;
+        for (var dataField in this.headerCells) {
+          var filter = tableState.filters[dataField];
+          this.getFilter(dataField).state = filter || null;
+          if (filter) {
+            filtered = true;
+          }
+        }
         this.orderedColumnIndices = tableState.orderedColumnIndices;
-        if (tableState.filtered) {
+        if (filtered) {
           this.trigger('filterchange');
         }
       }
@@ -708,7 +710,7 @@ namespace comfortable {
         var cellWidths : { col : number, width : number}[] = [];
         var cellHeights : { row : number, height : number}[] = [];
         var hiddenColumns : number[] = [];
-        //var filters : { [ dataField : string ] : string[] } = {};
+        var filters : { [ dataField : string ] : any } = {};
         var col : any, row : any;
         for (col in this.cellWidth) {
           cellWidths.push({ col : col, width : this.cellWidth[col] });
@@ -719,25 +721,20 @@ namespace comfortable {
         for (col in this.hiddenColumns) {
           hiddenColumns.push(col);
         }
-        /*
-        for (var dataField in this.filterContext.filters) {
-          var rejects = this.filterContext.filters[dataField];
-          var values : string[] = [];
-          for (var value in rejects) {
-            values.push(value);
+        for (var dataField in this.headerCells) {
+          var filter = this.getFilter(dataField);
+          if (filter.state) {
+            filters[dataField] = filter.state;
           }
-          filters[dataField] = values;
         }
-        */
         var tableState : TemplateTableState = {
           lockColumn : this.lockLeft,
           enableLockColumn : this.enableLockColumn,
           cellWidths : cellWidths,
           cellHeights : cellHeights,
           hiddenColumns : hiddenColumns,
-          filtered : this.filteredItems != null,
           sort : this.sort,
-//          filters : filters,
+          filters : filters,
           orderedColumnIndices : this.orderedColumnIndices
         };
         return JSON.parse(JSON.stringify(tableState) );
@@ -794,34 +791,36 @@ namespace comfortable {
     }).on('filterchange', function() {
 
       // apply filter
-//TODO
-//      var filters = this.filterContext.filters;
+
+      var filters : { [ dataField : string ] : Filter } = {};
+      !function() {
+        for (var dataField in this.headerCells) {
+          var filter = this.getFilter(dataField);
+          if (filter.state) {
+            filters[dataField] = filter;
+          }
+        }  
+      }.bind(this)();
+
       var filteredItems : any[] = this.items.filter(function(item : any) {
         var filtered = false;
-        /*
         for (var dataField in filters) {
           var value = item[dataField];
           if (typeof value == 'undefined') {
             continue;
           }
-          value = '' + value;
-          (filters[dataField] || []).forEach(function(filter : Filter) {
-            if (!filter.accept(value) ) {
-              filtered = true;
-            }
-          });
-          if (filters[dataField]['' + value]) {
+          var filter = filters[dataField];
+          if (!filter.accept(value) ) {
             filtered = true;
             break;
           }
         }
-        */
         return !filtered;
       } );
 
       var sort = this.sort;
       if (sort) {
-        var order = sort.sortOrder == SortOrder.ASC? 1 : -1;
+        var order = sort.order == SortOrder.ASC? 1 : -1;
         var dataField = sort.dataField;
         var indexField = '.index';
         var sortKeyField = '.sortKey';

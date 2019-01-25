@@ -473,13 +473,10 @@ namespace comfortable {
 
             filterButton.cell = cell;
             var sort = tableModel.sort;
+            var filter = tableModel.getFilter(cell.dataField);
             filterButton.setSortOrder(
               (sort && sort.dataField == cell.dataField)? sort.order : null);
-            //ar rejects = filterContext.filters[cell.dataField] || {};
-            var filtered = false;
-            //TODO
-            //for (var value in rejects) { filtered = true; break; }
-            filterButton.setFiltered(filtered);
+            filterButton.setFiltered(!!filter.state);
           }
           if (filterButton) {
             filterButton.$el.style.display = cell.dataField? '' : 'none';
