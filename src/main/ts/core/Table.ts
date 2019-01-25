@@ -664,7 +664,7 @@ namespace comfortable {
               col += 1, handleIndex += 1) {
             var handle = getOrCrt();
             left += tableModel.getCellWidthAt(col);
-            if (left > clientWidth) {
+            if (left > rect.left + rect.width) {
               break;
             }
             if (!this.model.isColumnResizableAt(col) ) {
