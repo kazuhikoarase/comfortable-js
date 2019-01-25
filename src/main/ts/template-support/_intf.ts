@@ -69,7 +69,9 @@ namespace comfortable {
     enableLockColumn : boolean;
     defaultLockColumn : number;
     setLockLeft : (lockLeft : number) => void;
-    filterContext : FilterContext;
+    setLockRight : (lockLeft : number) => void;
+//    filterContext : FilterContext;
+    sort : Sort;
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
     headerCells : { [ dataField : string ] : TableTemplateCellStyle };
     items : any[];
@@ -93,8 +95,8 @@ namespace comfortable {
     cellHeights : { row : number, height : number }[];
     hiddenColumns : number[];
     filtered : boolean;
-    sort : { dataField : string; sortOrder : string; };
-    filters : { [ dataField : string ] : string[] };
+    sort : Sort;
+//    filters : { [ dataField : string ] : string[] };
     orderedColumnIndices : number[];
   }
 
@@ -102,12 +104,24 @@ namespace comfortable {
     dataField? : string;
     comparator? : Comparator;
   }
-
+/*
   export type Rejects = { [ value : string ] : boolean };
+*/
+  export interface Filter {
+//    setConfig : (config : any) => void;
+//    getConfig : () => any;
+//    createUI : (parent : HTMLElement) => void;
+    accept : (value : any) => boolean;
+  }
+
+  export interface Sort {
+    dataField : string;
+    sortOrder : string;
+  }
 
   export interface FilterContext {
     sort? : { dataField : string; sortOrder : string; }
-    filters : { [ dataField : string ] : Rejects };
+    filters : { [ dataField : string ] : Filter[] };
   }
 
   export interface TemplateTable extends Table {

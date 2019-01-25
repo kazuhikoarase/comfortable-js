@@ -41,7 +41,7 @@ namespace comfortable {
   interface FilterDialogOptions extends CellRendererFactoryOpts {
     sortOrder : string;
     filterValues : any[];
-    rejects : Rejects;
+//    rejects : Rejects;
   }
 
   interface FilterDialog extends EventTarget {
@@ -147,7 +147,7 @@ namespace comfortable {
 
     var sortAscButton = createSortButton(messages.SORT_ASC);
     var sortDescButton = createSortButton(messages.SORT_DESC);
-
+/*
     var filterItems : FilterItem[] = [ messages.SELECT_ALL ]
       .concat(opts.filterValues)
       .map(function(value, i) {
@@ -215,13 +215,13 @@ namespace comfortable {
     filterItemList.$el.style.width = '150px';
     filterItemList.$el.style.height = '0px';
     filterItemList.invalidate();
-
+*/
     var dialog = util.extend(ui.createDialog([
       // sort
       sortAscButton.$el,
       sortDescButton.$el,
       // search box
-      util.createElement('input', { attrs : { type : 'text' },
+/*      util.createElement('input', { attrs : { type : 'text' },
         style : { width : '150px', margin : '4px 0px' },
         on : { keyup : function(event) {
           var value = event.currentTarget.value;
@@ -229,9 +229,9 @@ namespace comfortable {
             return !(value && filterItem.label.indexOf(value) == -1);
           });
           filterItemList.invalidate();
-        }} }),
+        }} }),*/
       // filter items
-        filterItemList.$el,
+//        filterItemList.$el,
       // buttons
       util.createElement('div', { style :
           { marginTop : '4px', display : 'inline-block', float : 'right' } },
@@ -244,9 +244,7 @@ namespace comfortable {
             dialog.dispose();
           })
         ])
-    ]), {
-      sortOrder : opts.sortOrder, rejects : opts.rejects
-    } ).on('sortclick', function(event : Event, detail : any) {
+    ]), opts).on('sortclick', function(event : Event, detail : any) {
 
       if (detail.label == messages.SORT_ASC) {
         this.sortOrder = this.sortOrder == SortOrder.ASC? null : SortOrder.ASC;
@@ -265,7 +263,7 @@ namespace comfortable {
       sortAscButton.selector.setSelected(this.sortOrder == SortOrder.ASC);
       sortDescButton.selector.setSelected(this.sortOrder == SortOrder.DESC);
 
-    } ).on('filterclick', function(event : Event, detail : any) {
+    } )/*.on('filterclick', function(event : Event, detail : any) {
 
       if (detail.index == 0) {
         // select all
@@ -309,7 +307,7 @@ namespace comfortable {
 
       filterItemList.invalidate();
 
-    }).trigger('sortchange').trigger('filterchange');
+    })*/.trigger('sortchange')/*.trigger('filterchange')*/;
 
     return dialog;
   };
@@ -420,21 +418,20 @@ namespace comfortable {
       var dialog : FilterDialog = null;
 
       var showFilterDialog = function() : FilterDialog {
-        var filterContext = tableModel.filterContext;
+        var sort = tableModel.sort;
         var dataField = filterButton.cell.dataField;
         var filterValues = getFilterValues(tableModel, dataField);
         var dialog = createFilterDialog(util.extend({
-          sortOrder : filterContext.sort &&
-            filterContext.sort.dataField == dataField?
-            filterContext.sort.sortOrder : null,
-          rejects : filterContext.filters[dataField] || {},
+          sortOrder : (sort && sort.dataField == dataField)?
+            sort.sortOrder : null,
+          //rejects : filterContext.filters[dataField] || {},
           filterValues : filterValues
         }, opts), filterButton.cell).on('applysort', function() {
-          filterContext.sort = this.sortOrder?
+          tableModel.sort = this.sortOrder?
               { dataField : dataField, sortOrder : this.sortOrder } :null;
           tableModel.trigger('filterchange');
         }).on('applyfilter', function() {
-          filterContext.filters[dataField] = this.rejects;
+ //         filterContext.filters[dataField] = this.rejects;
           tableModel.trigger('filterchange');
         });
         var off = util.offset(td.$el);
@@ -475,13 +472,14 @@ namespace comfortable {
             }
 
             filterButton.cell = cell;
-            var filterContext = tableModel.filterContext;
-            filterButton.setSortOrder(filterContext.sort &&
-                filterContext.sort.dataField == cell.dataField?
-                    filterContext.sort.sortOrder : null);
-            var rejects = filterContext.filters[cell.dataField] || {};
+            var sort = tableModel.sort;
+            filterButton.setSortOrder(
+              (sort && sort.dataField == cell.dataField)?
+                sort.sortOrder : null);
+            //ar rejects = filterContext.filters[cell.dataField] || {};
             var filtered = false;
-            for (var value in rejects) { filtered = true; break; }
+            //TODO
+            //for (var value in rejects) { filtered = true; break; }
             filterButton.setFiltered(filtered);
           }
           if (filterButton) {
