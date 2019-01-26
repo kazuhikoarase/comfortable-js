@@ -67,8 +67,7 @@ namespace comfortable {
   };
 
   var createFilterDialog = function(
-      opts : FilterDialogOptions,
-      content : HTMLElement) {
+      opts : FilterDialogOptions, filterUI : HTMLElement) {
 
     var messages = i18n.getMessages();
     var labelStyle : { [ k : string ] : string } =
@@ -98,7 +97,7 @@ namespace comfortable {
       // sort
       sortAscButton.$el,
       sortDescButton.$el,
-      content,
+      filterUI,
       // buttons
       util.createElement('div', { style :
           { marginTop : '4px', display : 'inline-block', float : 'right' } },
@@ -210,18 +209,21 @@ namespace comfortable {
       var dialog : FilterDialog = null;
 
       var showFilterDialog = function() : FilterDialog {
+
         var dataField = filterButton.cell.dataField;
         var sort = tableModel.sort;
         var filter = tableModel.getFilter(dataField);
-        //var filterValues = getFilterValues(tableModel, dataField);
+
         opts = util.extend({
           sortOrder : (sort && sort.dataField == dataField)? sort.order : null,
           filterState : filter.state
         }, opts);
-        var dialog : any = createFilterDialog(<FilterDialogOptions>opts,
-          createDefaultFilterUI(<FilterDialogOptions>opts,
-            tableModel, filterButton.cell, () => dialog)
-        ).on('applysort', function() {
+
+        var filterUI = createDefaultFilterUI(<FilterDialogOptions>opts,
+            tableModel, filterButton.cell, () => dialog);
+
+        var dialog : any = createFilterDialog(
+          <FilterDialogOptions>opts, filterUI).on('applysort', function() {
           tableModel.sort = this.sortOrder?
               { dataField : dataField, order : this.sortOrder } :null;
           tableModel.trigger('filterchange');
@@ -229,6 +231,7 @@ namespace comfortable {
           filter.state = this.filterState;
           tableModel.trigger('filterchange');
         });
+
         var off = util.offset(td.$el);
         dialog.$el.style.left = off.left + 'px',
         dialog.$el.style.top = (off.top + td.$el.offsetHeight) + 'px';
