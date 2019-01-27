@@ -524,6 +524,7 @@ namespace comfortable {
       private filters : { [ dataField : string ] : Filter } = {};
       public getFilter(dataField : string) : Filter {
         return this.filters[dataField] || (this.filters[dataField] = {
+          createUI : createDefaultFilterUI,
           accept : (value : any) => true,
           state : null
         });

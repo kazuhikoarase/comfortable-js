@@ -104,13 +104,16 @@ namespace comfortable {
     dataField? : string;
     comparator? : Comparator;
   }
-/*
-  export type Rejects = { [ value : string ] : boolean };
-*/
+
   export interface Filter {
 //    setConfig : (config : any) => void;
 //    getConfig : () => any;
 //    createUI : (parent : HTMLElement) => void;
+    createUI : (
+      opts : FilterDialogOptions,
+      tableModel : TemplateTableModel,
+      cell : TemplateTableCell,
+      dialog : () => any) => HTMLElement
     accept : (value : any) => boolean;
     state : any;
   }

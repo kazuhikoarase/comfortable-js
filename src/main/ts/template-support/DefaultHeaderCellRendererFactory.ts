@@ -20,7 +20,6 @@ namespace comfortable {
     isSelected : () => boolean;
   }
 
-
   interface FilterButton {
     $el : HTMLElement;
     cell : TemplateTableCell;
@@ -219,7 +218,7 @@ namespace comfortable {
           filterState : filter.state
         }, opts);
 
-        var filterUI = createDefaultFilterUI(<FilterDialogOptions>opts,
+        var filterUI = filter.createUI(<FilterDialogOptions>opts,
             tableModel, filterButton.cell, () => dialog);
 
         var dialog : any = createFilterDialog(
