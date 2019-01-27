@@ -99,17 +99,24 @@ namespace comfortable {
       }
     };
   };
+ 
+  export function createDefaultFilter() : Filter {
+    return {
+      createUI : createUI,
+      accept : (value : any) => true,
+      state : null
+    };
+  }
 
-  export function createDefaultFilterUI(
+  function createUI(
       opts : FilterDialogOptions,
       tableModel : TemplateTableModel,
-      cell : TemplateTableCell,
-      dialog : () => any) {
+      cell : TemplateTableCell) {
 
     var messages = i18n.getMessages();
     var labelStyle : { [ k : string ] : string } =
       { marginLeft : '4px', verticalAlign : 'middle' };
-    
+
     var dataField = cell.dataField;
     var filterValues = getFilterValues(tableModel, dataField);
 
@@ -149,7 +156,7 @@ namespace comfortable {
           on : {
             mousedown : (event) => { event.preventDefault(); },
             click : () => {
-              dialog().trigger('filterclick', { index : this.index });
+              filterclick(this.index);
             }
           }
         }, [ this.checkbox.$el, this.label ])
@@ -186,57 +193,57 @@ namespace comfortable {
     filterItemList.$el.style.height = '0px';
     filterItemList.invalidate();
 
-    util.callLater(function() {
+    var filterclick = function(index : number) {
 
-      dialog().on('filterclick', function(event : Event, detail : any) {
-  
-        if (detail.index == 0) {
-          // select all
-          var selectCount = 0;
-          filterItems.forEach(function(filterItem, i) {
-            if (i > 0 && filterItem.checked) {
-              selectCount += 1;
-            }
-          });
-          var selectAll = selectCount != filterItems.length - 1;
-          filterItems.forEach(function(filterItem, i) {
-            if (i > 0) {
-              filterItem.checked = selectAll;
-            }
-          });
-        } else {
-          var filterItem = filterItems[detail.index];
-          filterItem.checked = !filterItem.checked;
-        }
-  
-        rejects = function() {
-          var rejects : any = {};
-          filterItems.forEach(function(filterItem, i) {
-            if (i > 0 && !filterItem.checked) {
-              rejects[filterItem.value] = true;
-            }
-          });
-          return rejects;
-        }();
+      if (index == 0) {
+        // select all
+        var selectCount = 0;
+        filterItems.forEach(function(filterItem, i) {
+          if (i > 0 && filterItem.checked) {
+            selectCount += 1;
+          }
+        });
+        var selectAll = selectCount != filterItems.length - 1;
+        filterItems.forEach(function(filterItem, i) {
+          if (i > 0) {
+            filterItem.checked = selectAll;
+          }
+        });
+      } else {
+        var filterItem = filterItems[index];
+        filterItem.checked = !filterItem.checked;
+      }
+
+      rejects = function() {
+        var rejects : any = {};
+        filterItems.forEach(function(filterItem, i) {
+          if (i > 0 && !filterItem.checked) {
+            rejects[filterItem.value] = true;
+          }
+        });
+        return rejects;
+      }();
 
 //        (this.filterState || (this.filterState = {}) ).rejects = rejects;
-        this.trigger('filterchange');
+      filterchange();
+    };
 
-      }).on('filterchange', function() {
+    var filterchange = function() {
 
-        var rejectCount = 0;
-        for (var value in rejects) {
-          rejectCount += 1;
-        }
+      var rejectCount = 0;
+      for (var value in rejects) {
+        rejectCount += 1;
+      }
 
-        // update 'select all' checkbox
-        filterItems[0].checked = rejectCount != filterItems.length - 1;
-        filterItems[0].incomplete = rejectCount != 0;
+      // update 'select all' checkbox
+      filterItems[0].checked = rejectCount != filterItems.length - 1;
+      filterItems[0].incomplete = rejectCount != 0;
 
-        filterItemList.invalidate();
+      filterItemList.invalidate();
+    };
 
-      }).trigger('filterchange');
-    });
+    filterchange();
+
     return util.createElement('div', { props : {} }, [
 
       // search box

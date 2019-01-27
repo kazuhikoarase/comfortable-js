@@ -106,14 +106,10 @@ namespace comfortable {
   }
 
   export interface Filter {
-//    setConfig : (config : any) => void;
-//    getConfig : () => any;
-//    createUI : (parent : HTMLElement) => void;
     createUI : (
       opts : FilterDialogOptions,
       tableModel : TemplateTableModel,
-      cell : TemplateTableCell,
-      dialog : () => any) => HTMLElement
+      cell : TemplateTableCell) => HTMLElement
     accept : (value : any) => boolean;
     state : any;
   }

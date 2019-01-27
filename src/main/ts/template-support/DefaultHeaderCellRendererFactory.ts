@@ -219,7 +219,7 @@ namespace comfortable {
         }, opts);
 
         var filterUI = filter.createUI(<FilterDialogOptions>opts,
-            tableModel, filterButton.cell, () => dialog);
+            tableModel, filterButton.cell);
 
         var dialog : any = createFilterDialog(
           <FilterDialogOptions>opts, filterUI).on('applysort', function() {

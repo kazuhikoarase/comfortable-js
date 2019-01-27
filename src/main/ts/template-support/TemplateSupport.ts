@@ -523,11 +523,8 @@ namespace comfortable {
       public sort : Sort = null;
       private filters : { [ dataField : string ] : Filter } = {};
       public getFilter(dataField : string) : Filter {
-        return this.filters[dataField] || (this.filters[dataField] = {
-          createUI : createDefaultFilterUI,
-          accept : (value : any) => true,
-          state : null
-        });
+        return this.filters[dataField] ||
+          (this.filters[dataField] = createDefaultFilter() );
       }
       public hiddenColumns : { [ orderedCol : number ] : boolean } = {};
       public items : any[] = [];
