@@ -214,22 +214,24 @@ namespace comfortable {
         var filter = tableModel.getFilter(dataField);
 
         opts = util.extend({
-          sortOrder : (sort && sort.dataField == dataField)? sort.order : null,
-          filterState : filter.state
+          sortOrder : (sort && sort.dataField == dataField)? sort.order : null
         }, opts);
 
-        var filterUI = filter.createUI(<FilterDialogOptions>opts,
+        var filterUI = filter.createUI(
+            <FilterDialogOptions>opts,
             tableModel, filterButton.cell);
+        filterUI.setState(filter.getState() );
 
         var dialog : any = createFilterDialog(
-          <FilterDialogOptions>opts, filterUI).on('applysort', function() {
-          tableModel.sort = this.sortOrder?
-              { dataField : dataField, order : this.sortOrder } :null;
-          tableModel.trigger('filterchange');
-        }).on('applyfilter', function() {
-          filter.state = this.filterState;
-          tableModel.trigger('filterchange');
-        });
+            <FilterDialogOptions>opts, filterUI.$el
+          ).on('applysort', function() {
+            tableModel.sort = this.sortOrder?
+                { dataField : dataField, order : this.sortOrder } :null;
+            tableModel.trigger('filterchange');
+          }).on('applyfilter', function() {
+            filter.setState(filterUI.getState() );
+            tableModel.trigger('filterchange');
+          });
 
         var off = util.offset(td.$el);
         dialog.$el.style.left = off.left + 'px',
@@ -273,7 +275,7 @@ namespace comfortable {
             var filter = tableModel.getFilter(cell.dataField);
             filterButton.setSortOrder(
               (sort && sort.dataField == cell.dataField)? sort.order : null);
-            filterButton.setFiltered(!!filter.state);
+            filterButton.setFiltered(filter.enabled() );
           }
           if (filterButton) {
             filterButton.$el.style.display = cell.dataField? '' : 'none';

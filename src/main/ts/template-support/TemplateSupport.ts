@@ -522,9 +522,12 @@ namespace comfortable {
       public orderedColumnIndices : number[] = null;
       public sort : Sort = null;
       private filters : { [ dataField : string ] : Filter } = {};
+      public filterFactory() : Filter {
+        return new DefaultFilter();
+      }
       public getFilter(dataField : string) : Filter {
         return this.filters[dataField] ||
-          (this.filters[dataField] = createDefaultFilter() );
+          (this.filters[dataField] = this.filterFactory() );
       }
       public hiddenColumns : { [ orderedCol : number ] : boolean } = {};
       public items : any[] = [];
@@ -535,7 +538,7 @@ namespace comfortable {
       public resetFilter() {
         this.sort = null;
         for (var dataField in this.headerCells) {
-          this.getFilter(dataField).state = null;
+          this.getFilter(dataField).setState(null);
         }
         this.filteredItems = null;
         table.invalidate();
@@ -694,7 +697,7 @@ namespace comfortable {
         var filtered = false;
         for (var dataField in this.headerCells) {
           var filter = tableState.filters[dataField];
-          this.getFilter(dataField).state = filter || null;
+          this.getFilter(dataField).setState(filter || null);
           if (filter) {
             filtered = true;
           }
@@ -721,8 +724,8 @@ namespace comfortable {
         }
         for (var dataField in this.headerCells) {
           var filter = this.getFilter(dataField);
-          if (filter.state) {
-            filters[dataField] = filter.state;
+          if (filter.enabled() ) {
+            filters[dataField] = filter.getState();
           }
         }
         var tableState : TemplateTableState = {

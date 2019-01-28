@@ -18,7 +18,6 @@ namespace comfortable {
     label: any;
     value: string;
     checked: boolean;
-    color: boolean;
     incomplete? : boolean;
   }
 
@@ -77,7 +76,7 @@ namespace comfortable {
       style : antiBsGlobals });
     return {
       $el : util.createElement('span', {
-        attrs : { 'class' : '${prefix}-checkbox-body' }, 
+        attrs : { 'class' : '${prefix}-checkbox-body' },
         style : util.extend(antiBsGlobals, { display : 'inline-block',
           width : '12px', height : '12px' }
         )}, [
@@ -99,166 +98,210 @@ namespace comfortable {
       }
     };
   };
- 
-  export function createDefaultFilter() : Filter {
-    return {
-      createUI : createUI,
-      accept : (value : any) => true,
-      state : null
-    };
-  }
 
-  function createUI(
+  export class DefaultFilter implements Filter {
+
+    public createUI(
       opts : FilterDialogOptions,
       tableModel : TemplateTableModel,
-      cell : TemplateTableCell) {
+      cell : TemplateTableCell
+    ) : FilterUI {
 
-    var messages = i18n.getMessages();
-    var labelStyle : { [ k : string ] : string } =
-      { marginLeft : '4px', verticalAlign : 'middle' };
+      var messages = i18n.getMessages();
+      var labelStyle : { [ k : string ] : string } =
+        { marginLeft : '4px', verticalAlign : 'middle' };
 
-    var dataField = cell.dataField;
-    var filterValues = getFilterValues(tableModel, dataField);
+      var dataField = cell.dataField;
+      var filterValues = getFilterValues(tableModel, dataField);
 
-    var rejects : any = {};
-    if (opts.filterState && opts.filterState.rejects) {
-      rejects = opts.filterState && opts.filterState.rejects;
-    }
+      var _state : any = {};
 
-    var filterItems : FilterItem[] = [ messages.SELECT_ALL ]
-      .concat(filterValues)
-      .map(function(value, i) {
-        return {
-          index : i,
-          label : (i > 0)? opts.labelFunction(value, cell) : value,
-          value : value,
-          checked : (i > 0)? !rejects[value] : true,
-          color : false
-        };
-      });
+      var filterItems : FilterItem[] = [ messages.SELECT_ALL ]
+        .concat(filterValues)
+        .map(function(value, i) {
+          return {
+            index : i,
+            label : (i > 0)? opts.labelFunction(value, cell) : value,
+            value : value,
+            checked : false,
+            olor : false
+          };
+        });
 
-    class FilterItemCell implements ListCell {
-      public checkbox = (() => {
-        var checkbox = createCheckbox();
-        checkbox.$el.style.verticalAlign = 'middle';
-        return checkbox;
-      })();
-      private label = util.createElement('span', { style : labelStyle,
-        props : { textContent : 'M' } });
-      public index = 0;
-      public row = 0;
-      public setLabel(text : string) {
-        this.label.textContent = text || messages.SELECT_BLANK;
-        this.$el.setAttribute('title', this.label.textContent);
-      }
-      public $el = util.createElement('div', {
-          attrs : { 'class' : '${prefix}-clickable-op' },
-          on : {
-            mousedown : (event) => { event.preventDefault(); },
-            click : () => {
-              filterclick(this.index);
+      class FilterItemCell implements ListCell {
+        public checkbox = (() => {
+          var checkbox = createCheckbox();
+          checkbox.$el.style.verticalAlign = 'middle';
+          return checkbox;
+        })();
+        private label = util.createElement('span', { style : labelStyle,
+          props : { textContent : 'M' } });
+        public index = 0;
+        public row = 0;
+        public setLabel(text : string) {
+          this.label.textContent = text || messages.SELECT_BLANK;
+          this.$el.setAttribute('title', this.label.textContent);
+        }
+        public $el = util.createElement('div', {
+            attrs : { 'class' : '${prefix}-clickable-op' },
+            on : {
+              mousedown : (event) => { event.preventDefault(); },
+              click : () => {
+                filterclick(this.index);
+              }
             }
-          }
-        }, [ this.checkbox.$el, this.label ])
-    }
-
-    class FilterItemList extends ListImpl<FilterItem,FilterItemCell> {
-      public items = filterItems;
-      public getItemAt(row : number) { return this.items[row]; }
-      public getItemCount() { return this.items.length; }
-      public createCell() {
-        return new FilterItemCell();
-      }
-      public renderCell(cell : FilterItemCell, item : FilterItem) {
-        cell.index = item.index;
-        cell.setLabel(item.label);
-        cell.checkbox.setChecked(item.checked);
-        cell.checkbox.setIncomplete(item.incomplete);
-      }
-      public height = 0;
-      public maxHeight = 150;
-    }
-
-    var filterItemList = new FilterItemList();
-    filterItemList.on('rendered', function(event : Event, detail : any) {
-      var height = Math.min(this.maxHeight,
-          this.cellHeight * this.getItemCount() );
-      if (this.height != height) {
-        this.height = height;
-        this.$el.style.height = height + 'px';
-        this.invalidate();
-      }
-    })
-    filterItemList.$el.style.width = '150px';
-    filterItemList.$el.style.height = '0px';
-    filterItemList.invalidate();
-
-    var filterclick = function(index : number) {
-
-      if (index == 0) {
-        // select all
-        var selectCount = 0;
-        filterItems.forEach(function(filterItem, i) {
-          if (i > 0 && filterItem.checked) {
-            selectCount += 1;
-          }
-        });
-        var selectAll = selectCount != filterItems.length - 1;
-        filterItems.forEach(function(filterItem, i) {
-          if (i > 0) {
-            filterItem.checked = selectAll;
-          }
-        });
-      } else {
-        var filterItem = filterItems[index];
-        filterItem.checked = !filterItem.checked;
+          }, [ this.checkbox.$el, this.label ])
       }
 
-      rejects = function() {
-        var rejects : any = {};
-        filterItems.forEach(function(filterItem, i) {
-          if (i > 0 && !filterItem.checked) {
-            rejects[filterItem.value] = true;
-          }
-        });
-        return rejects;
-      }();
-
-//        (this.filterState || (this.filterState = {}) ).rejects = rejects;
-      filterchange();
-    };
-
-    var filterchange = function() {
-
-      var rejectCount = 0;
-      for (var value in rejects) {
-        rejectCount += 1;
+      class FilterItemList extends ListImpl<FilterItem,FilterItemCell> {
+        public items = filterItems;
+        public getItemAt(row : number) { return this.items[row]; }
+        public getItemCount() { return this.items.length; }
+        public createCell() {
+          return new FilterItemCell();
+        }
+        public renderCell(cell : FilterItemCell, item : FilterItem) {
+          cell.index = item.index;
+          cell.setLabel(item.label);
+          cell.checkbox.setChecked(item.checked);
+          cell.checkbox.setIncomplete(item.incomplete);
+        }
+        public height = 0;
+        public maxHeight = 150;
       }
 
-      // update 'select all' checkbox
-      filterItems[0].checked = rejectCount != filterItems.length - 1;
-      filterItems[0].incomplete = rejectCount != 0;
-
+      var filterItemList = new FilterItemList();
+      filterItemList.on('rendered', function(event : Event, detail : any) {
+        var height = Math.min(this.maxHeight,
+            this.cellHeight * this.getItemCount() );
+        if (this.height != height) {
+          this.height = height;
+          this.$el.style.height = height + 'px';
+          this.invalidate();
+        }
+      })
+      filterItemList.$el.style.width = '150px';
+      filterItemList.$el.style.height = '0px';
       filterItemList.invalidate();
-    };
 
-    filterchange();
+      var filterclick = function(index : number) {
 
-    return util.createElement('div', { props : {} }, [
-
-      // search box
-      util.createElement('input', { attrs : { type : 'text' },
-        style : { width : '150px', margin : '4px 0px' },
-        on : { keyup : function(event) {
-          var value = event.currentTarget.value;
-          filterItemList.items = filterItems.filter(function(filterItem) {
-            return !(value && filterItem.label.indexOf(value) == -1);
+        if (index == 0) {
+          // select all
+          var selectCount = 0;
+          filterItems.forEach(function(filterItem, i) {
+            if (i > 0 && filterItem.checked) {
+              selectCount += 1;
+            }
           });
-          filterItemList.invalidate();
-        }} }),
-      // filter items
-      filterItemList.$el
-    ]);
-  }
+          var selectAll = selectCount != filterItems.length - 1;
+          filterItems.forEach(function(filterItem, i) {
+            if (i > 0) {
+              filterItem.checked = selectAll;
+            }
+          });
+        } else {
+          var filterItem = filterItems[index];
+          filterItem.checked = !filterItem.checked;
+        }
 
+        _state.rejects = function() {
+          var rejects : any = {};
+          filterItems.forEach(function(filterItem, i) {
+            if (i > 0 && !filterItem.checked) {
+              rejects[filterItem.value] = true;
+            }
+          });
+          return rejects;
+        }();
+
+  //        (this.filterState || (this.filterState = {}) ).rejects = rejects;
+        filterchange();
+      };
+
+      var filterchange = function() {
+
+        var rejectCount = 0;
+        for (var value in _state.rejects) {
+          rejectCount += 1;
+        }
+
+        // update 'select all' checkbox
+        filterItems[0].checked = rejectCount != filterItems.length - 1;
+        filterItems[0].incomplete = rejectCount != 0;
+
+        filterItemList.invalidate();
+      };
+
+      return {
+        setState : (state : any) => {
+          var rejects : any = {};
+          state.rejects.forEach(function(value : any) {
+            rejects[value] = true;
+          });
+          _state.rejects = rejects;
+          filterItems.forEach(function(filterItem, i) {
+            if (i > 0) {
+              filterItem.checked = !_state.rejects[filterItem.value];
+            }
+          });
+          filterchange();
+        },
+        getState : () => {
+          var state = { rejects : [] as any[] };
+          for (var value in _state.rejects) {
+            state.rejects.push(value);
+          }
+          return state;
+        },
+        $el : util.createElement('div', { props : {} }, [
+          // search box
+          util.createElement('input', { attrs : { type : 'text' },
+            style : { width : '150px', margin : '4px 0px' },
+            on : { keyup : function(event) {
+              var value = event.currentTarget.value;
+              filterItemList.items = filterItems.filter(function(filterItem) {
+                return !(value && filterItem.label.indexOf(value) == -1);
+              });
+              filterItemList.invalidate();
+            }} }),
+          // filter items
+          filterItemList.$el
+        ])
+      };
+    }
+
+    public enabled() {
+      var enabled = false;
+      for (var reject in this.state.rejects) {
+        enabled = true;
+        break;
+      }
+      return enabled;
+    }
+
+    public accept(value : any) {
+      return !this.state.rejects[value];
+    }
+
+    private state : any = { rejects : {} };
+
+    public setState(state : any) {
+      var rejects : any = {};
+      if (state && state.rejects) {
+        state.rejects.forEach(function(value : any) {
+          rejects[value] = true;
+        });
+      }
+      this.state.rejects = rejects;
+    }
+
+    public getState() : any {
+      var state = { rejects : [] as any[] };
+      for (var value in this.state.rejects) {
+        state.rejects.push(value);
+      }
+      return state;
+    }
+  }
 }

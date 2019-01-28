@@ -70,8 +70,8 @@ namespace comfortable {
     defaultLockColumn : number;
     setLockLeft : (lockLeft : number) => void;
     setLockRight : (lockLeft : number) => void;
-//    filterContext : FilterContext;
     sort : Sort;
+    filterFactory : () => Filter;
     getFilter : (dataField : string) => Filter;
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
     headerCells : { [ dataField : string ] : TableTemplateCellStyle };
@@ -105,13 +105,21 @@ namespace comfortable {
     comparator? : Comparator;
   }
 
+  export interface FilterUI {
+    $el : HTMLElement;
+    setState : (state : any) => void;
+    getState : () => any;
+  }
+
   export interface Filter {
     createUI : (
       opts : FilterDialogOptions,
       tableModel : TemplateTableModel,
-      cell : TemplateTableCell) => HTMLElement
+      cell : TemplateTableCell) => FilterUI;
+    enabled : () => boolean;
     accept : (value : any) => boolean;
-    state : any;
+    setState : (state : any) => void;
+    getState : () => any;
   }
 
   export interface Sort {
