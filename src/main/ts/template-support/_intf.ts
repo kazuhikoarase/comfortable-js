@@ -69,7 +69,10 @@ namespace comfortable {
     enableLockColumn : boolean;
     defaultLockColumn : number;
     setLockLeft : (lockLeft : number) => void;
-    filterContext : FilterContext;
+    setLockRight : (lockLeft : number) => void;
+    sort : Sort;
+    filterFactory : () => Filter;
+    getFilter : (dataField : string) => Filter;
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
     headerCells : { [ dataField : string ] : TableTemplateCellStyle };
     items : any[];
@@ -92,9 +95,8 @@ namespace comfortable {
     cellWidths : { col : number, width : number }[];
     cellHeights : { row : number, height : number }[];
     hiddenColumns : number[];
-    filtered : boolean;
-    sort : { dataField : string; sortOrder : string; };
-    filters : { [ dataField : string ] : string[] };
+    sort : Sort;
+    filters : { [ dataField : string ] : any };
     orderedColumnIndices : number[];
   }
 
@@ -103,11 +105,26 @@ namespace comfortable {
     comparator? : Comparator;
   }
 
-  export type Rejects = { [ value : string ] : boolean };
+  export interface FilterUI {
+    $el : HTMLElement;
+    setState : (state : any) => void;
+    getState : () => any;
+  }
 
-  export interface FilterContext {
-    sort? : { dataField : string; sortOrder : string; }
-    filters : { [ dataField : string ] : Rejects };
+  export interface Filter {
+    createUI : (
+      opts : FilterDialogOptions,
+      tableModel : TemplateTableModel,
+      cell : TemplateTableCell) => FilterUI;
+    enabled : () => boolean;
+    accept : (value : any) => boolean;
+    setState : (state : any) => void;
+    getState : () => any;
+  }
+
+  export interface Sort {
+    dataField : string;
+    order : string;
   }
 
   export interface TemplateTable extends Table {

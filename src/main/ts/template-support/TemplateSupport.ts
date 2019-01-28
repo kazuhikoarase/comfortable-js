@@ -13,10 +13,6 @@ namespace comfortable {
 
   'use strict';
 
-  var createFilterContext = function() : FilterContext {
-    return { sort : null, filters : {} };
-  };
-
   var createDefaultOrderedColumnIndices = function(tableModel : TableModel) {
     var orderedColumnIndices : number[] = [];
     var columnCount = tableModel.getColumnCount();
@@ -524,7 +520,15 @@ namespace comfortable {
       public columnDraggable = columnDraggable;
       public columnResizable = columnResizable;
       public orderedColumnIndices : number[] = null;
-      public filterContext = createFilterContext();
+      public sort : Sort = null;
+      private filters : { [ dataField : string ] : Filter } = {};
+      public filterFactory() : Filter {
+        return new DefaultFilter();
+      }
+      public getFilter(dataField : string) : Filter {
+        return this.filters[dataField] ||
+          (this.filters[dataField] = this.filterFactory() );
+      }
       public hiddenColumns : { [ orderedCol : number ] : boolean } = {};
       public items : any[] = [];
       public filteredItems : any[] = null;
@@ -532,7 +536,10 @@ namespace comfortable {
       public multipleRowsSelectable = false;
       public selectedRows : { [ row : number ] : boolean } = {};
       public resetFilter() {
-        this.filterContext = createFilterContext();
+        this.sort = null;
+        for (var dataField in this.headerCells) {
+          this.getFilter(dataField).setState(null);
+        }
         this.filteredItems = null;
         table.invalidate();
       }
@@ -662,7 +669,6 @@ namespace comfortable {
         tableState.cellWidths = tableState.cellWidths || <any>{};
         tableState.cellHeights = tableState.cellHeights || <any>{};
         tableState.hiddenColumns = tableState.hiddenColumns || <any>{};
-        tableState.filtered = tableState.filtered || false;
         tableState.sort = tableState.sort || null;
         tableState.filters = tableState.filters || {};
         tableState.orderedColumnIndices =
@@ -682,21 +688,22 @@ namespace comfortable {
         tableState.hiddenColumns.forEach(function(orderedCol : number) {
           hiddenColumns[orderedCol] = true;
         });
-        var filters : { [ dataField : string ] : any } = {};
-        for (var dataField in tableState.filters) {
-          filters[dataField] = {};
-          tableState.filters[dataField].forEach(function(value) {
-            filters[dataField][value] = true;
-          });
-        }
         this.lockLeft = tableState.lockColumn;
         this.enableLockColumn = tableState.enableLockColumn;
         this.cellWidth = cellWidth;
         this.cellHeight = cellHeight;
         this.hiddenColumns = hiddenColumns;
-        this.filterContext = { sort : tableState.sort, filters : filters };
+        this.sort = tableState.sort;
+        var filtered = false;
+        for (var dataField in this.headerCells) {
+          var filter = tableState.filters[dataField];
+          this.getFilter(dataField).setState(filter || null);
+          if (filter) {
+            filtered = true;
+          }
+        }
         this.orderedColumnIndices = tableState.orderedColumnIndices;
-        if (tableState.filtered) {
+        if (filtered) {
           this.trigger('filterchange');
         }
       }
@@ -704,7 +711,7 @@ namespace comfortable {
         var cellWidths : { col : number, width : number}[] = [];
         var cellHeights : { row : number, height : number}[] = [];
         var hiddenColumns : number[] = [];
-        var filters : { [ dataField : string ] : string[] } = {};
+        var filters : { [ dataField : string ] : any } = {};
         var col : any, row : any;
         for (col in this.cellWidth) {
           cellWidths.push({ col : col, width : this.cellWidth[col] });
@@ -715,13 +722,11 @@ namespace comfortable {
         for (col in this.hiddenColumns) {
           hiddenColumns.push(col);
         }
-        for (var dataField in this.filterContext.filters) {
-          var rejects = this.filterContext.filters[dataField];
-          var values : string[] = [];
-          for (var value in rejects) {
-            values.push(value);
+        for (var dataField in this.headerCells) {
+          var filter = this.getFilter(dataField);
+          if (filter.enabled() ) {
+            filters[dataField] = filter.getState();
           }
-          filters[dataField] = values;
         }
         var tableState : TemplateTableState = {
           lockColumn : this.lockLeft,
@@ -729,8 +734,7 @@ namespace comfortable {
           cellWidths : cellWidths,
           cellHeights : cellHeights,
           hiddenColumns : hiddenColumns,
-          filtered : this.filteredItems != null,
-          sort : this.filterContext.sort,
+          sort : this.sort,
           filters : filters,
           orderedColumnIndices : this.orderedColumnIndices
         };
@@ -789,7 +793,16 @@ namespace comfortable {
 
       // apply filter
 
-      var filters = this.filterContext.filters;
+      var filters : { [ dataField : string ] : Filter } = {};
+      !function() {
+        for (var dataField in this.headerCells) {
+          var filter = this.getFilter(dataField);
+          if (filter.enabled() ) {
+            filters[dataField] = filter;
+          }
+        }  
+      }.bind(this)();
+
       var filteredItems : any[] = this.items.filter(function(item : any) {
         var filtered = false;
         for (var dataField in filters) {
@@ -797,7 +810,8 @@ namespace comfortable {
           if (typeof value == 'undefined') {
             continue;
           }
-          if (filters[dataField]['' + value]) {
+          var filter = filters[dataField];
+          if (!filter.accept(value) ) {
             filtered = true;
             break;
           }
@@ -805,9 +819,9 @@ namespace comfortable {
         return !filtered;
       } );
 
-      var sort = this.filterContext.sort;
+      var sort = this.sort;
       if (sort) {
-        var order = sort.sortOrder == SortOrder.ASC? 1 : -1;
+        var order = sort.order == SortOrder.ASC? 1 : -1;
         var dataField = sort.dataField;
         var indexField = '.index';
         var sortKeyField = '.sortKey';
@@ -819,7 +833,6 @@ namespace comfortable {
         });
         if (comparator) {
           // sort by custom comparator.
-          delete this.filterContext['.comparator'];
           filteredItems.sort(function(item1, item2) {
             var result = comparator(item1[sortKeyField], item2[sortKeyField]);
             if (result != 0) {
