@@ -99,6 +99,18 @@ namespace comfortable {
     };
   };
 
+  var setToList = function(s : any) : any[] {
+    var l : any[] = [];
+    for (var v in s) { l.push(v); }
+    return l;
+  };
+
+  var listToSet = function(l : any[]) : any {
+    var s : any = {};
+    l.forEach(function(v) { s[v] = true; });
+    return s;
+  };
+
   export class DefaultFilter implements Filter {
 
     public createUI(
@@ -114,7 +126,7 @@ namespace comfortable {
       var dataField = cell.dataField;
       var filterValues = getFilterValues(tableModel, dataField);
 
-      var _state : any = {};
+      var rejects : any = {};
 
       var filterItems : FilterItem[] = [ messages.SELECT_ALL ]
         .concat(filterValues)
@@ -205,7 +217,7 @@ namespace comfortable {
           filterItem.checked = !filterItem.checked;
         }
 
-        _state.rejects = function() {
+        rejects = function() {
           var rejects : any = {};
           filterItems.forEach(function(filterItem, i) {
             if (i > 0 && !filterItem.checked) {
@@ -215,14 +227,13 @@ namespace comfortable {
           return rejects;
         }();
 
-  //        (this.filterState || (this.filterState = {}) ).rejects = rejects;
         filterchange();
       };
 
       var filterchange = function() {
 
         var rejectCount = 0;
-        for (var value in _state.rejects) {
+        for (var value in rejects) {
           rejectCount += 1;
         }
 
@@ -235,24 +246,16 @@ namespace comfortable {
 
       return {
         setState : (state : any) => {
-          var rejects : any = {};
-          state.rejects.forEach(function(value : any) {
-            rejects[value] = true;
-          });
-          _state.rejects = rejects;
+          rejects = listToSet(state.rejects);
           filterItems.forEach(function(filterItem, i) {
             if (i > 0) {
-              filterItem.checked = !_state.rejects[filterItem.value];
+              filterItem.checked = !rejects[filterItem.value];
             }
           });
           filterchange();
         },
         getState : () => {
-          var state = { rejects : [] as any[] };
-          for (var value in _state.rejects) {
-            state.rejects.push(value);
-          }
-          return state;
+          return { rejects : setToList(rejects) };
         },
         $el : util.createElement('div', { props : {} }, [
           // search box
@@ -273,7 +276,7 @@ namespace comfortable {
 
     public enabled() {
       var enabled = false;
-      for (var reject in this.state.rejects) {
+      for (var reject in this.rejects) {
         enabled = true;
         break;
       }
@@ -281,27 +284,18 @@ namespace comfortable {
     }
 
     public accept(value : any) {
-      return !this.state.rejects[value];
+      return !this.rejects[value];
     }
 
-    private state : any = { rejects : {} };
+    private rejects : any = {};
 
     public setState(state : any) {
-      var rejects : any = {};
-      if (state && state.rejects) {
-        state.rejects.forEach(function(value : any) {
-          rejects[value] = true;
-        });
-      }
-      this.state.rejects = rejects;
+      this.rejects = listToSet(
+        state && state.rejects? state.rejects : []);
     }
 
     public getState() : any {
-      var state = { rejects : [] as any[] };
-      for (var value in this.state.rejects) {
-        state.rejects.push(value);
-      }
-      return state;
+      return { rejects : setToList(this.rejects) };
     }
   }
 }

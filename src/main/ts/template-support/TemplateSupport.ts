@@ -797,7 +797,7 @@ namespace comfortable {
       !function() {
         for (var dataField in this.headerCells) {
           var filter = this.getFilter(dataField);
-          if (filter.state) {
+          if (filter.enabled() ) {
             filters[dataField] = filter;
           }
         }  
