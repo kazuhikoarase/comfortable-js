@@ -28,7 +28,16 @@ namespace comfortable.i18n {
       RESET : 'Reset',
       LOCK_COLUMN : '< Lock Column >',
       SELECT_BLANK : '(Space)',
-      SELECT_ALL : '(Select All)'
+      SELECT_ALL : '(Select All)',
+      SEARCH : 'Search',
+      NUMBER_FILTERS : 'Number Filters',
+      OP_LAYOUT : 'L',
+      EQUALS : 'equals',
+      NOT_EQUALS : 'not equals',
+      GREATER_THAN : 'greater than',
+      GREATER_THAN_OR_EQUALS : 'greater than or equals',
+      LESS_THAN : 'less than',
+      LESS_THAN_OR_EQUALS : 'less than or equals'
     }
   };
 

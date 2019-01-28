@@ -28,7 +28,16 @@ namespace comfortable.i18n {
       RESET : '初期値に戻す',
       LOCK_COLUMN : '< 列固定位置 >',
       SELECT_BLANK : '(空白)',
-      SELECT_ALL : '(全て選択)'
+      SELECT_ALL : '(全て選択)',
+      NUMBER_FILTERS : '数値フィルター',
+      SEARCH : '検索',
+      OP_LAYOUT : 'R',
+      EQUALS : 'と等しい',
+      NOT_EQUALS : 'と等しくない',
+      GREATER_THAN : 'より大きい',
+      GREATER_THAN_OR_EQUALS : '以上',
+      LESS_THAN : 'より小さい',
+      LESS_THAN_OR_EQUALS : '以下'
     }
   };
 

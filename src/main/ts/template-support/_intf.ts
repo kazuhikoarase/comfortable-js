@@ -113,6 +113,7 @@ namespace comfortable {
 
   export interface Filter {
     createUI : (
+      dialog : () => EventTarget,
       opts : FilterDialogOptions,
       tableModel : TemplateTableModel,
       cell : TemplateTableCell) => FilterUI;

@@ -114,14 +114,13 @@ namespace comfortable {
   export class DefaultFilter implements Filter {
 
     public createUI(
+      dialog : () => EventTarget,
       opts : FilterDialogOptions,
       tableModel : TemplateTableModel,
       cell : TemplateTableCell
     ) : FilterUI {
 
       var messages = i18n.getMessages();
-      var labelStyle : { [ k : string ] : string } =
-        { marginLeft : '4px', verticalAlign : 'middle' };
 
       var dataField = cell.dataField;
       var filterValues = getFilterValues(tableModel, dataField);
@@ -146,7 +145,8 @@ namespace comfortable {
           checkbox.$el.style.verticalAlign = 'middle';
           return checkbox;
         })();
-        private label = util.createElement('span', { style : labelStyle,
+        private label = util.createElement('span', {
+          style : filterLabelStyle,
           props : { textContent : 'M' } });
         public index = 0;
         public row = 0;
@@ -244,6 +244,96 @@ namespace comfortable {
         filterItemList.invalidate();
       };
 
+      var customFilterButton = function(filterTitle : string) {
+        var checkbox = createCheckbox();
+        util.extend(checkbox.$el.style,
+          { border : 'none', verticalAlign : 'middle' });
+        checkbox.setChecked(false);
+        var label = util.createElement('span', {
+              attrs : { 'class' : '${prefix}-clickable-op' },
+              style : filterLabelStyle,
+              props : { textContent : filterTitle }
+            } );
+        return {
+          $el : util.createElement('div', [ checkbox.$el, label ],
+            { on : {
+                click : function(event) {
+                  (<any>dialog() ).dispose();
+                  showFilterDialog(filterTitle);
+                }
+              }
+            })
+        };
+      }(messages.NUMBER_FILTERS);
+
+      var showFilterDialog = function(filterTitle : string) {
+        // TODO
+        var opOpts = [
+          { value : '', label : '' },
+          { value : 'eq', label : messages.EQUALS },
+          { value : 'ne', label : messages.NOT_EQUALS },
+          { value : 'gt', label : messages.GREATER_THAN },
+          { value : 'ge', label : messages.GREATER_THAN_OR_EQUALS },
+          { value : 'lt', label : messages.LESS_THAN },
+          { value : 'Le', label : messages.LESS_THAN_OR_EQUALS }
+        ];
+        var createOpUI = function() {
+          var op = util.createElement('select',
+            opOpts.map(function(item) {
+              return util.createElement('option', {
+                props : { textContent : item.label,
+                    value : item.value } });
+            }) );
+          var tx = util.createElement('input',
+            { attrs : { type : 'text' },
+              style : { width : '200px' }  } );
+          var opBody = util.createElement('div');
+          if (messages.OP_LAYOUT == 'L') {
+            opBody.appendChild(op);
+          }
+          opBody.appendChild(tx);
+          if (messages.OP_LAYOUT == 'R') {
+            opBody.appendChild(op);
+          }
+          return opBody;
+        };
+        var createRadio = function(label : string) {
+          var radio = util.createElement('input',
+            { attrs : { type : 'radio' } });
+          var radioBody = util.createElement('label',
+            [ radio, <any>document.createTextNode(label) ]);
+          return { $el : radioBody };
+        };
+        var rd1 = createRadio('and');
+        var rd2 = createRadio('or');
+        var cdBody = util.createElement('div', [ rd1.$el, rd2.$el ]);
+        var op1 = createOpUI();
+        var op2 = createOpUI();
+        var dialog = ui.createDialog([
+          util.createElement('div',
+            { props : { textContent : filterTitle } }),
+          op1, cdBody, op2,
+          util.createElement('div',
+            { style : { textAlign : 'right' } }, [
+            ui.createButton(messages.OK, (event)=>{
+              dialog.dispose();
+            }),
+            ui.createButton(messages.CANCEL, (event)=>{
+              dialog.dispose();
+            })
+          ])
+        ]).on('beforeshow', function() {
+          var left = (window.innerWidth -
+                        dialog.$el.offsetWidth) / 2;
+          var top = (window.innerHeight -
+                        dialog.$el.offsetHeight) / 2;
+          dialog.$el.style.left = left + 'px';
+          dialog.$el.style.top = top + 'px';
+        });
+
+        dialog.show();
+      };
+      
       return {
         setState : (state : any) => {
           rejects = listToSet(state.rejects);
@@ -258,8 +348,10 @@ namespace comfortable {
           return { rejects : setToList(rejects) };
         },
         $el : util.createElement('div', { props : {} }, [
+          /*customFilterButton.$el,*/
           // search box
-          util.createElement('input', { attrs : { type : 'text' },
+          util.createElement('input', { attrs : { type : 'text',
+              placeHolder: messages.SEARCH },
             style : { width : '150px', margin : '4px 0px' },
             on : { keyup : function(event) {
               var value = event.currentTarget.value;

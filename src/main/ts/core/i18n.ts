@@ -29,6 +29,15 @@ namespace comfortable.i18n {
     LOCK_COLUMN : string;
     SELECT_BLANK : string;
     SELECT_ALL : string;
+    SEARCH : string;
+    NUMBER_FILTERS : string;
+    OP_LAYOUT : string;
+    EQUALS : string;
+    NOT_EQUALS : string;
+    GREATER_THAN : string;
+    GREATER_THAN_OR_EQUALS : string;
+    LESS_THAN : string;
+    LESS_THAN_OR_EQUALS : string;
   }
 
   export var getInstance = function(lang : string) {

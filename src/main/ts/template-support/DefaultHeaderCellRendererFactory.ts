@@ -65,12 +65,13 @@ namespace comfortable {
     };
   };
 
+  export var filterLabelStyle : { [ k : string ] : string } =
+      { marginLeft : '4px', verticalAlign : 'middle' };
+
   var createFilterDialog = function(
       opts : FilterDialogOptions, filterUI : HTMLElement) {
 
     var messages = i18n.getMessages();
-    var labelStyle : { [ k : string ] : string } =
-      { marginLeft : '4px', verticalAlign : 'middle' };
 
     var createSortButton = function(label : string) {
       var selector = createSelector();
@@ -80,7 +81,7 @@ namespace comfortable {
         $el : util.createElement('div', [
           selector.$el,
           util.createElement('span', {
-            style : labelStyle, props : { textContent : label } })
+            style : filterLabelStyle, props : { textContent : label } })
         ], { attrs : { 'class' : '${prefix}-clickable-op' }, on : {
           mousedown : function(event) { event.preventDefault(); },
           click : function() { dialog.trigger('sortclick',
@@ -218,6 +219,7 @@ namespace comfortable {
         }, opts);
 
         var filterUI = filter.createUI(
+            () => dialog,
             <FilterDialogOptions>opts,
             tableModel, filterButton.cell);
         filterUI.setState(filter.getState() );
