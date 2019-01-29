@@ -1,3 +1,6 @@
+//
+// gulpfile for comfortable
+//
 
 const del = require('del');
 const gulp = require('gulp');
@@ -52,7 +55,7 @@ gulp.task('concat-main-css', function() {
 
 gulp.task('build', gulp.series('build-main', 'concat-main-css') );
 
-gulp.task('compress', gulp.series('build', function () {
+gulp.task('compress', gulp.series('build', function() {
   return gulp.src(`${build}/${targetName}.js`)
     .pipe(uglify({ output : { ascii_only : true } }) )
     .pipe(rename({ suffix: '.min' }) )

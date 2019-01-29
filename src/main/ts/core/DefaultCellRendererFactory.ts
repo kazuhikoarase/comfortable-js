@@ -283,7 +283,7 @@ namespace comfortable {
         render : function(cell) {
           if (!renderIsEditor) {
             labelRenderer.setLabel(opts.labelFunction(cell.value, cell) );
-            if (opts.dataType == 'number') {
+            if (!cell.textAlign && opts.dataType == 'number') {
               td.$el.style.textAlign = 'right';
             }
           } else {
