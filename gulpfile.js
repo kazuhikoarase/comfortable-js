@@ -1,6 +1,3 @@
-//
-// gulpfile for comfortable
-//
 
 const del = require('del');
 const gulp = require('gulp');
