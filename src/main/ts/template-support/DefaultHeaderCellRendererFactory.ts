@@ -84,8 +84,8 @@ namespace comfortable {
             style : filterLabelStyle, props : { textContent : label } })
         ], { attrs : { 'class' : '${prefix}-clickable-op' }, on : {
           mousedown : function(event) { event.preventDefault(); },
-          click : function() { dialog.trigger('sortclick',
-              { label : label }); }
+          click : function() {
+            flDialog.trigger('sortclick', { label : label }); }
         } })
       };
     };
@@ -93,7 +93,7 @@ namespace comfortable {
     var sortAscButton = createSortButton(messages.SORT_ASC);
     var sortDescButton = createSortButton(messages.SORT_DESC);
 
-    var dialog = util.extend(ui.createDialog([
+    var flDialog = util.extend(ui.createDialog([
       // sort
       sortAscButton.$el,
       sortDescButton.$el,
@@ -103,11 +103,11 @@ namespace comfortable {
           { marginTop : '4px', display : 'inline-block', float : 'right' } },
         [
           ui.createButton(messages.OK, function() {
-            dialog.dispose();
-            dialog.trigger('applyfilter');
+            flDialog.dispose();
+            flDialog.trigger('applyfilter');
           }),
           ui.createButton(messages.CANCEL, function() {
-            dialog.dispose();
+            flDialog.dispose();
           })
         ])
     ]), opts).on('sortclick', function(event : Event, detail : any) {
@@ -131,7 +131,7 @@ namespace comfortable {
 
     } ).trigger('sortchange');
 
-    return dialog;
+    return flDialog;
   };
 
   var createFilterButton = function() : FilterButton {
@@ -202,12 +202,6 @@ namespace comfortable {
 
     return function(td) : TableCellRenderer {
 
-      var labelRenderer = createMultiLineLabelRenderer(td.$el);
-
-      var tableModel : TemplateTableModel = <any>td.tableModel;
-      var filterButton : FilterButton = null;
-      var dialog : FilterDialog = null;
-
       var showFilterDialog = function() : FilterDialog {
 
         var dataField = filterButton.cell.dataField;
@@ -219,12 +213,12 @@ namespace comfortable {
         }, opts);
 
         var filterUI = filter.createUI(
-            () => dialog,
+            () => flDialog,
             <FilterDialogOptions>opts,
             tableModel, filterButton.cell);
         filterUI.setState(filter.getState() );
 
-        var dialog : any = createFilterDialog(
+        var flDialog : any = createFilterDialog(
             <FilterDialogOptions>opts, filterUI.$el
           ).on('applysort', function() {
             tableModel.sort = this.sortOrder?
@@ -236,11 +230,17 @@ namespace comfortable {
           });
 
         var off = util.offset(td.$el);
-        dialog.$el.style.left = off.left + 'px',
-        dialog.$el.style.top = (off.top + td.$el.offsetHeight) + 'px';
-        dialog.show();
-        return dialog;
+        flDialog.$el.style.left = off.left + 'px',
+        flDialog.$el.style.top = (off.top + td.$el.offsetHeight) + 'px';
+        flDialog.show();
+        return flDialog;
       };
+
+      var labelRenderer = createMultiLineLabelRenderer(td.$el);
+
+      var tableModel : TemplateTableModel = <any>td.tableModel;
+      var filterButton : FilterButton = null;
+      var dialog : FilterDialog = null;
 
       return {
         render : function(cell) {

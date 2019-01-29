@@ -30,14 +30,24 @@ namespace comfortable.i18n {
     SELECT_BLANK : string;
     SELECT_ALL : string;
     SEARCH : string;
+    CLEAR_FILTER_FROM : string;
+    TEXT_FILTERS : string;
     NUMBER_FILTERS : string;
     OP_LAYOUT : string;
+    AND : string;
+    OR : string;
     EQUALS : string;
     NOT_EQUALS : string;
     GREATER_THAN : string;
     GREATER_THAN_OR_EQUALS : string;
     LESS_THAN : string;
     LESS_THAN_OR_EQUALS : string;
+    STARTS_WITH : string;
+    NOT_STARTS_WITH : string;
+    ENDS_WITH : string;
+    NOT_ENDS_WITH : string;
+    CONTAINS : string;
+    NOT_CONTAINS : string;
   }
 
   export var getInstance = function(lang : string) {

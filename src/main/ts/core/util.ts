@@ -234,6 +234,18 @@ namespace comfortable {
       return Math.max(min2, Math.min(Math.round(val2), max2) );
     },
 
+    trimRe : /^[\s\u3000]+|[\s\u3000]+$/g,
+    trim : function(value : string) {
+      return value.replace(util.trimRe, '');
+    },
+
+    format : function(msg : string, ...args : any[]) {
+      for (var i = 0; i < args.length; i += 1) {
+        msg = msg.replace(new RegExp('\\{' + i + '\\}'), '' + args[i]);
+      }
+      return msg;
+    },
+    
     // num utils
 
     numRe : /^([\+\-]?)([0-9]*)(\.[0-9]*)?$/,

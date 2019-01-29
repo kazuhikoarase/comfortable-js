@@ -30,14 +30,24 @@ namespace comfortable.i18n {
       SELECT_BLANK : '(Space)',
       SELECT_ALL : '(Select All)',
       SEARCH : 'Search',
+      CLEAR_FILTER_FROM : 'Clear Filter From "{0}"',
+      TEXT_FILTERS : 'Text Filters',
       NUMBER_FILTERS : 'Number Filters',
       OP_LAYOUT : 'L',
-      EQUALS : 'equals',
-      NOT_EQUALS : 'not equals',
-      GREATER_THAN : 'greater than',
-      GREATER_THAN_OR_EQUALS : 'greater than or equals',
-      LESS_THAN : 'less than',
-      LESS_THAN_OR_EQUALS : 'less than or equals'
+      AND : 'AND',
+      OR : 'OR',
+      EQUALS : 'Equals',
+      NOT_EQUALS : 'Not Equals',
+      GREATER_THAN : 'Greater Than',
+      GREATER_THAN_OR_EQUALS : 'Greater Than or Equals',
+      LESS_THAN : 'Less Than',
+      LESS_THAN_OR_EQUALS : 'Less Than or Equals',
+      STARTS_WITH : 'Starts With',
+      NOT_STARTS_WITH : 'Not Starts With',
+      ENDS_WITH : 'Ends With',
+      NOT_ENDS_WITH : 'Not Ends With',
+      CONTAINS : 'Contains',
+      NOT_CONTAINS : 'Not Contains'
     }
   };
 

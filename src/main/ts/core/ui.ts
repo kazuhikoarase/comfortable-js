@@ -30,6 +30,7 @@ namespace comfortable {
       return util.createElement('button',{
         props : { textContent : label },
         attrs : { 'class' : '${prefix}-button' },
+        style : { verticalAlign : 'top' },
         on : { mousedown : function(event : Event) {
           event.preventDefault();
         }, click : function(event : Event) { action(event); } } });

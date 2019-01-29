@@ -50,8 +50,6 @@ namespace comfortable {
     }
     if (comparator) {
       filterValues.sort(comparator);
-    } else {
-      filterValues.sort();
     }
     // blank is always last.
     if (exists['']) {
@@ -109,6 +107,37 @@ namespace comfortable {
     var s : any = {};
     l.forEach(function(v) { s[v] = true; });
     return s;
+  };
+
+  var operators = {
+    EQUALS : 'eq',
+    NOT_EQUALS : 'ne',
+    GREATER_THAN : 'gt',
+    GREATER_THAN_OR_EQUALS : 'ge',
+    LESS_THAN : 'lt',
+    LESS_THAN_OR_EQUALS : 'le',
+    STARTS_WITH : 'sw',
+    NOT_STARTS_WITH : 'nsw',
+    ENDS_WITH : 'ew',
+    NOT_ENDS_WITH : 'new',
+    CONTAINS : 'ct',
+    NOT_CONTAINS : 'nct',
+  };
+
+  var activeCustomFilter = function(customFilter : any) {
+    return customFilter.op1 && customFilter.const1 ||
+        customFilter.op2 && customFilter.const2
+  };
+
+  var createDefaultCustomFilter = function() {
+    return {
+      op : 'and', // 'and' or 'or'
+      op1 : '',
+      const1 : '',
+      op2 : '',
+      const2 : '',
+      dataType : ''
+    };
   };
 
   export class DefaultFilter implements Filter {
@@ -244,7 +273,38 @@ namespace comfortable {
         filterItemList.invalidate();
       };
 
-      var customFilterButton = function(filterTitle : string) {
+      //---------------------------------------------------------
+      // custom filter
+
+      var customFilter = createDefaultCustomFilter();
+
+      var createClearButton = function() {
+        var checkbox = createCheckbox();
+        util.extend(checkbox.$el.style,
+          { border : 'none', verticalAlign : 'middle' });
+        checkbox.setChecked(false);
+        var label = util.createElement('span', {
+              attrs : { 'class' : '${prefix}-clickable-op' },
+              style : filterLabelStyle,
+              props : { textContent :
+                util.format(messages.CLEAR_FILTER_FROM, (<any>cell).label) }
+            } );
+        return {
+          $el : util.createElement('div', [ checkbox.$el, label ],
+            { on : {
+                click : function(event) {
+                  (<any>dialog() ).dispose();
+                  rejects = {};
+                  customFilter = createDefaultCustomFilter();
+                  dialog().trigger('applyfilter');
+                }
+              }
+            }),
+          checkbox : checkbox
+        };
+      };
+
+      var createFilterButton = function(filterTitle : string) {
         var checkbox = createCheckbox();
         util.extend(checkbox.$el.style,
           { border : 'none', verticalAlign : 'middle' });
@@ -262,78 +322,124 @@ namespace comfortable {
                   showFilterDialog(filterTitle);
                 }
               }
-            })
+            }),
+          checkbox : checkbox
         };
-      }(messages.NUMBER_FILTERS);
+      };
 
-      var showFilterDialog = function(filterTitle : string) {
-        // TODO
-        var opOpts = [
-          { value : '', label : '' },
-          { value : 'eq', label : messages.EQUALS },
-          { value : 'ne', label : messages.NOT_EQUALS },
-          { value : 'gt', label : messages.GREATER_THAN },
-          { value : 'ge', label : messages.GREATER_THAN_OR_EQUALS },
-          { value : 'lt', label : messages.LESS_THAN },
-          { value : 'Le', label : messages.LESS_THAN_OR_EQUALS }
-        ];
-        var createOpUI = function() {
-          var op = util.createElement('select',
-            opOpts.map(function(item) {
+      var showFilterDialog = function(title : string) {
+        var optMap = function(k : string) {
+          return { value : (<any>operators)[k], label : (<any>messages)[k] };
+        };
+        var opOpts : any[] = [ { value : '', label : '' } ];
+        opOpts = opOpts.concat([
+          'EQUALS',
+          'NOT_EQUALS',
+          'GREATER_THAN',
+          'GREATER_THAN_OR_EQUALS',
+          'LESS_THAN',
+          'LESS_THAN_OR_EQUALS'].map(optMap) );
+        if (dataType == 'string') {
+          opOpts = opOpts.concat([
+            'STARTS_WITH',
+            'NOT_STARTS_WITH',
+            'ENDS_WITH',
+            'NOT_ENDS_WITH',
+            'CONTAINS',
+            'NOT_CONTAINS'].map(optMap) );
+        }
+        var createOpUI = function(op : string, value : string) {
+          var sel :any = util.createElement('select',
+            opOpts.map(function(opOpt) {
               return util.createElement('option', {
-                props : { textContent : item.label,
-                    value : item.value } });
+                props : { textContent : opOpt.label,
+                    value : opOpt.value,
+                    selected : op == opOpt.value } });
             }) );
-          var tx = util.createElement('input',
+          var txt : any = util.createElement('input',
             { attrs : { type : 'text' },
-              style : { width : '200px' }  } );
+              style : { width : '200px' },
+              props : { value : sel.value? value : '' } } );
           var opBody = util.createElement('div');
           if (messages.OP_LAYOUT == 'L') {
-            opBody.appendChild(op);
+            opBody.appendChild(sel);
+            txt.style.marginLeft = '2px';
           }
-          opBody.appendChild(tx);
+          opBody.appendChild(txt);
           if (messages.OP_LAYOUT == 'R') {
-            opBody.appendChild(op);
+            txt.style.marginRight = '2px';
+            opBody.appendChild(sel);
           }
-          return opBody;
+          return { $el : opBody, sel : sel, txt : txt };
         };
-        var createRadio = function(label : string) {
-          var radio = util.createElement('input',
-            { attrs : { type : 'radio' } });
+
+        var updateRadios = function() {
+          customFilter.op = customFilter.op || 'and';
+          rd1.radio.checked = rd1.radio.value == customFilter.op;
+          rd2.radio.checked = rd2.radio.value == customFilter.op;
+        };
+        var createRadio = function(value : string, label : string) {
+          var radio : any = util.createElement('input',
+            { attrs : { type : 'radio' }, props : { value : value },
+              on : { click : function() {
+                customFilter.op = value;
+                updateRadios();
+              } } });
           var radioBody = util.createElement('label',
             [ radio, <any>document.createTextNode(label) ]);
-          return { $el : radioBody };
+          return { $el : radioBody, radio : radio };
         };
-        var rd1 = createRadio('and');
-        var rd2 = createRadio('or');
-        var cdBody = util.createElement('div', [ rd1.$el, rd2.$el ]);
-        var op1 = createOpUI();
-        var op2 = createOpUI();
-        var dialog = ui.createDialog([
-          util.createElement('div',
-            { props : { textContent : filterTitle } }),
-          op1, cdBody, op2,
+
+        var rd1 = createRadio('and', messages.AND);
+        var rd2 = createRadio('or', messages.OR);
+        var rdGrp = util.createElement('div', [ rd1.$el, rd2.$el ]);
+        updateRadios();
+
+        var op1 = createOpUI(customFilter.op1, customFilter.const1);
+        var op2 = createOpUI(customFilter.op2, customFilter.const2);
+
+        var cfDialog = ui.createDialog([
+          util.createElement('div', { props : {
+              textContent : title + ' - ' + (<any>cell).label },
+            style : { margin : '2px' } }),
+          op1.$el, rdGrp, op2.$el,
           util.createElement('div',
             { style : { textAlign : 'right' } }, [
             ui.createButton(messages.OK, (event)=>{
-              dialog.dispose();
+              var flt = function(val : string) : string {
+                return util.toNarrowNumber(util.trim(val) );
+              };
+              customFilter.op1 = op1.sel.value;
+              customFilter.const1 = customFilter.op1? flt(op1.txt.value) : '';
+              customFilter.op2 = op2.sel.value;
+              customFilter.const2 = customFilter.op2? flt(op2.txt.value) : '';
+              cfDialog.dispose();
+              dialog().trigger('applyfilter');
             }),
             ui.createButton(messages.CANCEL, (event)=>{
-              dialog.dispose();
+              cfDialog.dispose();
             })
           ])
         ]).on('beforeshow', function() {
           var left = (window.innerWidth -
-                        dialog.$el.offsetWidth) / 2;
+                        cfDialog.$el.offsetWidth) / 2;
           var top = (window.innerHeight -
-                        dialog.$el.offsetHeight) / 2;
-          dialog.$el.style.left = left + 'px';
-          dialog.$el.style.top = top + 'px';
+                        cfDialog.$el.offsetHeight) / 2;
+          cfDialog.$el.style.left = left + 'px';
+          cfDialog.$el.style.top = top + 'px';
         });
 
-        dialog.show();
+        cfDialog.show();
       };
-      
+
+      var dataType = (<any>cell).dataType || 'string';
+      var customFilterButton = createFilterButton(dataType == 'number'?
+        messages.NUMBER_FILTERS : messages.TEXT_FILTERS);
+
+      if (!(dataType == 'string' || dataType == 'number') ) {
+        customFilterButton.$el.style.display = 'none';
+      }
+
       return {
         setState : (state : any) => {
           rejects = listToSet(state.rejects);
@@ -343,12 +449,20 @@ namespace comfortable {
             }
           });
           filterchange();
+          customFilter = state.customFilter;
+          customFilterButton.checkbox.setChecked(
+            activeCustomFilter(customFilter) );
         },
         getState : () => {
-          return { rejects : setToList(rejects) };
+          customFilter.dataType = dataType;
+          return {
+            rejects : setToList(rejects),
+            customFilter : customFilter
+          };
         },
         $el : util.createElement('div', { props : {} }, [
-          /*customFilterButton.$el,*/
+          createClearButton().$el,
+          customFilterButton.$el,
           // search box
           util.createElement('input', { attrs : { type : 'text',
               placeHolder: messages.SEARCH },
@@ -372,22 +486,130 @@ namespace comfortable {
         enabled = true;
         break;
       }
+      if (activeCustomFilter(this.customFilter) ) {
+        enabled = true;
+      }
       return enabled;
     }
 
     public accept(value : any) {
-      return !this.rejects[value];
+      if (this.rejects[value]) {
+        return false;
+      } else if (!this.customFilterAccept(value) ) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    private createCustomFilterAccept(customFilter : any) :
+        (value : any) => boolean {
+
+      if (activeCustomFilter(customFilter) ) {
+
+        var creOp = function(op : string, constVal : any) :
+            (value : any) => boolean {
+
+          if (customFilter.dataType == 'number') {
+
+            // number
+
+            constVal = +constVal;
+
+            switch(op) {
+
+            case operators.EQUALS :
+              return (value : any) => +value == constVal;
+            case operators.NOT_EQUALS :
+              return (value : any) => !(+value == constVal);
+            case operators.GREATER_THAN :
+              return (value : any) => +value > constVal;
+            case operators.GREATER_THAN_OR_EQUALS :
+              return (value : any) => +value >= constVal;
+            case operators.LESS_THAN :
+              return (value : any) => +value < constVal;
+            case operators.LESS_THAN_OR_EQUALS :
+              return (value : any) => +value <= constVal;
+
+            default :
+              throw 'bad op:' + op;
+            }
+
+          } else {
+
+            // string
+
+            switch(op) {
+
+            case operators.EQUALS :
+              return (value : any) => value == constVal;
+            case operators.NOT_EQUALS :
+              return (value : any) => value != constVal;
+            case operators.GREATER_THAN :
+              return (value : any) => value > constVal;
+            case operators.GREATER_THAN_OR_EQUALS :
+              return (value : any) => value >= constVal;
+            case operators.LESS_THAN :
+              return (value : any) => value < constVal;
+            case operators.LESS_THAN_OR_EQUALS :
+              return (value : any) => value <= constVal;
+
+            case operators.STARTS_WITH :
+              return (value : any) => value.indexOf(constVal) == 0;
+            case operators.NOT_STARTS_WITH :
+              return (value : any) => value.indexOf(constVal) != 0;
+            case operators.ENDS_WITH :
+              return (value : any) => value && value.indexOf(constVal) ==
+                value.length - constVal.length;
+            case operators.NOT_ENDS_WITH :
+              return (value : any) => !(value && value.indexOf(constVal) ==
+                value.length - constVal.length);
+            case operators.CONTAINS :
+              return (value : any) => value.indexOf(constVal) != -1;
+            case operators.NOT_CONTAINS :
+              return (value : any) => value.indexOf(constVal) == -1;
+
+            default :
+              throw 'bad op:' + op;
+            }
+          }
+        };
+
+        var ops : any[] = [];
+        if (customFilter.const1) {
+          ops.push(creOp(customFilter.op1, customFilter.const1) );
+        }
+        if (customFilter.const2) {
+          ops.push(creOp(customFilter.op2, customFilter.const2) );
+        }
+
+        return ops.length == 1? ops[0] :
+          customFilter.op == 'and'?
+            (value : any) => ops[0](value) && ops[1](value) :
+            (value : any) => ops[0](value) || ops[1](value);
+
+      } else {
+        return () => true;
+      }
     }
 
     private rejects : any = {};
+    private customFilter : any = {};
+    private customFilterAccept : (value : any) => boolean = () => true;
 
     public setState(state : any) {
       this.rejects = listToSet(
         state && state.rejects? state.rejects : []);
+      this.customFilter = state.customFilter || {};
+      this.customFilterAccept =
+        this.createCustomFilterAccept(this.customFilter);
     }
 
     public getState() : any {
-      return { rejects : setToList(this.rejects) };
+      return {
+        rejects : setToList(this.rejects),
+        customFilter : this.customFilter
+      };
     }
   }
 }
