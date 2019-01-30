@@ -208,9 +208,9 @@ namespace comfortable {
         var sort = tableModel.sort;
         var filter = tableModel.getFilter(dataField);
 
-        opts = util.extend({
+        opts = util.extend(opts, {
           sortOrder : (sort && sort.dataField == dataField)? sort.order : null
-        }, opts);
+        });
 
         var filterUI = filter.createUI(
             () => flDialog,

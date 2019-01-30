@@ -224,10 +224,10 @@ namespace comfortable {
     var mark = {
       $el : util.createSVGElement('svg', {
         style : { position : 'absolute', right : '0px', top : '0px'},
-        attrs : { width : '' + size, height : '' + size } }, [
+          attrs : { width : '' + size, height : '' + size,
+        'class' : '${prefix}-tooltip-corner' } }, [
         util.createSVGElement('path', {
-          attrs : { d : 'M0 0L' + size + ' 0L' + size + ' ' + size + 'Z' },
-          style : { stroke : 'none', fill : 'red' } 
+          attrs : { d : 'M0 0L' + size + ' 0L' + size + ' ' + size + 'Z' }
         })
       ]),
       text : '',
@@ -248,7 +248,7 @@ namespace comfortable {
 
     var box = util.createElement('div', {
       style : { position : 'absolute' },
-      attrs : { 'class' : '${prefix}-tooltip' } });
+      attrs : { 'class' : '${prefix}-tooltip-box' } });
     var bar = util.createSVGElement('svg', {
         style : { position : 'absolute' },
         attrs : { width : '' + barW, height : '' + barH } },
@@ -262,7 +262,9 @@ namespace comfortable {
     bar.style.fill = 'none';
 
     var off = util.offset(td.$el);
-    box.textContent = text;
+    //box.textContent = text;
+    createMultiLineLabelRenderer(box).setLabel(text);
+
     box.style.left = (off.left + td.$el.offsetWidth + barW - 1) + 'px';
     box.style.top = (off.top - barH + 1) + 'px';
     bar.style.left = (off.left + td.$el.offsetWidth) + 'px';

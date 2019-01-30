@@ -421,12 +421,12 @@ namespace comfortable {
             })
           ])
         ]).on('beforeshow', function() {
-          var left = (window.innerWidth -
-                        cfDialog.$el.offsetWidth) / 2;
-          var top = (window.innerHeight -
-                        cfDialog.$el.offsetHeight) / 2;
-          cfDialog.$el.style.left = left + 'px';
-          cfDialog.$el.style.top = top + 'px';
+          var left = document.documentElement.scrollLeft +
+            ( (window.innerWidth - this.$el.offsetWidth) / 2 );
+          var top = document.documentElement.scrollTop +
+            ( (window.innerHeight - this.$el.offsetHeight) / 2 );
+          this.$el.style.left = left + 'px';
+          this.$el.style.top = top + 'px';
         });
 
         cfDialog.show();

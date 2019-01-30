@@ -63,6 +63,7 @@ namespace comfortable {
     row : number;
     col : number;
     value : any;
+    tooltip? : string;
   }
 
   export interface TableModel extends EventTarget {
@@ -82,6 +83,7 @@ namespace comfortable {
     getLineRowAt : (row : number) => any;
     getLineRowCountAt : (row : number) => number;
     getValueAt : (row : number, col : number) => any;
+    getTooltipAt : (row : number, col : number) => string;
     getCellStyleAt : (row : number, col : number) => TableCellStyle;
     getCellRendererFactoryAt : (row : number, col : number) => TableCellRendererFactory;
     getCellWidthAt : (col : number) => number;

@@ -54,7 +54,12 @@ SELECT.ctj-editor {
   background-color : transparent;
 }
 
-.ctj-tooltip {
+.ctj-tooltip-corner {
+  stroke : none;
+  fill : #ff0000;
+}
+
+.ctj-tooltip-box {
   padding : 2px 4px;
   background-color : #ffffcc;
   border : 1px solid #000000;

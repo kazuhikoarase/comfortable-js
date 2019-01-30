@@ -35,14 +35,17 @@ namespace comfortable {
     public getLineRowAt(row : number) { return row; }
     public getLineRowCountAt(row : number) { return this.getRowCount(); }
     public getValueAt(row : number, col : number) { return row + ',' + col; }
+    public getTooltipAt(row : number, col : number) { return ''; }
     public getCellStyleAt(row : number, col : number) { return {}; }
     public getCellRendererFactoryAt(row : number, col : number) { return this.defaultCellRendererFactory; }
     public getCellWidthAt(col : number) { return this.defaultCellWidth; }
     public getCellHeightAt(row : number) { return this.defaultCellHeight; }
     public getCellAt(row : number, col : number) {
       return util.extend({
-          row : row, col : col, value : this.getValueAt(row, col) },
-          this.defaultCellStyle, this.getCellStyleAt(row, col) );
+          row : row, col : col,
+          value : this.getValueAt(row, col),
+          tooltip : this.getTooltipAt(row, col)
+        }, this.defaultCellStyle, this.getCellStyleAt(row, col) );
     }
     public checkSpaned(row : number, col : number) {
       var minRow = Math.max(0, row - this.maxRowSpan);

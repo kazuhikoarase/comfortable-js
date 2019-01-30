@@ -660,6 +660,18 @@ namespace comfortable {
           return typeof value != 'undefined'? value : '';
         }
       }
+      public tooltipSuffix = 'Tooltip';
+      public getTooltipAt(row : number, col : number) : any {
+        var orderedCol = this.getOrderedColumnIndexAt(col);
+        if (row < headLength || row >= this.getRowCount() - footLength) {
+          return '';
+        } else {
+          var itemIndex = this.getItemIndexAt(row, col);
+          var value = this.getItemAt(itemIndex.row)
+            [itemIndex.col + this.tooltipSuffix];
+          return typeof value != 'undefined'? value : '';
+        }
+      }
       public setTableState(tableState : TemplateTableState) {
 
         tableState = JSON.parse(JSON.stringify(tableState) );
