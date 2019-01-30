@@ -46,25 +46,25 @@ gulp.task('build-main', function() {
 gulp.task('concat-main-css', function() {
   return gulp.src(mainCssSrc)
     .pipe(order([ '**/*.css' ]) )
-    .pipe(concat(targetName + '.css') )
+    .pipe(concat(`${targetName}.css`) )
     .pipe(gulp.dest(`${build}/`) );
 });
 
-gulp.task('build', gulp.series('build-main', 'concat-main-css') );
-
-gulp.task('compress', gulp.series('build', function() {
+gulp.task('compress-main', gulp.series('build-main', function() {
   return gulp.src(`${build}/${targetName}.js`)
     .pipe(uglify({ output : { ascii_only : true } }) )
     .pipe(rename({ suffix: '.min' }) )
     .pipe(gulp.dest(`${build}/`) );
 }) );
 
+gulp.task('build', gulp.series('compress-main', 'concat-main-css') );
+
 gulp.task('watch', function() {
   var src = mainTsSrc.concat(mainCssSrc);
-  gulp.watch(src, gulp.series('compress') )
+  gulp.watch(src, gulp.series('build') )
     .on('change', function(path) {
       console.log(path);
     });
 });
 
-gulp.task('default', gulp.series('clean', 'compress') );
+gulp.task('default', gulp.series('clean', 'build') );
