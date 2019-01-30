@@ -90,6 +90,7 @@ var tableFromTemplate = function(targetId) {
     for (var i = 0; i < 1000; i += 1) {
       items.push({
         myData1 : 'Data' + i,
+        myData1Tooltip : (i % 3 == 0)? 'Tooltip for Data' + i : '',
         myData2 : options[i % options.length].grpCd,
         myData3 : '',
         myData4 : '' + i,

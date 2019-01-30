@@ -58,6 +58,7 @@ declare namespace comfortable {
         row: number;
         col: number;
         value: any;
+        tooltip?: string;
     }
     interface TableModel extends EventTarget {
         defaultCellWidth: number;
@@ -76,6 +77,7 @@ declare namespace comfortable {
         getLineRowAt: (row: number) => any;
         getLineRowCountAt: (row: number) => number;
         getValueAt: (row: number, col: number) => any;
+        getTooltipAt: (row: number, col: number) => string;
         getCellStyleAt: (row: number, col: number) => TableCellStyle;
         getCellRendererFactoryAt: (row: number, col: number) => TableCellRendererFactory;
         getCellWidthAt: (col: number) => number;
@@ -220,6 +222,25 @@ declare namespace comfortable.i18n {
         LOCK_COLUMN: string;
         SELECT_BLANK: string;
         SELECT_ALL: string;
+        SEARCH: string;
+        CLEAR_FILTER_FROM: string;
+        TEXT_FILTERS: string;
+        NUMBER_FILTERS: string;
+        OP_LAYOUT: string;
+        AND: string;
+        OR: string;
+        EQUALS: string;
+        NOT_EQUALS: string;
+        GREATER_THAN: string;
+        GREATER_THAN_OR_EQUALS: string;
+        LESS_THAN: string;
+        LESS_THAN_OR_EQUALS: string;
+        STARTS_WITH: string;
+        NOT_STARTS_WITH: string;
+        ENDS_WITH: string;
+        NOT_ENDS_WITH: string;
+        CONTAINS: string;
+        NOT_CONTAINS: string;
     }
     var getInstance: (lang: string) => I18N;
     var getMessages: () => Messages;
@@ -345,9 +366,22 @@ declare namespace comfortable {
         action?: (event?: Event) => void;
         children?: () => MenuItem[];
     }
+    interface CheckBox {
+        $el: HTMLElement;
+        checked: boolean;
+        setIncomplete: (incomplete: boolean) => void;
+        setChecked: (checked: boolean) => void;
+        isChecked: () => boolean;
+    }
+    interface Dialog extends EventTarget {
+        $el: HTMLElement;
+        show: () => void;
+        dispose: () => void;
+    }
     var ui: {
         createButton: (label: string, action: (event: Event) => void) => HTMLElement;
-        createDialog: (children: HTMLElement[]) => any;
+        createCheckbox: () => CheckBox;
+        createDialog: (children: HTMLElement[]) => Dialog;
         showMenu: (left: number, top: number, menuItems: MenuItem[]) => Menu;
     };
 }
@@ -409,6 +443,9 @@ declare namespace comfortable {
         moveSublist: (list: any[], from: number, length: number, to: number) => any[];
         getCellId: (row: number, col: number) => string;
         translate: (val1: number, min1: number, max1: number, min2: number, max2: number, log?: string) => number;
+        trimRe: RegExp;
+        trim: (value: string) => string;
+        format: (msg: string, ...args: any[]) => string;
         numRe: RegExp;
         formatNumber: (value: string, digits?: number, s1?: string, s2?: string) => string;
         toNarrowNumber: (value: string) => string;
@@ -466,7 +503,10 @@ declare namespace comfortable {
         enableLockColumn: boolean;
         defaultLockColumn: number;
         setLockLeft: (lockLeft: number) => void;
-        filterContext: FilterContext;
+        setLockRight: (lockLeft: number) => void;
+        sort: Sort;
+        filterFactory: () => Filter;
+        getFilter: (dataField: string) => Filter;
         defaultHeaderCellRendererFactory: TableCellRendererFactory;
         headerCells: {
             [dataField: string]: TableTemplateCellStyle;
@@ -498,13 +538,9 @@ declare namespace comfortable {
             height: number;
         }[];
         hiddenColumns: number[];
-        filtered: boolean;
-        sort: {
-            dataField: string;
-            sortOrder: string;
-        };
+        sort: Sort;
         filters: {
-            [dataField: string]: string[];
+            [dataField: string]: any;
         };
         orderedColumnIndices: number[];
     }
@@ -512,17 +548,21 @@ declare namespace comfortable {
         dataField?: string;
         comparator?: Comparator;
     }
-    type Rejects = {
-        [value: string]: boolean;
-    };
-    interface FilterContext {
-        sort?: {
-            dataField: string;
-            sortOrder: string;
-        };
-        filters: {
-            [dataField: string]: Rejects;
-        };
+    interface FilterUI {
+        $el: HTMLElement;
+        setState: (state: any) => void;
+        getState: () => any;
+    }
+    interface Filter {
+        createUI: (dialog: () => EventTarget, opts: FilterDialogOptions, tableModel: TemplateTableModel, cell: TemplateTableCell) => FilterUI;
+        enabled: () => boolean;
+        accept: (value: any) => boolean;
+        setState: (state: any) => void;
+        getState: () => any;
+    }
+    interface Sort {
+        dataField: string;
+        order: string;
     }
     interface TemplateTable extends Table {
     }
@@ -538,9 +578,39 @@ declare namespace comfortable {
  *  http://www.opensource.org/licenses/mit-license.php
  */
 declare namespace comfortable {
+    class DefaultFilter implements Filter {
+        createUI(dialog: () => EventTarget, opts: FilterDialogOptions, tableModel: TemplateTableModel, cell: TemplateTableCell): FilterUI;
+        enabled(): boolean;
+        accept(value: any): boolean;
+        private createCustomFilterAccept;
+        private rejects;
+        private customFilter;
+        private customFilterAccept;
+        setState(state: any): void;
+        getState(): any;
+    }
+}
+/*!
+ * comfortable
+ *
+ * Copyright (c) 2018 Kazuhiko Arase
+ *
+ * URL: https://github.com/kazuhikoarase/comfortable-js/
+ *
+ * Licensed under the MIT license:
+ *  http://www.opensource.org/licenses/mit-license.php
+ */
+declare namespace comfortable {
+    interface FilterDialogOptions extends CellRendererFactoryOpts {
+        sortOrder: string;
+        filterState: any;
+    }
     var SortOrder: {
         ASC: string;
         DESC: string;
+    };
+    var filterLabelStyle: {
+        [k: string]: string;
     };
     var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
 }
