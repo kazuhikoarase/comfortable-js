@@ -440,6 +440,11 @@ namespace comfortable {
         customFilterButton.$el.style.display = 'none';
       }
 
+      // horizontal bar
+      var hr = () => util.createElement('div', { style : {
+        borderTop : '1px solid #000', opacity : '0.2', margin : '4px 0px'
+      } });
+
       return {
         setState : (state : any) => {
           rejects = listToSet(state.rejects);
@@ -461,8 +466,10 @@ namespace comfortable {
           };
         },
         $el : util.createElement('div', { props : {} }, [
+          hr(),
           createClearButton().$el,
           customFilterButton.$el,
+          hr(),
           // search box
           util.createElement('input', { attrs : { type : 'text',
               placeHolder: messages.SEARCH },

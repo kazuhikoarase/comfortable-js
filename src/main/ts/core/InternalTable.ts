@@ -313,6 +313,7 @@ namespace comfortable {
         td.tableModel = tableModel;
         td.$el.style.overflow = 'hidden';
         td.$el.style.whiteSpace = 'nowrap';
+        td.$el.style.position = 'relative';
       };
 
       for (var row = tableState.minRow; row <= tableState.maxRow; row += 1) {
