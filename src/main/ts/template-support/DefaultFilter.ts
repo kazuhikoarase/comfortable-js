@@ -407,7 +407,11 @@ namespace comfortable {
             { style : { textAlign : 'right' } }, [
             ui.createButton(messages.OK, (event)=>{
               var flt = function(val : string) : string {
-                return util.toNarrowNumber(util.trim(val) );
+                val = util.trim(val);
+                if (dataType == 'number') {
+                  val = util.toNarrowNumber(val);
+                }
+                return val;
               };
               customFilter.op1 = op1.sel.value;
               customFilter.const1 = customFilter.op1? flt(op1.txt.value) : '';
