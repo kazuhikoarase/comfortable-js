@@ -23,6 +23,20 @@ namespace comfortable {
     children? : () => MenuItem[];
   }
 
+  export interface CheckBox {
+    $el : HTMLElement;
+    checked : boolean;
+    setIncomplete : (incomplete : boolean) => void;
+    setChecked : (checked : boolean) => void;
+    isChecked : () => boolean;
+  }
+
+  export interface Dialog extends EventTarget {
+    $el : HTMLElement;
+    show : () => void;
+    dispose : () => void;
+  }
+
   export var ui = {
 
     createButton : function(
@@ -35,8 +49,47 @@ namespace comfortable {
           event.preventDefault();
         }, click : function(event : Event) { action(event); } } });
     },
+
+    // three state checkbox
+    createCheckbox : function() : CheckBox {
   
-    createDialog : function(children : HTMLElement[]) {
+      // fix for layout collapse by bootstrap.
+      var antiBsGlobals : { [k : string] : string } = {
+          verticalAlign :'baseline',
+          boxSizing : 'content-box',
+          lineHeight : '1' };
+  
+      var path = util.createSVGElement('path', { attrs : {
+          'class' : '${prefix}-checkbox-check',
+          d : 'M 2 5 L 5 9 L 10 3'
+        },
+        style : antiBsGlobals });
+      return {
+        $el : util.createElement('span', {
+          attrs : { 'class' : '${prefix}-checkbox-body' },
+          style : util.extend(antiBsGlobals, { display : 'inline-block',
+            width : '12px', height : '12px' }
+          )}, [
+            util.createSVGElement('svg', {
+              attrs : { width : '12', height : '12' },
+              style : antiBsGlobals }, [ path ])
+          ] ),
+        checked : true,
+        setIncomplete : function(incomplete) {
+          util.$(path).addClass(
+              '${prefix}-checkbox-incomplete-check', !incomplete);
+        },
+        setChecked : function(checked) {
+          this.checked = checked;
+          path.style.display = this.checked? '' : 'none';
+        },
+        isChecked : function() {
+          return this.checked;
+        }
+      };
+    },
+
+    createDialog : function(children : HTMLElement[]) : Dialog {
       var dialog = util.extend(new EventTargetImpl(), {
         $el : util.createElement('div', {
             attrs : { 'class' : '${prefix}-dialog' },

@@ -21,14 +21,6 @@ namespace comfortable {
     incomplete? : boolean;
   }
 
-  interface CheckBox {
-    $el : HTMLElement;
-    checked : boolean;
-    setIncomplete : (incomplete : boolean) => void;
-    setChecked : (checked : boolean) => void;
-    isChecked : () => boolean;
-  }
-
   var getFilterValues = function(
       tableModel : TemplateTableModel, dataField : string) {
     var comparator = tableModel.headerCells[dataField].comparator;
@@ -56,45 +48,6 @@ namespace comfortable {
       filterValues.push('');
     }
     return filterValues;
-  };
-
-  // filter checkbox
-  var createCheckbox = function() : CheckBox {
-
-    // fix for layout collapse by bootstrap.
-    var antiBsGlobals : { [k : string] : string } = {
-        verticalAlign :'baseline',
-        boxSizing : 'content-box',
-        lineHeight : '1' };
-
-    var path = util.createSVGElement('path', { attrs : {
-        'class' : '${prefix}-checkbox-check',
-        d : 'M 2 5 L 5 9 L 10 3'
-      },
-      style : antiBsGlobals });
-    return {
-      $el : util.createElement('span', {
-        attrs : { 'class' : '${prefix}-checkbox-body' },
-        style : util.extend(antiBsGlobals, { display : 'inline-block',
-          width : '12px', height : '12px' }
-        )}, [
-          util.createSVGElement('svg', {
-            attrs : { width : '12', height : '12' },
-            style : antiBsGlobals }, [ path ])
-        ] ),
-      checked : true,
-      setIncomplete : function(incomplete) {
-        util.$(path).addClass(
-            '${prefix}-checkbox-incomplete-check', !incomplete);
-      },
-      setChecked : function(checked) {
-        this.checked = checked;
-        path.style.display = this.checked? '' : 'none';
-      },
-      isChecked : function() {
-        return this.checked;
-      }
-    };
   };
 
   var setToList = function(s : any) : any[] {
@@ -170,7 +123,7 @@ namespace comfortable {
 
       class FilterItemCell implements ListCell {
         public checkbox = (() => {
-          var checkbox = createCheckbox();
+          var checkbox = ui.createCheckbox();
           checkbox.$el.style.verticalAlign = 'middle';
           return checkbox;
         })();
@@ -279,7 +232,7 @@ namespace comfortable {
       var customFilter = createDefaultCustomFilter();
 
       var createClearButton = function() {
-        var checkbox = createCheckbox();
+        var checkbox = ui.createCheckbox();
         util.extend(checkbox.$el.style,
           { border : 'none', verticalAlign : 'middle' });
         checkbox.setChecked(false);
@@ -305,7 +258,7 @@ namespace comfortable {
       };
 
       var createFilterButton = function(filterTitle : string) {
-        var checkbox = createCheckbox();
+        var checkbox = ui.createCheckbox();
         util.extend(checkbox.$el.style,
           { border : 'none', verticalAlign : 'middle' });
         checkbox.setChecked(false);
@@ -398,7 +351,7 @@ namespace comfortable {
         var op1 = createOpUI(customFilter.op1, customFilter.const1);
         var op2 = createOpUI(customFilter.op2, customFilter.const2);
 
-        var cfDialog = ui.createDialog([
+        var cfDialog = <Dialog>ui.createDialog([
           util.createElement('div', { props : {
               textContent : title + ' - ' + (<any>cell).label },
             style : { margin : '2px' } }),
