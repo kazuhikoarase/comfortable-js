@@ -1,0 +1,120 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="../lib/comfortable.css" />
+<script src="../lib/comfortable.js"></script>
+<style>
+</style>
+</head>
+<body>
+<script>
+
+var table = comfortable.fromTemplate({
+  thead: [
+    [
+      {
+        label: 'DateField'
+      }
+    ]
+  ],
+  tbody: [
+    [
+      {
+        factory: function(td) {
+
+          var $c = comfortable;
+
+          var textfield = $c.util.createElement('input', {
+            attrs : { type : 'text' },
+            style : { margin: '0px', flex: '1', width: '1px' },
+            on : {
+            }
+          });
+          var calIcon = $c.util.createElement('canvas', {
+            style : { verticalAlign: 'middle',  },
+            props : { width: '21', height: '21',
+               },
+            on : {
+              click : function(event) {
+              }
+            }
+          });
+          var ctx = calIcon.getContext('2d');
+          ctx.clearRect(0, 0, 21, 21);
+          ctx.fillStyle = '#333';
+          for (var x = 0; x < 21; x += 1) {
+            for (var y = 0; y < 21; y += 1) {
+              if (x % 4 == 0 || y % 4 == 0) {
+                ctx.fillRect(x, y, 1, 1);
+              }
+              var c = ~~(x / 4);
+              var r = ~~(y / 4);
+            }
+          }
+          var button = $c.util.createElement('span', {
+            style : { width: '25px', float:'right', display: 'inline-block',
+              lineHeight: '21px', textAlign: 'center' },
+            props : {  },
+            on : {
+              click : function(event) {
+              }
+            }
+          }, [ calIcon ]);
+          var body = $c.util.createElement('div', {
+            style : { display:'flex', width:'100%', height:'100%' },
+            on : {
+
+            }
+          }, [ textfield, button] );
+          td.$el.appendChild(body);
+
+          var flg = false;
+          return {
+            render : function(cell) {
+
+            },
+            beginEdit : function(cell) {
+
+              return {
+                focus : function() {
+                  textfield.focus();
+                },
+                endEdit : function() {
+                  textfield.blur();
+                  return { oldValue : '', newValue : '' };
+                }
+              };
+            },
+            dispose : function() {
+            }
+          };
+        }
+      }
+    ]
+  ]
+});
+
+// set border style.
+table.model.defaultCellStyle.borderRight = '1px solid silver';
+table.model.defaultCellStyle.borderBottom = '1px solid silver';
+table.$el.style.border = '1px solid silver';
+
+var items = [];
+for (var i = 0; i < 100; i += 1) {
+  items.push([ 0 ]);
+}
+table.model.items = items;
+
+// narrower
+table.$el.style.width = '200px';
+
+//request rendering.
+table.invalidate();
+
+document.body.appendChild(table.$el);
+
+</script>
+
+</body>
+</html>
