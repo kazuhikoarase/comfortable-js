@@ -47,7 +47,8 @@ namespace comfortable.i18n {
       ENDS_WITH : 'Ends With',
       NOT_ENDS_WITH : 'Not Ends With',
       CONTAINS : 'Contains',
-      NOT_CONTAINS : 'Not Contains'
+      NOT_CONTAINS : 'Not Contains',
+      WEEKDAYS : 'SU,MO,TU,WE,TH,FR,SA'
     }
   };
 

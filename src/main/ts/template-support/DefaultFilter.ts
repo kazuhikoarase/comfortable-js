@@ -351,7 +351,7 @@ namespace comfortable {
         var op1 = createOpUI(customFilter.op1, customFilter.const1);
         var op2 = createOpUI(customFilter.op2, customFilter.const2);
 
-        var cfDialog = <Dialog>ui.createDialog([
+        var cfDialog = <ui.Dialog>ui.createDialog([
           util.createElement('div', { props : {
               textContent : title + ' - ' + (<any>cell).label },
             style : { margin : '2px' } }),

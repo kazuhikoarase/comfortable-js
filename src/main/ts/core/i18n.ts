@@ -48,6 +48,7 @@ namespace comfortable.i18n {
     NOT_ENDS_WITH : string;
     CONTAINS : string;
     NOT_CONTAINS : string;
+    WEEKDAYS : string;
   }
 
   export var getInstance = function(lang : string) {

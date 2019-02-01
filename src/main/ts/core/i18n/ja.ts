@@ -47,7 +47,8 @@ namespace comfortable.i18n {
       ENDS_WITH : 'で終わる',
       NOT_ENDS_WITH : 'で終わらない',
       CONTAINS : 'を含む',
-      NOT_CONTAINS : 'を含まない'
+      NOT_CONTAINS : 'を含まない',
+      WEEKDAYS : '日,月,火,水,木,金,土'
     }
   };
 

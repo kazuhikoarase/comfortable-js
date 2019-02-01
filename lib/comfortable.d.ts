@@ -111,13 +111,13 @@ declare namespace comfortable {
     }
     interface CellRendererFactoryOpts {
         labelFunction?: (value: any, cell: EditorCell) => string;
-        createEditor?: () => CellEditor;
+        createEditor?: () => CellEditor<any>;
         renderIsEditor?: boolean;
         dataType?: string;
     }
     type EditorCell = TextEditorCell | CheckBoxCell | SelectBoxCell;
-    interface CellEditor {
-        $el: HTMLElement;
+    interface CellEditor<E> {
+        $el: E;
         beginEdit: (td: TdWrapper, cell: EditorCell) => void;
         focus: () => void;
         blur: () => void;
@@ -241,6 +241,7 @@ declare namespace comfortable.i18n {
         NOT_ENDS_WITH: string;
         CONTAINS: string;
         NOT_CONTAINS: string;
+        WEEKDAYS: string;
     }
     var getInstance: (lang: string) => I18N;
     var getMessages: () => Messages;
@@ -357,7 +358,7 @@ declare namespace comfortable {
  * Licensed under the MIT license:
  *  http://www.opensource.org/licenses/mit-license.php
  */
-declare namespace comfortable {
+declare namespace comfortable.ui {
     interface Menu {
         dispose: () => void;
     }
@@ -378,12 +379,12 @@ declare namespace comfortable {
         show: () => void;
         dispose: () => void;
     }
-    var ui: {
-        createButton: (label: string, action: (event: Event) => void) => HTMLElement;
-        createCheckbox: () => CheckBox;
-        createDialog: (children: HTMLElement[]) => Dialog;
-        showMenu: (left: number, top: number, menuItems: MenuItem[]) => Menu;
-    };
+    var createButton: (label: string, action: (event: Event) => void) => HTMLElement;
+    var createCheckbox: () => CheckBox;
+    var createDialog: (children: HTMLElement[]) => Dialog;
+    var showMenu: (left: number, top: number, menuItems: MenuItem[]) => Menu;
+    var createCalIcon: (r: number) => HTMLElement;
+    var createCalendar: (base: Date) => HTMLElement;
 }
 /*!
  * comfortable

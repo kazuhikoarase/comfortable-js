@@ -13,7 +13,7 @@ namespace comfortable {
 
   'use strict';
 
-  class TextEditor implements CellEditor {
+  class TextEditor implements CellEditor<HTMLInputElement> {
 
     private opts : TextEditorOptions;
     private valueType : string;
@@ -22,11 +22,9 @@ namespace comfortable {
       this.opts = opts;
     }
 
-    public $el = util.createElement('input', {
+    public $el = <HTMLInputElement>util.createElement('input', {
       attrs : { type : 'text', 'class' : '${prefix}-editor' }
     });
-
-    private _$el = <HTMLInputElement>this.$el;
 
     public beginEdit(td : TdWrapper, cell : TextEditorCell) {
       var cs = window.getComputedStyle(td.$el, null);
@@ -49,23 +47,23 @@ namespace comfortable {
     }
     public focus() {
       this.$el.focus();
-      this._$el.select();
+      this.$el.select();
     }
     public blur() {
       this.$el.blur();
     }
     public setValue(value : any) {
-      this._$el.value = value;
+      this.$el.value = value;
       this.valueType = typeof value;
     }
     public getValue() {
       if (this.opts.dataType == 'number') {
         var value = util.formatNumber(
-            util.toNarrowNumber(this._$el.value),
+            util.toNarrowNumber(this.$el.value),
             this.opts.decimalDigits, '');
         return this.valueType == 'number'? +value : value;
       }
-      return this._$el.value;
+      return this.$el.value;
     }
     public isValid() {
       if (this.opts.dataType == 'number') {
@@ -76,7 +74,7 @@ namespace comfortable {
     }
   }
 
-  class CheckBox implements CellEditor {
+  class CheckBox implements CellEditor<HTMLInputElement> {
 
     private opts : CheckBoxOptions;
     private booleanValues : any[] = null;
@@ -85,11 +83,9 @@ namespace comfortable {
       this.opts = opts;
     }
 
-    public $el = util.createElement('input', {
+    public $el = <HTMLInputElement>util.createElement('input', {
       attrs : { type : 'checkbox', 'class' : '${prefix}-editor' }
     });
-
-    private _$el = <HTMLInputElement>this.$el;
 
     public beginEdit(td : TdWrapper, cell : CheckBoxCell) {
       var cs = window.getComputedStyle(td.$el, null);
@@ -106,17 +102,17 @@ namespace comfortable {
       this.$el.blur();
     }
     public setValue(value : any) {
-      this._$el.checked = (value === this.booleanValues[1]);
+      this.$el.checked = (value === this.booleanValues[1]);
     }
     public getValue() {
-      return this.booleanValues[this._$el.checked? 1 : 0];
+      return this.booleanValues[this.$el.checked? 1 : 0];
     }
     public isValid() {
       return true;
     }
   }
 
-  class SelectBox implements CellEditor {
+  class SelectBox implements CellEditor<HTMLSelectElement> {
 
     private opts : SelectBoxOptions;
 
@@ -124,11 +120,9 @@ namespace comfortable {
       this.opts = opts;
     }
 
-    public $el = util.createElement('select', {
+    public $el = <HTMLSelectElement>util.createElement('select', {
       attrs : { 'class' : '${prefix}-editor' }
     });
-
-    private _$el = <HTMLSelectElement>this.$el;
 
     public beginEdit(td : TdWrapper, cell : SelectBoxCell) {
       var cs = window.getComputedStyle(td.$el, null);
@@ -175,10 +169,10 @@ namespace comfortable {
       this.$el.blur();
     }
     public setValue(value : any) {
-      this._$el.value = value;
+      this.$el.value = value;
     }
     public getValue() {
-      return this._$el.value;
+      return this.$el.value;
     }
     public isValid() {
       return true;
@@ -342,7 +336,7 @@ namespace comfortable {
     return function(td : TdWrapper) : TableCellRenderer {
 
       var labelRenderer = createMultiLineLabelRenderer(td.$el);
-      var editor : CellEditor = null;
+      var editor : CellEditor<any> = null;
       var oldValue : any = null;
 
       var tooltip : Tooltip = null;

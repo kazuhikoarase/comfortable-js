@@ -54,6 +54,38 @@ SELECT.ctj-editor {
   background-color : transparent;
 }
 
+.ctj-cal-button {
+border: 1px solid #f0f0f0;
+}
+.ctj-cal-button-symbol {
+  stroke: none;
+  fill: #666;
+}
+
+TABLE.ctj-calendar,
+TABLE.ctj-calendar TH,
+TABLE.ctj-calendar TD {
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+  padding: 1px 2px;
+  font-size: 0.9em;
+  cursor: default;
+}
+TABLE.ctj-calendar TD {
+  text-align: right;
+}
+TABLE.ctj-calendar TD:not(.ctj-this-month) {
+  color: #ccc;
+}
+
+TABLE.ctj-calendar TH.ctj-holiday,
+TABLE.ctj-calendar TD.ctj-holiday {
+  background-color: #fee;
+}
+TABLE.ctj-calendar TD.ctj-today {
+  color: #00f;
+}
+
 .ctj-tooltip-corner {
   stroke : none;
   fill : #ff0000;

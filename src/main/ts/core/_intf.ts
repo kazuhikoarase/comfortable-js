@@ -119,15 +119,15 @@ namespace comfortable {
 
   export interface CellRendererFactoryOpts {
     labelFunction? : (value : any, cell : EditorCell) => string;
-    createEditor? : () => CellEditor;
+    createEditor? : () => CellEditor<any>;
     renderIsEditor? : boolean;
     dataType? : string;
   }
 
   export type EditorCell = TextEditorCell|CheckBoxCell|SelectBoxCell;
 
-  export interface CellEditor {
-    $el : HTMLElement;
+  export interface CellEditor<E> {
+    $el : E;
     beginEdit : (td : TdWrapper, cell : EditorCell) => void;
     focus : () => void;
     blur : () => void;
