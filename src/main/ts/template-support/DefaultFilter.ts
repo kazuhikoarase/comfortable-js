@@ -116,8 +116,7 @@ namespace comfortable {
             index : i,
             label : (i > 0)? opts.labelFunction(value, cell) : value,
             value : value,
-            checked : false,
-            olor : false
+            checked : false
           };
         });
 

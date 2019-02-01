@@ -304,7 +304,8 @@ namespace comfortable {
     var bodyDataCells : any = {};
     template.tbody.forEach(function(tr) {
       tr.forEach(function(cell) {
-        if (typeof cell.dataField == 'string') {
+        if (typeof cell.dataField == 'string' &&
+            !bodyDataCells[cell.dataField]) {
           bodyDataCells[cell.dataField] = cell;
         }
       });

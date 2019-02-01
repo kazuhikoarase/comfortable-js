@@ -48,8 +48,8 @@ namespace comfortable {
     return className.replace(classNamePrefixRe, classNamePrefix);
   }
 
-  var wideNumChars = '０１２３４５６７８９＋－．，';
-  var narrowNumChars = '0123456789+-.,';
+  var wideNumChars = '０１２３４５６７８９＋－．，／';
+  var narrowNumChars = '0123456789+-.,/';
   if (wideNumChars.length != narrowNumChars.length) {
     throw wideNumChars + ',' + narrowNumChars;
   }
@@ -297,6 +297,47 @@ namespace comfortable {
         s += (index != -1)? narrowNumChars.charAt(index) : c;
       }
       return s;
+    },
+
+    fillLeftZero : function(s : string, digits : number) {
+      while (s.length < digits) { s = '0' + s; }
+      return s;
+    },
+
+    formatYM : function(year : number, month : number) : string {
+      return year + '/' + (month + 1);
+    },
+    /**
+     * format string(8)
+     */
+    formatDate : function(date : any) : string {
+      if (typeof date == 'string' && date.match(/^\d{8}$/) ) {
+        return date.substring(0, 4) +
+          '/' + date.substring(4, 6) +
+          '/' + date.substring(6, 8);
+      } else {
+        return '';
+      }
+    },
+    /**
+     * parse into string(8)
+     */
+    dateRe : /^(\d{4})\D(\d{1,2})\D(\d{1,2})$/,
+    parseDate : function(value : any) : string {
+      if (typeof value == 'number') {
+        value = '' + value;
+      }
+      if (typeof value == 'string') {
+        var mat = value.match(this.dateRe);
+        if (mat) {
+          value = new Date(+mat[1], +mat[2] - 1, +mat[3]);
+        } else {
+          return value;
+        }
+      }
+      return util.fillLeftZero('' + value.getFullYear(), 4) +
+          util.fillLeftZero('' + (value.getMonth() + 1), 2) +
+          util.fillLeftZero('' + value.getDate(), 2);
     }
   }
 

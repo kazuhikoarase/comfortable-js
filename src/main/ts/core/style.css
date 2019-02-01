@@ -77,7 +77,7 @@ TABLE.ctj-cal-table TH,
 TABLE.ctj-cal-table TD {
   border-collapse: collapse;
   border: 1px solid #ccc;
-  padding: 1px 2px;
+  padding: 2px;
 }
 TABLE.ctj-cal-table TD {
   text-align: right;
@@ -90,8 +90,13 @@ TABLE.ctj-cal-table TH.ctj-holiday,
 TABLE.ctj-cal-table TD.ctj-holiday {
   background-color: #fee;
 }
-TABLE.ctj-cal-table TD.ctj-today {
-  color: #00f;
+TABLE.ctj-cal-table TD.ctj-selected-date {
+  color: #fff;
+  background-color: #33f;
+}
+TABLE.ctj-cal-table TD.ctj-current-date {
+  color: #fff;
+  background-color: #333;
 }
 
 .ctj-tooltip-corner {

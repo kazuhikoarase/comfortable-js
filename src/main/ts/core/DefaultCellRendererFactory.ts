@@ -22,31 +22,144 @@ namespace comfortable {
 
     constructor(opts : TextEditorOptions) {
       this.opts = opts;
+
       this.textfield = <HTMLInputElement>util.createElement('input', {
         attrs : { type : 'text', 'class' : '${prefix}-editor' }
       });
+
       if (this.opts.dataType == 'date') {
-
-        this.textfield.style.flex = '1';
-
-        var button = util.createElement('span', {
-          style : { float:'right', display: 'inline-block', padding: '1px' },
-          props : {  },
-          on : {
-            click : function(event : any) {
-            }
-          }
-        }, [ ui.createCalIcon() ]);
-
-        this.$el = util.createElement('div', {
-          style : { display:'flex', width:'100%', height:'100%' },
-          on : {
-
-          }
-        }, [ this.textfield, button] );
+        this.$el = this.createDateField();
       } else {
         this.$el = this.textfield;
       }
+    }
+
+    private createDateField() {
+      var setSelectedDate = function(date : Date) {
+        this.textfield.value = util.formatDate(util.parseDate(date) );
+        this.textfield.select();
+      }.bind(this);
+      util.set(this.textfield, {
+        style : { flex: '1' },
+        on : { keydown : function(event) {
+          switch(event.keyCode) {
+          case 13: // Enter
+            if (cal) {
+              event.preventDefault();
+              event.stopPropagation();
+              if (cal) {
+                setSelectedDate(cal.getSelectedDate() );
+              }
+              hideCal();
+            }
+            break;
+          case 27: // ESC
+            if (cal) {
+              event.preventDefault();
+              event.stopPropagation();
+              hideCal();
+            }
+            break;
+          case 37: // Left
+            if (cal != null) {
+              event.preventDefault();
+              cal.rollDate(-1);
+            }
+            break;
+          case 38: // Up
+            if (cal != null) {
+              event.preventDefault();
+              cal.rollDate(-7);
+            }
+            break;
+          case 39: // Right
+            if (cal != null) {
+              event.preventDefault();
+              cal.rollDate(1);
+            }
+            break;
+          case 40: // Down
+            if (cal != null) {
+              event.preventDefault(); 
+              cal.rollDate(7);
+            } else {
+              event.preventDefault();
+              showCal();
+            }
+            break;
+          default:
+            break;
+          }
+        } }
+      });
+
+      var cal : any = null;
+
+      var mousedownHandler = function(event : any) {
+        if (cal && util.closest(event.target, { $el: cal.$el }) ) {
+        } else if (util.closest(event.target, { $el: button }) ) {
+        } else {
+          hideCal();
+        }
+      };
+      var showCal = function() {
+        if (cal) {
+          hideCal();
+        }
+        cal = ui.createCalendar(function() {
+              if (this.isValid() ) {
+                var value = this.getValue();
+                if (value) {
+                  return new Date(
+                    +value.substring(0, 4),
+                    +value.substring(4, 6) - 1,
+                    +value.substring(6, 8) );
+                }
+              }
+              return new Date();
+            }.bind(this)() )
+          .on('click', function(event : any, date : Date) {
+            setSelectedDate(date);
+            hideCal();
+          });
+        var off = util.offset(this.textfield);
+        util.set(cal.$el, { style: {
+          position: 'absolute',
+          left : off.left + 'px',
+          top : (off.top + this.textfield.offsetHeight) + 'px' } });
+        document.body.appendChild(cal.$el);
+        util.$(document).on('mousedown', mousedownHandler);
+      }.bind(this);
+      var hideCal = function() {
+        if (cal) {
+          document.body.removeChild(cal.$el);
+          util.$(document).off('mousedown', mousedownHandler);
+          cal = null;
+        }
+      };
+      var button = util.createElement('span', {
+        style : { float:'right', display: 'inline-block', padding: '1px' },
+        props : {  },
+        on : {
+          mousedown : function(event) {
+            event.preventDefault();
+          },
+          click : function(event) {
+            if (cal) {
+              hideCal();
+            } else {
+              showCal() ;
+            }
+          }
+        }
+      }, [ ui.createCalIcon(), ui.createSpacer() ]);
+
+      return util.createElement('div', {
+        style : { display: 'flex', width: '100%', height: '100%' },
+        on : {
+
+        }
+      }, [ this.textfield, button ] );
     }
 
     public setVisible(visible : boolean) {
@@ -84,6 +197,10 @@ namespace comfortable {
       this.textfield.blur();
     }
     public setValue(value : any) {
+      if (this.opts.dataType == 'number') {
+      } else if (this.opts.dataType == 'date') {
+        value = util.formatDate(value);
+      }
       this.textfield.value = value;
       this.valueType = typeof value;
     }
@@ -93,13 +210,17 @@ namespace comfortable {
             util.toNarrowNumber(this.textfield.value),
             this.opts.decimalDigits, '');
         return this.valueType == 'number'? +value : value;
+      } else if (this.opts.dataType == 'date') {
+        return util.parseDate(
+            util.toNarrowNumber(this.textfield.value) );
       }
       return this.textfield.value;
     }
     public isValid() {
       if (this.opts.dataType == 'number') {
-        return !!util.toNarrowNumber(
-          <string>this.getValue() ).match(util.numRe);
+        return !!('' + this.getValue() ).match(util.numRe);
+      } else if (this.opts.dataType == 'date') {
+        return !!('' + this.getValue() ).match(/^(\d{8})?$/);
       }
       return true;
     }
@@ -328,6 +449,10 @@ namespace comfortable {
         } else if (this.dataType == 'number') {
 
           return util.formatNumber(value, this.decimalDigits);
+
+        } else if (this.dataType == 'date') {
+
+          return util.formatDate(value);
 
         } else if (this.dataType == 'select-one') {
 

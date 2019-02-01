@@ -165,8 +165,10 @@ namespace comfortable.ui {
     return { dispose : dispose };
   };
 
-  var createCalTable = function(base : Date) {
+  var createCalTable = function(
+      year : number, month : number, current : Date, selected : Date) {
 
+    var base = new Date(year, month, 1);
     var weekdays = i18n.getMessages().WEEKDAYS.split(/,/g);
 
     var thead = util.createElement('thead');
@@ -196,11 +198,16 @@ namespace comfortable.ui {
         }
         if (date.getMonth() == base.getMonth() ) {
           className += ' ${prefix}-this-month';
-        }
-        if (date.getFullYear() == base.getFullYear() &&
-            date.getMonth() == base.getMonth() &&
-            date.getDate() == base.getDate() ) {
-          className += ' ${prefix}-today';
+          if (date.getFullYear() == selected.getFullYear() &&
+              date.getMonth() == selected.getMonth() &&
+              date.getDate() == selected.getDate() ) {
+            className += ' ${prefix}-selected-date';
+          }
+          if (date.getFullYear() == current.getFullYear() &&
+              date.getMonth() == current.getMonth() &&
+              date.getDate() == current.getDate() ) {
+            className += ' ${prefix}-current-date';
+          }
         }
         return util.createElement('td',
             { props: { textContent: '' + date.getDate() },
@@ -235,11 +242,16 @@ namespace comfortable.ui {
         ]);
   };
 
+  export var createSpacer = function() {
+    return util.createElement('span',{ style: { verticalAlign:'middle',
+        display:'inline-block', height: '100%' } });
+  };
+
   export var createCalIcon = function(r? : number) {
     r = r || 3;
     var w = r * 5 + 1;
     var calIcon = util.createElement('canvas', {
-      style : { verticalAlign: 'top' },
+      style : { verticalAlign: 'middle' },
       props : { width: '' + w, height: '' + w,
          },
       on : {
@@ -266,48 +278,73 @@ namespace comfortable.ui {
     return calIcon;
   };
 
-  export var createCalendar = function(base : Date) {
+  export var createCalendar = function(selectedDate : Date) {
 
-    base = base || new Date();
+    var displayDate : Date = null;
+    var setDisplayDate = function(date : Date) {
+      displayDate = new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+
+    var defaultSelected = selectedDate;
+    setDisplayDate(defaultSelected);
 
     var prev = createCalButton(true, function() {
-      base = new Date(base.getFullYear(), base.getMonth() - 1, 1);
-      update(base);
+      displayDate = new Date(displayDate.getFullYear(),
+        displayDate.getMonth() - 1, 1);
+      update();
     });
     var next = createCalButton(false, function() {
-      base = new Date(base.getFullYear(), base.getMonth() + 1, 1);
-      update(base);
+      displayDate = new Date(displayDate.getFullYear(),
+        displayDate.getMonth() + 1, 1);
+      update();
     });
 
     var title = util.createElement('span',
         { style: { flex: '1', textAlign: 'center' },
           on: { mousedown: function(event : any) { event.preventDefault(); },
             click: function() {
-              base = new Date();
-              update(base);
+              setDisplayDate(defaultSelected);
+              update();
             } } });
     var header = util.createElement('div',
         { style: { display: 'flex' } }, [ prev, title, next ]);
 
     var cal = util.extend(new EventTargetImpl(), {
       $el: util.createElement('div', [ header ],
-        { attrs: { 'class': '${prefix}-calendar' } })
+        { attrs: { 'class': '${prefix}-calendar' } }),
+      rollDate: function(offset : number) {
+        selectedDate = new Date(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(), 
+          selectedDate.getDate() + offset);
+        setDisplayDate(selectedDate);
+        update();
+      },
+      getSelectedDate : function() {
+        return selectedDate;
+      }
     });
     var table : any = null;
 
-    var update = function(base : Date) {
-      title.textContent = base.getFullYear() + '/' + (base.getMonth() + 1);
+    var update = function() {
+      title.textContent = util.formatYM(
+          displayDate.getFullYear(),
+          displayDate.getMonth() );
       if (table) {
         cal.$el.removeChild(table.$el);
         table = null;
       }
-      table = createCalTable(base).on('click',
+      table = createCalTable(
+          displayDate.getFullYear(),
+          displayDate.getMonth(), 
+          selectedDate,
+          defaultSelected).on('click',
         function(event : any, date : Date) {
           cal.trigger(event.type, date);
         });
       cal.$el.appendChild(table.$el);
     };
-    update(base);
+    update();
 
     return cal;
   };
