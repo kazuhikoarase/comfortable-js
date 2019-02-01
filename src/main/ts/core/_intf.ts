@@ -134,6 +134,7 @@ namespace comfortable {
     setValue : (value : any) => void;
     getValue : () => any;
     isValid : () => boolean;
+    setVisible : (visible : boolean) => void;
   }
 
 }

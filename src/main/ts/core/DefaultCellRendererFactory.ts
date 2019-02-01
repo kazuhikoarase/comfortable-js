@@ -12,19 +12,50 @@
 namespace comfortable {
 
   'use strict';
-
-  class TextEditor implements CellEditor<HTMLInputElement> {
+  class TextEditor implements CellEditor<HTMLElement> {
 
     private opts : TextEditorOptions;
     private valueType : string;
 
+    public $el : HTMLElement;
+    private textfield : HTMLInputElement;
+
     constructor(opts : TextEditorOptions) {
       this.opts = opts;
+      this.textfield = <HTMLInputElement>util.createElement('input', {
+        attrs : { type : 'text', 'class' : '${prefix}-editor' }
+      });
+      if (this.opts.dataType == 'date') {
+
+        this.textfield.style.flex = '1';
+
+        var button = util.createElement('span', {
+          style : { float:'right', display: 'inline-block', padding: '1px' },
+          props : {  },
+          on : {
+            click : function(event : any) {
+            }
+          }
+        }, [ ui.createCalIcon() ]);
+
+        this.$el = util.createElement('div', {
+          style : { display:'flex', width:'100%', height:'100%' },
+          on : {
+
+          }
+        }, [ this.textfield, button] );
+      } else {
+        this.$el = this.textfield;
+      }
     }
 
-    public $el = <HTMLInputElement>util.createElement('input', {
-      attrs : { type : 'text', 'class' : '${prefix}-editor' }
-    });
+    public setVisible(visible : boolean) {
+      if (this.opts.dataType == 'date') {
+        this.$el.style.display = visible? 'flex' : 'none';
+      } else {
+        this.$el.style.display = visible? '' : 'none';
+      }
+    }
 
     public beginEdit(td : TdWrapper, cell : TextEditorCell) {
       var cs = window.getComputedStyle(td.$el, null);
@@ -43,27 +74,27 @@ namespace comfortable {
       if (typeof cell.maxLength == 'number') {
         (<any>opts.props).maxLength = cell.maxLength;
       }
-      util.set(this.$el, opts);
+      util.set(this.textfield, opts);
     }
     public focus() {
-      this.$el.focus();
-      this.$el.select();
+      this.textfield.focus();
+      this.textfield.select();
     }
     public blur() {
-      this.$el.blur();
+      this.textfield.blur();
     }
     public setValue(value : any) {
-      this.$el.value = value;
+      this.textfield.value = value;
       this.valueType = typeof value;
     }
     public getValue() {
       if (this.opts.dataType == 'number') {
         var value = util.formatNumber(
-            util.toNarrowNumber(this.$el.value),
+            util.toNarrowNumber(this.textfield.value),
             this.opts.decimalDigits, '');
         return this.valueType == 'number'? +value : value;
       }
-      return this.$el.value;
+      return this.textfield.value;
     }
     public isValid() {
       if (this.opts.dataType == 'number') {
@@ -86,6 +117,10 @@ namespace comfortable {
     public $el = <HTMLInputElement>util.createElement('input', {
       attrs : { type : 'checkbox', 'class' : '${prefix}-editor' }
     });
+
+    public setVisible(visible : boolean) {
+      this.$el.style.display = visible? '' : 'none';
+    }
 
     public beginEdit(td : TdWrapper, cell : CheckBoxCell) {
       var cs = window.getComputedStyle(td.$el, null);
@@ -123,6 +158,10 @@ namespace comfortable {
     public $el = <HTMLSelectElement>util.createElement('select', {
       attrs : { 'class' : '${prefix}-editor' }
     });
+
+    public setVisible(visible : boolean) {
+      this.$el.style.display = visible? '' : 'none';
+    }
 
     public beginEdit(td : TdWrapper, cell : SelectBoxCell) {
       var cs = window.getComputedStyle(td.$el, null);
@@ -348,14 +387,15 @@ namespace comfortable {
         }
         labelRenderer.setVisible(false);
         editor.beginEdit(td, cell);
-        editor.$el.style.display = '';
+        editor.setVisible(true);
         editor.setValue(oldValue = cell.value);
       };
 
       var renderIsEditor = opts.renderIsEditor;
       if (typeof renderIsEditor == 'undefined') {
         renderIsEditor = opts.dataType == 'boolean' ||
-          opts.dataType == 'select-one';
+          opts.dataType == 'select-one' ||
+          opts.dataType == 'date';
       }
 
       var editing = false;
@@ -400,7 +440,7 @@ namespace comfortable {
               editing =false;
               if (!renderIsEditor) {
                 labelRenderer.setVisible(true);
-                editor.$el.style.display = 'none';
+                editor.setVisible(false);
               } else {
                 editor.blur();
               }

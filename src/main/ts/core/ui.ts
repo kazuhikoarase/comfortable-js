@@ -204,11 +204,18 @@ namespace comfortable.ui {
         }
         return util.createElement('td',
             { props: { textContent: '' + date.getDate() },
-              attrs: { 'class': className } })
+              attrs: { 'class': className },
+              on: { mousedown: function(event) { event.preventDefault(); },
+                click: function() {
+                  table.trigger('click', date);
+                } } });
       }) ) );
     }
-    return util.createElement('table',
-        { attrs: { 'class': '${prefix}-calendar' } }, [ thead, tbody ]);
+    var table = util.extend(new EventTargetImpl(), {
+      $el: util.createElement('table',
+        { attrs: { 'class': '${prefix}-cal-table' } }, [ thead, tbody ])
+    });
+    return table;
   };
 
   var createCalButton = function(prev : boolean, action : () => void) {
@@ -228,7 +235,7 @@ namespace comfortable.ui {
         ]);
   };
 
-  export var createCalIcon = function(r : number) {
+  export var createCalIcon = function(r? : number) {
     r = r || 3;
     var w = r * 5 + 1;
     var calIcon = util.createElement('canvas', {
@@ -282,18 +289,23 @@ namespace comfortable.ui {
     var header = util.createElement('div',
         { style: { display: 'flex' } }, [ prev, title, next ]);
 
-    var cal = util.createElement('div', [ header ],
-        { style: { position: 'absolute', left: '300px', top : '20px' } });
+    var cal = util.extend(new EventTargetImpl(), {
+      $el: util.createElement('div', [ header ],
+        { attrs: { 'class': '${prefix}-calendar' } })
+    });
     var table : any = null;
 
     var update = function(base : Date) {
       title.textContent = base.getFullYear() + '/' + (base.getMonth() + 1);
       if (table) {
-        cal.removeChild(table);
+        cal.$el.removeChild(table.$el);
         table = null;
       }
-      table = createCalTable(base);
-      cal.appendChild(table);
+      table = createCalTable(base).on('click',
+        function(event : any, date : Date) {
+          cal.trigger(event.type, date);
+        });
+      cal.$el.appendChild(table.$el);
     };
     update(base);
 
