@@ -35,56 +35,70 @@ namespace comfortable {
     }
 
     private createDateField() {
+      var _this = this;
       var setSelectedDate = function(date : Date) {
-        this.textfield.value = util.formatDate(util.parseDate(date) );
-        this.textfield.select();
-      }.bind(this);
+        _this.textfield.value = util.formatDate(util.parseDate(date) );
+      };
+      var rollDate = function(offset : number) {
+        var date = _this.getDate();
+        if (date) {
+          date.setDate(date.getDate() + offset);
+          setSelectedDate(date);
+        }
+      };
       util.set(this.textfield, {
         style : { flex: '1' },
         on : { keydown : function(event) {
+
           switch(event.keyCode) {
           case 13: // Enter
+          case 27: // Esc
             if (cal) {
               event.preventDefault();
               event.stopPropagation();
-              if (cal) {
-                setSelectedDate(cal.getSelectedDate() );
-              }
               hideCal();
+              _this.textfield.select();
             }
             break;
-          case 27: // ESC
+          case 32: // Space
+            event.preventDefault();
             if (cal) {
-              event.preventDefault();
-              event.stopPropagation();
-              hideCal();
+            } else {
+              showCal();
             }
             break;
           case 37: // Left
             if (cal != null) {
               event.preventDefault();
               cal.rollDate(-1);
+              setSelectedDate(cal.getSelectedDate() );
             }
             break;
           case 38: // Up
+            event.preventDefault();
             if (cal != null) {
-              event.preventDefault();
               cal.rollDate(-7);
+              setSelectedDate(cal.getSelectedDate() );
+            } else {
+              rollDate(-1);
+              _this.textfield.select();
             }
             break;
           case 39: // Right
             if (cal != null) {
               event.preventDefault();
               cal.rollDate(1);
+              setSelectedDate(cal.getSelectedDate() );
             }
             break;
           case 40: // Down
+            event.preventDefault(); 
             if (cal != null) {
-              event.preventDefault(); 
               cal.rollDate(7);
+              setSelectedDate(cal.getSelectedDate() );
             } else {
-              event.preventDefault();
-              showCal();
+              rollDate(1);
+              _this.textfield.select();
             }
             break;
           default:
@@ -106,18 +120,7 @@ namespace comfortable {
         if (cal) {
           hideCal();
         }
-        cal = ui.createCalendar(function() {
-              if (this.isValid() ) {
-                var value = this.getValue();
-                if (value) {
-                  return new Date(
-                    +value.substring(0, 4),
-                    +value.substring(4, 6) - 1,
-                    +value.substring(6, 8) );
-                }
-              }
-              return new Date();
-            }.bind(this)() )
+        cal = ui.createCalendar(this.getDate() || new Date() )
           .on('click', function(event : any, date : Date) {
             setSelectedDate(date);
             hideCal();
@@ -160,6 +163,19 @@ namespace comfortable {
 
         }
       }, [ this.textfield, button ] );
+    }
+
+    private getDate() : Date {
+      if (this.isValid() ) {
+        var value = <string>this.getValue();
+        if (value) {
+          return new Date(
+            +value.substring(0, 4),
+            +value.substring(4, 6) - 1,
+            +value.substring(6, 8) );
+        }
+      }
+      return null;
     }
 
     public setVisible(visible : boolean) {

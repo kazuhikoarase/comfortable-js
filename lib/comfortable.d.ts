@@ -124,6 +124,7 @@ declare namespace comfortable {
         setValue: (value: any) => void;
         getValue: () => any;
         isValid: () => boolean;
+        setVisible: (visible: boolean) => void;
     }
 }
 /*!
@@ -383,8 +384,9 @@ declare namespace comfortable.ui {
     var createCheckbox: () => CheckBox;
     var createDialog: (children: HTMLElement[]) => Dialog;
     var showMenu: (left: number, top: number, menuItems: MenuItem[]) => Menu;
-    var createCalIcon: (r: number) => HTMLElement;
-    var createCalendar: (base: Date) => HTMLElement;
+    var createSpacer: () => HTMLElement;
+    var createCalIcon: (r?: number) => HTMLElement;
+    var createCalendar: (selectedDate: Date) => any;
 }
 /*!
  * comfortable
@@ -450,6 +452,17 @@ declare namespace comfortable {
         numRe: RegExp;
         formatNumber: (value: string, digits?: number, s1?: string, s2?: string) => string;
         toNarrowNumber: (value: string) => string;
+        fillLeftZero: (s: string, digits: number) => string;
+        formatYM: (year: number, month: number) => string;
+        /**
+         * format string(8)
+         */
+        formatDate: (date: any) => string;
+        /**
+         * parse into string(8)
+         */
+        dateRe: RegExp;
+        parseDate: (value: any) => string;
     };
 }
 /*!

@@ -62,28 +62,41 @@ border: 1px solid #f0f0f0;
   fill: #666;
 }
 
-TABLE.ctj-calendar,
-TABLE.ctj-calendar TH,
-TABLE.ctj-calendar TD {
+.ctj-calendar {
+  font-family : 'ms pgothic', sans-serif;
+  font-size : 14px;
+  background-color : #ffffff;
+  cursor : default;
+  -webkit-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+          box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+}
+
+TABLE.ctj-cal-table,
+TABLE.ctj-cal-table TH,
+TABLE.ctj-cal-table TD {
   border-collapse: collapse;
   border: 1px solid #ccc;
-  padding: 1px 2px;
-  font-size: 0.9em;
-  cursor: default;
+  padding: 2px;
 }
-TABLE.ctj-calendar TD {
+TABLE.ctj-cal-table TD {
   text-align: right;
 }
-TABLE.ctj-calendar TD:not(.ctj-this-month) {
+TABLE.ctj-cal-table TD:not(.ctj-this-month) {
   color: #ccc;
 }
 
-TABLE.ctj-calendar TH.ctj-holiday,
-TABLE.ctj-calendar TD.ctj-holiday {
+TABLE.ctj-cal-table TH.ctj-holiday,
+TABLE.ctj-cal-table TD.ctj-holiday {
   background-color: #fee;
 }
-TABLE.ctj-calendar TD.ctj-today {
-  color: #00f;
+TABLE.ctj-cal-table TD.ctj-selected-date {
+  color: #fff;
+  background-color: #33f;
+}
+TABLE.ctj-cal-table TD.ctj-current-date {
+  color: #fff;
+  background-color: #333;
 }
 
 .ctj-tooltip-corner {
