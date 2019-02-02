@@ -31,6 +31,7 @@ namespace comfortable.i18n {
       SELECT_ALL : '(全て選択)',
       TEXT_FILTERS : 'テキストフィルター',
       NUMBER_FILTERS : '数値フィルター',
+      DATE_FILTERS : '日付フィルター',
       SEARCH : '検索',
       CLEAR_FILTER_FROM : '"{0}" からフィルターをクリア',
       OP_LAYOUT : 'R',

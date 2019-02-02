@@ -291,7 +291,7 @@ namespace comfortable {
           'GREATER_THAN_OR_EQUALS',
           'LESS_THAN',
           'LESS_THAN_OR_EQUALS'].map(optMap) );
-        if (dataType == 'string') {
+        if (dataType == 'string' || dataType == 'date') {
           opOpts = opOpts.concat([
             'STARTS_WITH',
             'NOT_STARTS_WITH',
@@ -389,10 +389,14 @@ namespace comfortable {
       };
 
       var dataType = (<any>cell).dataType || 'string';
-      var customFilterButton = createFilterButton(dataType == 'number'?
-        messages.NUMBER_FILTERS : messages.TEXT_FILTERS);
+      var customFilterButton = createFilterButton(
+        dataType == 'number'? messages.NUMBER_FILTERS :
+        dataType == 'date'? messages.DATE_FILTERS :
+        messages.TEXT_FILTERS);
 
-      if (!(dataType == 'string' || dataType == 'number') ) {
+      if (!(dataType == 'string' ||
+          dataType == 'number' ||
+          dataType == 'date') ) {
         customFilterButton.$el.style.display = 'none';
       }
 

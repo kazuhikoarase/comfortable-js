@@ -33,6 +33,7 @@ namespace comfortable.i18n {
       CLEAR_FILTER_FROM : 'Clear Filter From "{0}"',
       TEXT_FILTERS : 'Text Filters',
       NUMBER_FILTERS : 'Number Filters',
+      DATE_FILTERS : 'Date Filters',
       OP_LAYOUT : 'L',
       AND : 'AND',
       OR : 'OR',
