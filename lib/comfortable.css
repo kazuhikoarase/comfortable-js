@@ -10,48 +10,48 @@
  */
 
 .ctj-v-resize-line {
-  border-left-style : dashed;
-  border-left-color : rgba(0,0,0,0.8);
+  border-left-style: dashed;
+  border-left-color: rgba(0,0,0,0.8);
 }
 
 .ctj-h-lock-line {
-  border-top : 1px solid rgba(0,0,0,0.5);
+  border-top: 1px solid rgba(0,0,0,0.5);
 }
 
 .ctj-v-lock-line {
-  border-left : 1px solid rgba(0,0,0,0.5);
+  border-left: 1px solid rgba(0,0,0,0.5);
 }
 
 .ctj-column-drag-proxy {
-  background-color : rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.1);
 }
 
 .ctj-column-drag-marker {
-  background-color : rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.5);
 }
 
 INPUT[type="text"].ctj-editor {
-  width : 100%;
-  height : 100%;
-  padding : 0px;
-  margin : 0px;
-  border : none;
-  background-color : transparent;
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  border: none;
+  background-color: transparent;
 }
 
 INPUT[type="checkbox"].ctj-editor {
-  padding : 0px;
-  margin : 0px;
-  border : none;
+  padding: 0px;
+  margin: 0px;
+  border: none;
 }
 
 SELECT.ctj-editor {
-  width : 100%;
-  height : 100%;
-  padding : 0px;
-  margin : 0px;
-  border : none;
-  background-color : transparent;
+  width: 100%;
+  height: 100%;
+  padding: 0px;
+  margin: 0px;
+  border: none;
+  background-color: transparent;
 }
 
 .ctj-cal-icon-button {
@@ -76,12 +76,12 @@ SELECT.ctj-editor {
 }
 
 .ctj-calendar {
-  font-size : 14px;
-  background-color : #ffffff;
-  cursor : default;
-  -webkit-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
-     -moz-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
-          box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  background-color: #ffffff;
+  cursor: default;
+  -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
 }
 
 TABLE.ctj-cal-table,
@@ -124,14 +124,14 @@ TABLE.ctj-cal-table TD.ctj-current-date:hover {
 }
 
 .ctj-tooltip-corner {
-  stroke : none;
-  fill : #ff0000;
+  stroke: none;
+  fill: #ff0000;
 }
 
 .ctj-tooltip-box {
-  padding : 2px 4px;
-  background-color : #ffffcc;
-  border : 1px solid #000000;
+  padding: 2px 4px;
+  background-color: #ffffcc;
+  border: 1px solid #000000;
 }
 
 /*!
@@ -146,11 +146,11 @@ TABLE.ctj-cal-table TD.ctj-current-date:hover {
  */
 
 .ctj-header {
-  font-weight : bold;
+  font-weight: bold;
 }
 
 .ctj-even {
-  background-color : rgba(0,0,0,0.05);
+  background-color: rgba(0,0,0,0.05);
 }
 
 .ctj-odd {
@@ -160,100 +160,100 @@ TABLE.ctj-cal-table TD.ctj-current-date:hover {
 }
 
 .ctj-item-hover {
-  background-color : rgba(255,255,0,0.1);
+  background-color: rgba(255,255,0,0.1);
 }
 
 .ctj-item-selected {
-  background-color : rgba(255,127,0,0.1);
+  background-color: rgba(255,127,0,0.1);
 }
 
 .ctj-clickable:hover {
-  background-color : rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.1);
 }
 
 .ctj-clickable:active {
-  background-color : rgba(0,0,0,0.2);
+  background-color: rgba(0,0,0,0.2);
 }
 
 .ctj-clickable-op:hover {
-  opacity : 0.6;
+  opacity: 0.6;
 }
 
 .ctj-selected,
 .ctj-selected:hover {
-  background-color : rgba(0,0,0,0.2);
+  background-color: rgba(0,0,0,0.2);
 }
 
 .ctj-dialog {
-  font-size : 14px;
-  background-color : #ffffff;
-  cursor : default;
-  -webkit-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
-     -moz-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
-          box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
-  padding : 4px;
+  font-size: 14px;
+  background-color: #ffffff;
+  cursor: default;
+  -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+  padding: 4px;
 }
 
 .ctj-contextmenu {
-  font-size : 14px;
-  background-color : #ffffff;
-  cursor : default;
-  -webkit-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
-     -moz-box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
-          box-shadow : 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+  font-size: 14px;
+  background-color: #ffffff;
+  cursor: default;
+  -webkit-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+     -moz-box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
+          box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.5);
 }
 
 .ctj-menuitem {
-  padding : 4px 12px;
+  padding: 4px 12px;
 }
 
 .ctj-button {
-  margin-top : 4px;
-  margin-left : 4px;
+  margin-top: 4px;
+  margin-left: 4px;
 }
 
 .ctj-listitem {
-  padding : 4px;
+  padding: 4px;
 }
 
 .ctj-column-edit-bar {
-  border-top : 3px solid rgba(0,0,0,0.8);
+  border-top: 3px solid rgba(0,0,0,0.8);
 }
 
 .ctj-column-edit-lock-column {
-  color : #0000ff;
+  color: #0000ff;
 }
 
 .ctj-selector-body,
 .ctj-checkbox-body {
-  border : 1px solid rgba(0,0,0,0.8);
+  border: 1px solid rgba(0,0,0,0.8);
 }
 
 .ctj-checkbox-check {
-	stroke-width : 2;
-	fill : none;
-  stroke : rgba(0,0,0,0.8);
+	stroke-width: 2;
+	fill: none;
+  stroke: rgba(0,0,0,0.8);
 }
 
 .ctj-checkbox-incomplete-check {
-  stroke : rgba(0,0,0,0.3);
+  stroke: rgba(0,0,0,0.3);
 }
 
 .ctj-filter-button {
-  right : 4px;
+  right: 4px;
 }
 
 .ctj-filter-body {
-  stroke : none;
-  fill : rgba(0,0,0,0.1);
+  stroke: none;
+  fill: rgba(0,0,0,0.1);
 }
 
 .ctj-filter-fill {
-  stroke : none;
-  fill : rgba(0,0,0,0.8);
+  stroke: none;
+  fill: rgba(0,0,0,0.8);
 }
 
 .ctj-filter-stroke {
-  stroke : rgba(0,0,0,0.8);
-	fill : none;
+  stroke: rgba(0,0,0,0.8);
+	fill: none;
 }
