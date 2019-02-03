@@ -236,7 +236,7 @@ namespace comfortable {
 
     trimRe : /^[\s\u3000]+|[\s\u3000]+$/g,
     trim : function(value : string) {
-      return value.replace(util.trimRe, '');
+      return value.replace(this.trimRe, '');
     },
 
     format : function(msg : string, ...args : any[]) {
@@ -261,7 +261,7 @@ namespace comfortable {
       if (typeof value != 'string') {
         return '';
       }
-      var mat = value.match(util.numRe);
+      var mat = value.match(this.numRe);
       if (mat) {
         if (mat[2].length == 0 && (!mat[3] || mat[3].length == 1) ) {
           return '';
@@ -335,9 +335,9 @@ namespace comfortable {
           return value;
         }
       }
-      return util.fillLeftZero('' + value.getFullYear(), 4) +
-          util.fillLeftZero('' + (value.getMonth() + 1), 2) +
-          util.fillLeftZero('' + value.getDate(), 2);
+      return this.fillLeftZero('' + value.getFullYear(), 4) +
+          this.fillLeftZero('' + (value.getMonth() + 1), 2) +
+          this.fillLeftZero('' + value.getDate(), 2);
     },
     isHoliday : function(date : Date) {
       var day = date.getDay();

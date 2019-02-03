@@ -54,12 +54,22 @@ SELECT.ctj-editor {
   background-color : transparent;
 }
 
+.ctj-cal-icon-button {
+  padding: 2px;
+  float: right;
+  display: inline-block;
+}
+.ctj-cal-icon-ibutton:hover {
+  background-color: rgba(0,0,0,0.1)
+}
+
 .ctj-cal-button {
   padding: 2px;
 }
 .ctj-cal-button:hover {
-  background-color: #f0f0f0;
+  background-color: rgba(0,0,0,0.1)
 }
+
 .ctj-cal-button-symbol {
   stroke: none;
   fill: #666;

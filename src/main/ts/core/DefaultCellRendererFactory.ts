@@ -148,9 +148,7 @@ namespace comfortable {
         }
       };
       var button = util.createElement('span', {
-        attrs : { 'class' : '${prefix}-cal-button' },
-        style : { float:'right', display: 'inline-block' },
-        props : {  },
+        attrs : { 'class' : '${prefix}-cal-icon-button' },
         on : {
           mousedown : function(event) {
             event.preventDefault();
@@ -167,9 +165,6 @@ namespace comfortable {
 
       return util.createElement('div', {
         style : { display: 'flex', width: '100%', height: '100%' },
-        on : {
-
-        }
       }, [ this.textfield, button ] );
     }
 
