@@ -19,7 +19,7 @@ var table = comfortable.fromTemplate({
       { dataField: 's', label: 'String' },
       { dataField: 'n', label: 'Number' },
       { dataField: 'ns', label: 'NumberS' },
-      { dataField: 'd', label: 'Date' }
+      { dataField: 'd', label: 'Date', width: 120 }
     ]
   ],
   tbody: [
@@ -47,7 +47,7 @@ for (var i = 0; i < 100; i += 1) {
 table.model.items = items;
 
 // narrower
-table.$el.style.width = '400px';
+table.$el.style.width = '500px';
 
 //request rendering.
 table.invalidate();

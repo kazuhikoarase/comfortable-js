@@ -227,6 +227,7 @@ declare namespace comfortable.i18n {
         CLEAR_FILTER_FROM: string;
         TEXT_FILTERS: string;
         NUMBER_FILTERS: string;
+        DATE_FILTERS: string;
         OP_LAYOUT: string;
         AND: string;
         OR: string;

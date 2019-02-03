@@ -63,7 +63,6 @@ border: 1px solid #f0f0f0;
 }
 
 .ctj-calendar {
-  font-family : 'ms pgothic', sans-serif;
   font-size : 14px;
   background-color : #ffffff;
   cursor : default;
@@ -161,7 +160,6 @@ TABLE.ctj-cal-table TD.ctj-current-date {
 }
 
 .ctj-dialog {
-  font-family : 'ms pgothic', sans-serif;
   font-size : 14px;
   background-color : #ffffff;
   cursor : default;
@@ -172,7 +170,6 @@ TABLE.ctj-cal-table TD.ctj-current-date {
 }
 
 .ctj-contextmenu {
-  font-family : 'ms pgothic', sans-serif;
   font-size : 14px;
   background-color : #ffffff;
   cursor : default;

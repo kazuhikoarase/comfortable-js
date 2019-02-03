@@ -523,9 +523,7 @@ namespace comfortable {
       public orderedColumnIndices : number[] = null;
       public sort : Sort = null;
       private filters : { [ dataField : string ] : Filter } = {};
-      public filterFactory() : Filter {
-        return new DefaultFilter();
-      }
+      public filterFactory() : Filter { return new DefaultFilter(); }
       public getFilter(dataField : string) : Filter {
         return this.filters[dataField] ||
           (this.filters[dataField] = this.filterFactory() );

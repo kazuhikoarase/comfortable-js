@@ -12,6 +12,7 @@
 namespace comfortable {
 
   'use strict';
+
   class TextEditor implements CellEditor<HTMLElement> {
 
     private opts : TextEditorOptions;
