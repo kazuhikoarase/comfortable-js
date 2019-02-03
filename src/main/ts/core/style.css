@@ -59,7 +59,7 @@ SELECT.ctj-editor {
   float: right;
   display: inline-block;
 }
-.ctj-cal-icon-ibutton:hover {
+.ctj-cal-icon-button:hover {
   background-color: rgba(0,0,0,0.1)
 }
 

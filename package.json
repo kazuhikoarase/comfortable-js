@@ -1,6 +1,6 @@
 {
   "name": "comfortable-js",
-  "version": "0.1.54",
+  "version": "0.1.55",
   "description": "Simple, Fast, Customizable Table Component in JavaScript.",
   "author": "Kazuhiko Arase",
   "main": "lib/comfortable.js",
