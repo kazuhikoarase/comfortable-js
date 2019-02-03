@@ -210,22 +210,24 @@ window.addEventListener('load', function(event) {
       title : 'Events',
       template : { thead : [
         [
-          { label : 'string', dataField : 'val1' },
-          { label : 'number', dataField : 'val2' },
-          { label : 'boolean', dataField : 'val3', labelFunction :
+          { label : 'string', dataField : 'strVal' },
+          { label : 'number', dataField : 'numVal' },
+          { label : 'date', dataField : 'dateVal', width: 120 },
+          { label : 'boolean', dataField : 'boolVal', labelFunction :
             function(value) { return value == '1'? 'On' : 'Off'; } },
-          { label : 'select-one', dataField : 'val4',
+          { label : 'select-one', dataField : 'selVal',
             options : [ { label : 'One', value : '1' },
                         { label : 'Two', value : '2' },
                         { label : 'Three', value : '3' } ] }
         ]
       ], tbody : [
         [
-          { dataType : 'string', dataField : 'val1', maxLength : 5 },
-          { dataType : 'number', dataField : 'val2' },
-          { dataType : 'boolean', dataField : 'val3',
+          { dataType : 'string', dataField : 'strVal', maxLength : 5 },
+          { dataType : 'number', dataField : 'numVal' },
+          { dataType : 'date', dataField : 'dateVal' },
+          { dataType : 'boolean', dataField : 'boolVal',
               booleanValues : [ '0', '1' ] },
-          { dataType : 'select-one', dataField : 'val4',
+          { dataType : 'select-one', dataField : 'selVal',
             options : [ { label : 'One', value : '1' },
                         { label : 'Two', value : '2' },
                         { label : 'Three', value : '3' } ] }
@@ -237,14 +239,16 @@ window.addEventListener('load', function(event) {
         table.model.defaultCellStyle.borderRight = '1px solid silver';
         table.model.defaultCellStyle.borderBottom = '1px solid silver';
         table.$el.style.border = '1px solid silver';
+        table.$el.style.width = '600px';
 
         var items = [];
         for (var i = 0; i < 100; i += 1) {
           items.push({
-            val1 : '' + i,
-            val2 : i,
-            val3 : '' + (i % 2),
-            val4 : '' + (i % 3 + 1) });
+            strVal : '' + i,
+            numVal : i,
+            dateVal : '20190101',
+            boolVal : '' + (i % 2),
+            selVal : '' + (i % 3 + 1) });
         }
         table.model.items = items;
 
