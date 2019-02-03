@@ -148,7 +148,8 @@ namespace comfortable {
         }
       };
       var button = util.createElement('span', {
-        style : { float:'right', display: 'inline-block', padding: '1px' },
+        attrs : { 'class' : '${prefix}-cal-button' },
+        style : { float:'right', display: 'inline-block' },
         props : {  },
         on : {
           mousedown : function(event) {

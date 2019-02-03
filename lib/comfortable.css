@@ -55,7 +55,7 @@ SELECT.ctj-editor {
 }
 
 .ctj-cal-button {
-  border: 1px solid #f0f0f0;
+  padding: 2px;
 }
 .ctj-cal-button:hover {
   background-color: #f0f0f0;
@@ -85,7 +85,7 @@ TABLE.ctj-cal-table TD {
   text-align: right;
 }
 TABLE.ctj-cal-table TD:hover {
-  background-color: #f0f0f0;
+  background-color: rgba(0,0,0,0.1);
 }
 TABLE.ctj-cal-table TD:not(.ctj-this-month) {
   color: #ccc;
@@ -93,24 +93,24 @@ TABLE.ctj-cal-table TD:not(.ctj-this-month) {
 
 TABLE.ctj-cal-table TH.ctj-holiday,
 TABLE.ctj-cal-table TD.ctj-holiday {
-  background-color: #fee;
+  background-color: rgba(255,0,0,0.2)
 }
 TABLE.ctj-cal-table TD.ctj-holiday:hover {
-  background-color: #fcc;
+  background-color: rgba(255,0,0,0.1)
 }
 TABLE.ctj-cal-table TD.ctj-selected-date {
   color: #fff;
-  background-color: #33f;
+  background-color: rgba(0,0,255,0.6);
 }
 TABLE.ctj-cal-table TD.ctj-selected-date:hover {
-  background-color: #99f;
+  background-color: rgba(0,0,255,0.5);
 }
 TABLE.ctj-cal-table TD.ctj-current-date {
   color: #fff;
-  background-color: #333;
+  background-color: rgba(0,0,0,0.3);
 }
 TABLE.ctj-cal-table TD.ctj-current-date:hover {
-  background-color: #999;
+  background-color: rgba(0,0,0,0.4);
 }
 
 .ctj-tooltip-corner {
