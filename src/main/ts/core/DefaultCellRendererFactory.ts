@@ -51,9 +51,10 @@ namespace comfortable {
         style : { flex: '1 1 0%' },
         on : { keydown : function(event) {
 
-          switch(event.keyCode) {
-          case 13: // Enter
-          case 27: // Esc
+          switch(event.key) {
+          case 'Enter':
+          case 'Escape':
+          case 'Esc':
             if (cal) {
               event.preventDefault();
               event.stopPropagation();
@@ -61,21 +62,24 @@ namespace comfortable {
               _this.textfield.select();
             }
             break;
-          case 32: // Space
+          case 'Spacebar':
+          case '\u0020':
             event.preventDefault();
             if (cal) {
             } else {
               showCal();
             }
             break;
-          case 37: // Left
+          case 'Left':
+          case 'ArrowLeft':
             if (cal != null) {
               event.preventDefault();
               cal.rollDate(-1);
               setSelectedDate(cal.getSelectedDate() );
             }
             break;
-          case 38: // Up
+          case 'Up':
+          case 'ArrowUp':
             event.preventDefault();
             if (cal != null) {
               cal.rollDate(-7);
@@ -85,14 +89,16 @@ namespace comfortable {
               _this.textfield.select();
             }
             break;
-          case 39: // Right
+          case 'Right':
+          case 'ArrowRight':
             if (cal != null) {
               event.preventDefault();
               cal.rollDate(1);
               setSelectedDate(cal.getSelectedDate() );
             }
             break;
-          case 40: // Down
+          case 'Down':
+          case 'ArrowDown':
             event.preventDefault(); 
             if (cal != null) {
               cal.rollDate(7);

@@ -309,12 +309,12 @@ namespace comfortable {
             }
           },
           keydown : (event) => {
-            switch(event.keyCode) {
-            case 9 : // Tab
+            switch(event.key) {
+            case 'Tab':
               event.preventDefault();
               this.move({ row : 0, col : event.shiftKey? -1 : 1 });
               break;
-            case 13 : // Enter
+            case 'Enter':
               event.preventDefault();
               this.move({ row : event.shiftKey? -1 : 1, col : 0 });
               break;
