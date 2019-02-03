@@ -464,6 +464,7 @@ declare namespace comfortable {
          */
         dateRe: RegExp;
         parseDate: (value: any) => string;
+        isHoliday: (date: Date) => boolean;
     };
 }
 /*!

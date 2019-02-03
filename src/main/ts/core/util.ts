@@ -338,6 +338,10 @@ namespace comfortable {
       return util.fillLeftZero('' + value.getFullYear(), 4) +
           util.fillLeftZero('' + (value.getMonth() + 1), 2) +
           util.fillLeftZero('' + value.getDate(), 2);
+    },
+    isHoliday : function(date : Date) {
+      var day = date.getDay();
+      return day == 0 || day == 6; // sun or sat.
     }
   }
 

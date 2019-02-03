@@ -192,8 +192,7 @@ namespace comfortable.ui {
             base.getDate() - base.getDay() + d);
         d += 1;
         var className = '';
-        var day = date.getDay();
-        if (day == 0 || day == 6) {
+        if (util.isHoliday(date) ) {
           className += ' ${prefix}-holiday';
         }
         if (date.getMonth() == base.getMonth() ) {
@@ -234,11 +233,12 @@ namespace comfortable.ui {
         [ util.createSVGElement('svg',
             { attrs: { width: '16', height: '16',
               'class': '${prefix}-cal-button-symbol' },
-              style: { verticalAlign: 'top' } },
+              style: { verticalAlign: 'middle' } },
             [ util.createSVGElement('path',
                 { attrs: { d: 'M3 2L13 8L3 14Z',
                   transform: prev?
-                    'translate(8,8) rotate(180) translate(-8,-8)' : '' } }) ])
+                    'translate(8,8) rotate(180) translate(-8,-8)' : '' } }) ]),
+          createSpacer()
         ]);
   };
 
@@ -300,7 +300,7 @@ namespace comfortable.ui {
     });
 
     var title = util.createElement('span',
-        { style: { flex: '1', textAlign: 'center' },
+        { style: { flex: '1 1 0%', textAlign: 'center' },
           on: { mousedown: function(event : any) { event.preventDefault(); },
             click: function() {
               setDisplayDate(defaultSelected);

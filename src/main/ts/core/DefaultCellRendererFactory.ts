@@ -48,7 +48,7 @@ namespace comfortable {
         }
       };
       util.set(this.textfield, {
-        style : { flex: '1' },
+        style : { flex: '1 1 0%' },
         on : { keydown : function(event) {
 
           switch(event.keyCode) {
