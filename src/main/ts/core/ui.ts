@@ -300,14 +300,16 @@ namespace comfortable.ui {
     });
 
     var title = util.createElement('span',
+        { style: { verticalAlign: 'middle' } });
+    var titleBody = util.createElement('span',
         { style: { flex: '1 1 0%', textAlign: 'center' },
           on: { mousedown: function(event : any) { event.preventDefault(); },
             click: function() {
               setDisplayDate(defaultSelected);
               update();
-            } } });
+            } } }, [ title, createSpacer() ]);
     var header = util.createElement('div',
-        { style: { display: 'flex' } }, [ prev, title, next ]);
+        { style: { display: 'flex' } }, [ prev, titleBody, next ]);
 
     var cal = util.extend(new EventTargetImpl(), {
       $el: util.createElement('div', [ header ],

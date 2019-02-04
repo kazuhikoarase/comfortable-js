@@ -230,8 +230,8 @@ TABLE.ctj-cal-table TD.ctj-current-date:hover {
 }
 
 .ctj-checkbox-check {
-	stroke-width: 2;
-	fill: none;
+  stroke-width: 2;
+  fill: none;
   stroke: rgba(0,0,0,0.8);
 }
 
@@ -255,5 +255,5 @@ TABLE.ctj-cal-table TD.ctj-current-date:hover {
 
 .ctj-filter-stroke {
   stroke: rgba(0,0,0,0.8);
-	fill: none;
+  fill: none;
 }
