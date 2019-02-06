@@ -643,12 +643,20 @@ namespace comfortable {
           if (this.selectedRows[itemIndex.row]) {
             style.className += ' ${prefix}-item-selected';
           }
+          if (this.getItemStyle) {
+            style = util.extend(style,
+              this.getItemStyle(this.getItemAt(itemIndex.row),
+                { row : row, col : col, itemIndex : itemIndex } ) );
+          }
         }
         if (style.editable === false) {
           style.className += ' ${prefix}-readonly';
         }
         return style;
       }
+
+      public getItemStyle : (item : any, detail : any) => any = null;
+
       public getValueAt(row : number, col : number) : any {
         var orderedCol = this.getOrderedColumnIndexAt(col);
         if (row < headLength || row >= this.getRowCount() - footLength) {

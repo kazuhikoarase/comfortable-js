@@ -36,12 +36,12 @@ namespace comfortable {
     }
 
     private createDateField() {
-      var _this = this;
+      var textEditor = this;
       var setSelectedDate = function(date : Date) {
-        _this.textfield.value = util.formatDate(util.parseDate(date) );
+        textEditor.textfield.value = util.formatDate(util.parseDate(date) );
       };
       var rollDate = function(offset : number) {
-        var date = _this.getDate();
+        var date = textEditor.getDate();
         if (date) {
           date.setDate(date.getDate() + offset);
           setSelectedDate(date);
@@ -59,7 +59,7 @@ namespace comfortable {
               event.preventDefault();
               event.stopPropagation();
               hideCal();
-              _this.textfield.select();
+              textEditor.textfield.select();
             }
             break;
           case 'Spacebar':
@@ -86,7 +86,7 @@ namespace comfortable {
               setSelectedDate(cal.getSelectedDate() );
             } else {
               rollDate(-1);
-              _this.textfield.select();
+              textEditor.textfield.select();
             }
             break;
           case 'Right':
@@ -105,7 +105,7 @@ namespace comfortable {
               setSelectedDate(cal.getSelectedDate() );
             } else {
               rollDate(1);
-              _this.textfield.select();
+              textEditor.textfield.select();
             }
             break;
           default:
