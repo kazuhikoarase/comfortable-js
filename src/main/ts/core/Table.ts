@@ -843,7 +843,16 @@ namespace comfortable {
 
     private createInternalEditor() : InternalEditor {
       var table = this;
-      return {
+      var valuecommitHandler = function(event : any, detail : any) {
+        if (editor.cell && detail.row == editor.cell.row &&
+            detail.col == editor.cell.col) {
+          // still editing after lost focus.
+          // then, force end edit.
+          editor.endEdit();
+          table.invalidate();
+        }
+      };
+      var editor : InternalEditor = {
         impl : null,
         cell : null,
         beginEdit : function(row, col, makeVisible) {
@@ -858,10 +867,12 @@ namespace comfortable {
             var td = target.tbody.children[index.trIndex].children[index.tdIndex];
             this.impl = td.renderer.beginEdit(table.model.getCellAt(row, col) );
             this.impl.focus();
+            table.model.on('valuecommit', valuecommitHandler);
           }
         },
         endEdit : function() {
           if (this.impl != null) {
+            table.model.off('valuecommit', valuecommitHandler);
             var endState = this.impl.endEdit();
             if (endState) {
               table.model.trigger('valuechange', {
@@ -876,6 +887,7 @@ namespace comfortable {
           this.cell = null;
         }
       };
+      return editor;
     }
 
     public $el = this.frame;

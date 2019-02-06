@@ -18,6 +18,9 @@ namespace comfortable {
     private opts : TextEditorOptions;
     private valueType : string;
 
+    private tableModel : TableModel;
+    private cell : TableCell;
+
     public $el : HTMLElement;
     private textfield : HTMLInputElement;
 
@@ -25,7 +28,9 @@ namespace comfortable {
       this.opts = opts;
 
       this.textfield = <HTMLInputElement>util.createElement('input', {
-        attrs : { type : 'text', 'class' : '${prefix}-editor' }
+        attrs : { type : 'text', 'class' : '${prefix}-editor' },
+        on : { blur: (event) => {
+          this.tableModel.trigger('valuecommit', this.cell); } }
       });
 
       if (this.opts.dataType == 'date') {
@@ -190,6 +195,10 @@ namespace comfortable {
     }
 
     public beginEdit(td : TdWrapper, cell : TextEditorCell) {
+
+      this.tableModel = td.tableModel;
+      this.cell = cell;
+
       var cs = window.getComputedStyle(td.$el, null);
       var opts : ElementOptions = {
           props : {},
@@ -250,12 +259,17 @@ namespace comfortable {
     private opts : CheckBoxOptions;
     private booleanValues : any[] = null;
 
+    private tableModel : TableModel;
+    private cell : TableCell;
+
     constructor(opts : CheckBoxOptions) {
       this.opts = opts;
     }
 
     public $el = <HTMLInputElement>util.createElement('input', {
-      attrs : { type : 'checkbox', 'class' : '${prefix}-editor' }
+      attrs : { type : 'checkbox', 'class' : '${prefix}-editor' },
+      on : { blur: (event) => {
+        this.tableModel.trigger('valuecommit', this.cell); } }
     });
 
     public setVisible(visible : boolean) {
@@ -263,6 +277,10 @@ namespace comfortable {
     }
 
     public beginEdit(td : TdWrapper, cell : CheckBoxCell) {
+
+      this.tableModel = td.tableModel;
+      this.cell = cell;
+
       var cs = window.getComputedStyle(td.$el, null);
       util.set(this.$el, {
         style : {
@@ -291,12 +309,17 @@ namespace comfortable {
 
     private opts : SelectBoxOptions;
 
+    private tableModel : TableModel;
+    private cell : TableCell;
+
     constructor(opts : SelectBoxOptions) {
       this.opts = opts;
     }
 
     public $el = <HTMLSelectElement>util.createElement('select', {
-      attrs : { 'class' : '${prefix}-editor' }
+      attrs : { 'class' : '${prefix}-editor' },
+      on : { blur: (event) => {
+        this.tableModel.trigger('valuecommit', this.cell); } }
     });
 
     public setVisible(visible : boolean) {
@@ -304,6 +327,10 @@ namespace comfortable {
     }
 
     public beginEdit(td : TdWrapper, cell : SelectBoxCell) {
+
+      this.tableModel = td.tableModel;
+      this.cell = cell;
+
       var cs = window.getComputedStyle(td.$el, null);
       util.set(this.$el, {
         style : {
