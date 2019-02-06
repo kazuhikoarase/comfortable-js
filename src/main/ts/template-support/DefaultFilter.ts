@@ -121,10 +121,10 @@ namespace comfortable {
         });
 
       class FilterItemCell implements ListCell {
-        public checkbox = (() => {
-          var checkbox = ui.createCheckbox();
-          checkbox.$el.style.verticalAlign = 'middle';
-          return checkbox;
+        public checkBox = (() => {
+          var checkBox = ui.createCheckBox();
+          checkBox.$el.style.verticalAlign = 'middle';
+          return checkBox;
         })();
         private label = util.createElement('span', {
           style : filterLabelStyle,
@@ -143,7 +143,7 @@ namespace comfortable {
                 filterclick(this.index);
               }
             }
-          }, [ this.checkbox.$el, this.label ])
+          }, [ this.checkBox.$el, this.label ])
       }
 
       class FilterItemList extends ListImpl<FilterItem,FilterItemCell> {
@@ -156,8 +156,8 @@ namespace comfortable {
         public renderCell(cell : FilterItemCell, item : FilterItem) {
           cell.index = item.index;
           cell.setLabel(item.label);
-          cell.checkbox.setChecked(item.checked);
-          cell.checkbox.setIncomplete(item.incomplete);
+          cell.checkBox.setChecked(item.checked);
+          cell.checkBox.setIncomplete(item.incomplete);
         }
         public height = 0;
         public maxHeight = 150;
@@ -218,7 +218,7 @@ namespace comfortable {
           rejectCount += 1;
         }
 
-        // update 'select all' checkbox
+        // update 'select all' checkBox
         filterItems[0].checked = rejectCount != filterItems.length - 1;
         filterItems[0].incomplete = rejectCount != 0;
 
@@ -231,10 +231,10 @@ namespace comfortable {
       var customFilter = createDefaultCustomFilter();
 
       var createClearButton = function() {
-        var checkbox = ui.createCheckbox();
-        util.extend(checkbox.$el.style,
+        var checkBox = ui.createCheckBox();
+        util.extend(checkBox.$el.style,
           { border : 'none', verticalAlign : 'middle' });
-        checkbox.setChecked(false);
+        checkBox.setChecked(false);
         var label = util.createElement('span', {
               attrs : { 'class' : '${prefix}-clickable-op' },
               style : filterLabelStyle,
@@ -242,7 +242,7 @@ namespace comfortable {
                 util.format(messages.CLEAR_FILTER_FROM, (<any>cell).label) }
             } );
         return {
-          $el : util.createElement('div', [ checkbox.$el, label ],
+          $el : util.createElement('div', [ checkBox.$el, label ],
             { on : {
                 click : function(event) {
                   (<any>dialog() ).dispose();
@@ -252,22 +252,22 @@ namespace comfortable {
                 }
               }
             }),
-          checkbox : checkbox
+          checkBox : checkBox
         };
       };
 
       var createFilterButton = function(filterTitle : string) {
-        var checkbox = ui.createCheckbox();
-        util.extend(checkbox.$el.style,
+        var checkBox = ui.createCheckBox();
+        util.extend(checkBox.$el.style,
           { border : 'none', verticalAlign : 'middle' });
-        checkbox.setChecked(false);
+        checkBox.setChecked(false);
         var label = util.createElement('span', {
               attrs : { 'class' : '${prefix}-clickable-op' },
               style : filterLabelStyle,
               props : { textContent : filterTitle }
             } );
         return {
-          $el : util.createElement('div', [ checkbox.$el, label ],
+          $el : util.createElement('div', [ checkBox.$el, label ],
             { on : {
                 click : function(event) {
                   (<any>dialog() ).dispose();
@@ -275,7 +275,7 @@ namespace comfortable {
                 }
               }
             }),
-          checkbox : checkbox
+          checkBox : checkBox
         };
       };
 
@@ -415,7 +415,7 @@ namespace comfortable {
           });
           filterchange();
           customFilter = state.customFilter;
-          customFilterButton.checkbox.setChecked(
+          customFilterButton.checkBox.setChecked(
             activeCustomFilter(customFilter) );
         },
         getState : () => {
@@ -567,7 +567,8 @@ namespace comfortable {
     public setState(state : any) {
       this.rejects = listToSet(
         state && state.rejects? state.rejects : []);
-      this.customFilter = state.customFilter || {};
+      this.customFilter =
+        state && state.customFilter? state.customFilter : {};
       this.customFilterAccept =
         this.createCustomFilterAccept(this.customFilter);
     }

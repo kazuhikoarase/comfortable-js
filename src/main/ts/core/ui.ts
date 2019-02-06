@@ -49,7 +49,7 @@ namespace comfortable.ui {
   };
 
   // three state checkbox
-  export var createCheckbox = function() : CheckBox {
+  export var createCheckBox = function() : CheckBox {
 
     // fix for layout collapse by bootstrap.
     var antiBsGlobals : { [k : string] : string } = {

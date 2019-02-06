@@ -382,7 +382,7 @@ declare namespace comfortable.ui {
         dispose: () => void;
     }
     var createButton: (label: string, action: (event: Event) => void) => HTMLElement;
-    var createCheckbox: () => CheckBox;
+    var createCheckBox: () => CheckBox;
     var createDialog: (children: HTMLElement[]) => Dialog;
     var showMenu: (left: number, top: number, menuItems: MenuItem[]) => Menu;
     var createSpacer: () => HTMLElement;

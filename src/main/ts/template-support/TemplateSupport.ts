@@ -300,7 +300,8 @@ namespace comfortable {
 
     // body => head,foot
     var inheritFromBody = [ 'dataType',
-      'options', 'labelField', 'valueField' ];
+      'options', 'labelField', 'valueField',
+      'booleanValues' ];
     var bodyDataCells : any = {};
     template.tbody.forEach(function(tr) {
       tr.forEach(function(cell) {
@@ -564,7 +565,7 @@ namespace comfortable {
           var style = getCellStyleAt(this, row, orderedCol);
           row -= headLength;
           return {
-            row : ~~(row / bodyLength),
+            row : Math.floor(row / bodyLength),
             col : style.dataField ||
               ( (row % bodyLength) * this.getColumnCount() + orderedCol)
           };

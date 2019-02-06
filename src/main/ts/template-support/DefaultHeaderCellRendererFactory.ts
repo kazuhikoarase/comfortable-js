@@ -236,42 +236,110 @@ namespace comfortable {
         return flDialog;
       };
 
+      var initCheckBox = function() {
+        checkBox = ui.createCheckBox();
+        util.set(checkBox.$el, {
+          on : { mousedown : function(event) {
+            event.preventDefault();
+            var cell = (<any>checkBox).cell;
+            var booleanValues = cell.booleanValues || [ false, true ];
+            var itemCount = tableModel.getItemCount();
+            var trueCount = 0;
+            for (var i = 0; i < itemCount; i += 1) {
+              if (tableModel.getItemAt(i)[cell.dataField] === booleanValues[1]) {
+                trueCount += 1;
+              }
+            }
+            var checked = trueCount != itemCount;
+            for (var i = 0; i < itemCount; i += 1) {
+              tableModel.getItemAt(i)[cell.dataField] =
+                booleanValues[checked? 1 : 0];
+            }
+            updateCheckBoxState();
+          }}});
+
+        if (!valuechangeHandler) {
+          valuechangeHandler = function(event, detail) {
+            if (detail.itemIndex.col == (<any>checkBox).cell.dataField) {
+              updateCheckBoxState();
+            }
+          };
+          tableModel.on('valuechange', valuechangeHandler);
+        }
+        td.$el.insertBefore(checkBox.$el, td.$el.firstChild);
+      };
+
+      var updateCheckBoxState = function() {
+        var cell = (<any>checkBox).cell;
+        var booleanValues = cell.booleanValues || [ false, true ];
+        var itemCount = tableModel.getItemCount();
+        var trueCount = 0;
+        for (var i = 0; i < itemCount; i += 1) {
+          if (tableModel.getItemAt(i)[cell.dataField] === booleanValues[1]) {
+            trueCount += 1;
+          }
+        }
+        checkBox.setChecked(trueCount > 0);
+        checkBox.setIncomplete(trueCount > 0 && trueCount != itemCount);
+      };
+
+      var initFilterButton = function() {
+        filterButton = createFilterButton();
+        util.set(filterButton.$el, {
+          on : { mousedown : function(event) {
+              event.preventDefault();
+              if (dialog == null) {
+                // wait for end edit then show dialog.
+                util.callLater(function() {
+                  dialog = showFilterDialog();
+                  dialog.on('dispose', function() {
+                    dialog = null;
+                  });
+                });
+              } else {
+                dialog.dispose();
+              }
+            }
+          }
+        });
+        td.$el.appendChild(filterButton.$el);
+      };
+
       var labelRenderer = createMultiLineLabelRenderer(td.$el);
 
       var tableModel : TemplateTableModel = <any>td.tableModel;
+      var checkBox : ui.CheckBox = null;
       var filterButton : FilterButton = null;
       var dialog : FilterDialog = null;
+
+      var valuechangeHandler : (event : any, detail : any) => void = null;
 
       return {
         render : function(cell) {
 
           labelRenderer.setLabel(cell.value || '\u00a0');
 
-          if (cell.dataField) {
-
-            if (!filterButton) {
-              filterButton = createFilterButton();
-              util.set(filterButton.$el, {
-                on : { mousedown : function(event) {
-                    event.preventDefault();
-                    if (dialog == null) {
-                      // wait for end edit then show dialog.
-                      util.callLater(function() {
-                        dialog = showFilterDialog();
-                        dialog.on('dispose', function() {
-                          dialog = null;
-                        });
-                      });
-                    } else {
-                      dialog.dispose();
-                    }
-                  }
-                }
-              });
-              td.$el.style.position = 'relative';
-              td.$el.appendChild(filterButton.$el);
+          // checckBox
+          if (cell.dataType == 'boolean') {
+            if (!checkBox) {
+              initCheckBox();
             }
+            (<any>checkBox).cell = cell;
+          }
+          if (checkBox) {
+            if (cell.dataType == 'boolean') {
+              checkBox.$el.style.display = 'inline-block';
+              updateCheckBoxState();
+            } else {
+              checkBox.$el.style.display = 'none';
+            }
+          }
 
+          // filterButton
+          if (cell.dataField) {
+            if (!filterButton) {
+              initFilterButton();
+            }
             filterButton.cell = cell;
             var sort = tableModel.sort;
             var filter = tableModel.getFilter(cell.dataField);
@@ -287,6 +355,9 @@ namespace comfortable {
           return { focus : function() {}, endEdit : function() {} };
         },
         dispose : function() {
+          if (valuechangeHandler) {
+            tableModel.off('valuechange', valuechangeHandler);
+          }
         }
       };
     };
