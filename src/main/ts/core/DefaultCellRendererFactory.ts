@@ -23,6 +23,7 @@ namespace comfortable {
 
     public $el : HTMLElement;
     private textfield : HTMLInputElement;
+    private button : HTMLElement;
 
     constructor(opts : TextEditorOptions) {
       this.opts = opts;
@@ -34,9 +35,12 @@ namespace comfortable {
       });
 
       if (this.opts.dataType == 'date') {
-        this.$el = this.createDateField();
+        var df = this.createDateField();
+        this.$el = df.body;
+        this.button = df.button;
       } else {
         this.$el = this.textfield;
+        this.button = null;
       }
     }
 
@@ -55,6 +59,10 @@ namespace comfortable {
       util.set(this.textfield, {
         style : { flex: '1 1 0%' },
         on : { keydown : function(event) {
+
+          if (!textEditor.cell.editable) {
+            return;
+          }
 
           switch(event.key) {
           case 'Enter':
@@ -158,7 +166,10 @@ namespace comfortable {
           mousedown : function(event) {
             event.preventDefault();
           },
-          click : function(event) {
+          click : (event) => {
+            if (!this.cell.editable) {
+              return;
+            }
             if (cal) {
               hideCal();
             } else {
@@ -168,9 +179,9 @@ namespace comfortable {
         }
       }, [ ui.createCalIcon(), ui.createSpacer() ]);
 
-      return util.createElement('div', {
+      return { body : util.createElement('div', {
         style : { display: 'flex', width: '100%', height: '100%' },
-      }, [ this.textfield, button ] );
+      }, [ this.textfield, button ] ), button : button };
     }
 
     private getDate() : Date {
@@ -201,7 +212,7 @@ namespace comfortable {
 
       var cs = window.getComputedStyle(td.$el, null);
       var opts : ElementOptions = {
-          props : {},
+          props : { readOnly : !cell.editable },
           style : {
             textAlign : cs.textAlign,
             verticalAlign : cs.verticalAlign,
@@ -209,13 +220,17 @@ namespace comfortable {
             backgroundColor : cs.backgroundColor,
             fontFamily : cs.fontFamily,
             fontSize : cs.fontSize,
-            fontWeight : cs.fontWeight
+            fontWeight : cs.fontWeight,
+            outline : cell.editable? '' : 'none'
           }
         };
       if (typeof cell.maxLength == 'number') {
         (<any>opts.props).maxLength = cell.maxLength;
       }
       util.set(this.textfield, opts);
+      if (this.button) {
+        this.button.style.opacity = cell.editable? '' : '0.5';
+      }
     }
     public focus() {
       this.textfield.focus();
@@ -283,6 +298,7 @@ namespace comfortable {
 
       var cs = window.getComputedStyle(td.$el, null);
       util.set(this.$el, {
+        props : { disabled : !cell.editable },
         style : {
         }
       });
@@ -290,6 +306,7 @@ namespace comfortable {
     }
     public focus() {
       this.$el.focus();
+      this.$el.select();
     }
     public blur() {
       this.$el.blur();
@@ -333,6 +350,7 @@ namespace comfortable {
 
       var cs = window.getComputedStyle(td.$el, null);
       util.set(this.$el, {
+        props : { disabled : !cell.editable },
         style : {
           textAlign : cs.textAlign,
           verticalAlign : cs.verticalAlign,
