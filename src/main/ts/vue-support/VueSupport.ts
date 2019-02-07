@@ -69,7 +69,7 @@ namespace comfortable {
 
       // observe the size of table.
       util.extend(this.$options, {
-        observeInterval : 20, // ms(50fps)
+        observeInterval : 50, // ms(20fps)
         alive : true, lastSize : { width : 0, height : 0 }
       });
       var observeSize = function() {

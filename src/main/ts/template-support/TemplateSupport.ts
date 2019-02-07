@@ -715,6 +715,9 @@ namespace comfortable {
         this.hiddenColumns = hiddenColumns;
         this.sort = tableState.sort;
         var filtered = false;
+        if (this.sort) {
+          filtered = true;
+        }
         for (var dataField in this.headerCells) {
           var filter = tableState.filters[dataField];
           this.getFilter(dataField).setState(filter || null);
