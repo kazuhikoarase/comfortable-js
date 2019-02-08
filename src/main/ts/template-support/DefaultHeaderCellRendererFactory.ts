@@ -239,6 +239,7 @@ namespace comfortable {
       var initCheckBox = function() {
         checkBox = ui.createCheckBox();
         util.set(checkBox.$el, {
+          style : { marginRight: '2px' } ,
           on : { mousedown : function(event) {
             event.preventDefault();
             var cell = (<any>checkBox).cell;
@@ -252,8 +253,8 @@ namespace comfortable {
             }
             var checked = trueCount != itemCount;
             for (var i = 0; i < itemCount; i += 1) {
-              tableModel.getItemAt(i)[cell.dataField] =
-                booleanValues[checked? 1 : 0];
+              var item = tableModel.getItemAt(i);
+              item[cell.dataField] = booleanValues[checked? 1 : 0];
             }
             updateCheckBoxState();
           }}});
