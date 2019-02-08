@@ -16,6 +16,7 @@ namespace comfortable {
   class TextEditor implements CellEditor<HTMLElement> {
 
     private opts : TextEditorOptions;
+    private defaultValue : any;
     private valueType : string;
 
     private tableModel : TableModel;
@@ -30,27 +31,51 @@ namespace comfortable {
 
       this.textfield = <HTMLInputElement>util.createElement('input', {
         attrs : { type : 'text', 'class' : '${prefix}-editor' },
-        on : { blur: (event) => {
+        on : { blur : (event) => {
           this.tableModel.trigger('valuecommit', this.cell); } }
       });
 
+      if (this.opts.dataType == 'number' ||
+          this.opts.dataType == 'date') {
+        this.textfield.style.imeMode = 'disabled';
+      }
+
       if (this.opts.dataType == 'date') {
+
         var df = this.createDateField();
+
         this.$el = df.body;
         this.button = df.button;
+
       } else {
+
+        util.set(this.textfield, {
+          on : { keydown : (event) => {
+
+            if (!this.cell.editable) {
+              return;
+            }
+
+            switch(event.key) {
+            case 'Escape':
+            case 'Esc':
+              this.setValue(this.defaultValue);
+              break;
+            }
+          } }
+        });
+
         this.$el = this.textfield;
         this.button = null;
       }
     }
 
     private createDateField() {
-      var textEditor = this;
-      var setSelectedDate = function(date : Date) {
-        textEditor.textfield.value = util.formatDate(util.parseDate(date) );
+      var setSelectedDate = (date : Date) => {
+        this.textfield.value = util.formatDate(util.parseDate(date) );
       };
-      var rollDate = function(offset : number) {
-        var date = textEditor.getDate();
+      var rollDate = (offset : number) => {
+        var date = this.getDate();
         if (date) {
           date.setDate(date.getDate() + offset);
           setSelectedDate(date);
@@ -58,21 +83,28 @@ namespace comfortable {
       };
       util.set(this.textfield, {
         style : { flex: '1 1 0%' },
-        on : { keydown : function(event) {
+        on : { keydown : (event) => {
 
-          if (!textEditor.cell.editable) {
+          if (!this.cell.editable) {
             return;
           }
 
+          var canceled = false;
           switch(event.key) {
-          case 'Enter':
           case 'Escape':
           case 'Esc':
+            // fall through.
+            canceled = true;
+          case 'Enter':
             if (cal) {
               event.preventDefault();
               event.stopPropagation();
               hideCal();
-              textEditor.textfield.select();
+              this.textfield.select();
+            } else {
+              if (canceled) {
+                this.setValue(this.defaultValue);
+              }
             }
             break;
           case 'Spacebar':
@@ -99,7 +131,7 @@ namespace comfortable {
               setSelectedDate(cal.getSelectedDate() );
             } else {
               rollDate(-1);
-              textEditor.textfield.select();
+              this.textfield.select();
             }
             break;
           case 'Right':
@@ -118,7 +150,7 @@ namespace comfortable {
               setSelectedDate(cal.getSelectedDate() );
             } else {
               rollDate(1);
-              textEditor.textfield.select();
+              this.textfield.select();
             }
             break;
           default:
@@ -240,12 +272,13 @@ namespace comfortable {
       this.textfield.blur();
     }
     public setValue(value : any) {
+      this.defaultValue = value;
+      this.valueType = typeof value;
       if (this.opts.dataType == 'number') {
       } else if (this.opts.dataType == 'date') {
         value = util.formatDate(value);
       }
       this.textfield.value = value;
-      this.valueType = typeof value;
     }
     public getValue() {
       if (this.opts.dataType == 'number') {
@@ -273,6 +306,7 @@ namespace comfortable {
 
     private opts : CheckBoxOptions;
     private booleanValues : any[] = null;
+    private defaultValue : any;
 
     private tableModel : TableModel;
     private cell : TableCell;
@@ -283,8 +317,24 @@ namespace comfortable {
 
     public $el = <HTMLInputElement>util.createElement('input', {
       attrs : { type : 'checkbox', 'class' : '${prefix}-editor' },
-      on : { blur: (event) => {
-        this.tableModel.trigger('valuecommit', this.cell); } }
+      on : {
+        blur : (event) => {
+          this.tableModel.trigger('valuecommit', this.cell);
+        },
+        keydown : (event) => {
+
+          if (!this.cell.editable) {
+            return;
+          }
+
+          switch(event.key) {
+          case 'Escape':
+          case 'Esc':
+            this.setValue(this.defaultValue);
+            break;
+          }
+        }
+      }
     });
 
     public setVisible(visible : boolean) {
@@ -312,6 +362,7 @@ namespace comfortable {
       this.$el.blur();
     }
     public setValue(value : any) {
+      this.defaultValue = value;
       this.$el.checked = (value === this.booleanValues[1]);
     }
     public getValue() {
@@ -325,6 +376,7 @@ namespace comfortable {
   class SelectBox implements CellEditor<HTMLSelectElement> {
 
     private opts : SelectBoxOptions;
+    private defaultValue : any;
 
     private tableModel : TableModel;
     private cell : TableCell;
@@ -335,8 +387,24 @@ namespace comfortable {
 
     public $el = <HTMLSelectElement>util.createElement('select', {
       attrs : { 'class' : '${prefix}-editor' },
-      on : { blur: (event) => {
-        this.tableModel.trigger('valuecommit', this.cell); } }
+      on : {
+        blur : (event) => {
+          this.tableModel.trigger('valuecommit', this.cell);
+        },
+        keydown : (event) => {
+
+          if (!this.cell.editable) {
+            return;
+          }
+
+          switch(event.key) {
+          case 'Escape':
+          case 'Esc':
+            this.setValue(this.defaultValue);
+            break;
+          }
+        }
+      }
     });
 
     public setVisible(visible : boolean) {
@@ -379,7 +447,7 @@ namespace comfortable {
       while (this.$el.childNodes.length > options.length) {
         this.$el.removeChild(this.$el.lastChild);
       }
-      // IE9 does not support style.display=none.
+      // IE9 does not support style.display=none for option.
       /*
       for (;i < select.childNodes.length; i += 1) {
         select.childNodes[i].style.display = 'none';
@@ -393,6 +461,7 @@ namespace comfortable {
       this.$el.blur();
     }
     public setValue(value : any) {
+      this.defaultValue = value;
       this.$el.value = value;
     }
     public getValue() {
