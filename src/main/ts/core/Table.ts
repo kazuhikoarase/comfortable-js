@@ -874,7 +874,7 @@ namespace comfortable {
           if (this.impl != null) {
             table.model.off('valuecommit', valuecommitHandler);
             var endState = this.impl.endEdit();
-            if (endState) {
+            if (endState && !(endState.oldValue === endState.newValue) ) {
               table.model.trigger('valuechange', {
                 row : this.cell.row,
                 col : this.cell.col,
