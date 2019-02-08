@@ -533,6 +533,7 @@ declare namespace comfortable {
         getItemAt: (row: number) => any;
         getItemCount: () => number;
         getItemIndexAt: (row: number, col: number) => ItemIndex;
+        getItemStyleAt: (itemIndex: ItemIndex) => TableCellStyle;
         getOrderedColumnIndexAt: (col: number) => number;
         orderedColumnIndices: number[];
         hiddenColumns: {

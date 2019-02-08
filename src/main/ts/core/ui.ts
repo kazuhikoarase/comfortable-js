@@ -53,7 +53,7 @@ namespace comfortable.ui {
 
     // fix for layout collapse by bootstrap.
     var antiBsGlobals : { [k : string] : string } = {
-        verticalAlign :'baseline',
+        verticalAlign :'top',
         boxSizing : 'content-box',
         lineHeight : '1' };
 
