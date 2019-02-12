@@ -312,7 +312,8 @@ namespace comfortable {
             { attrs : { type : 'text' },
               style : { width : '200px' },
               props : { value : sel.value? value : '' } } );
-          var opBody = util.createElement('div');
+          var opBody = util.createElement('div',
+            { style : { whiteSpace: 'nowrap' } });
           if (messages.OP_LAYOUT == 'L') {
             opBody.appendChild(sel);
             txt.style.marginLeft = '2px';
@@ -350,11 +351,39 @@ namespace comfortable {
         var op1 = createOpUI(customFilter.op1, customFilter.const1);
         var op2 = createOpUI(customFilter.op2, customFilter.const2);
 
+        var dialogPos = { left : 0, top : 0 };
+
         var cfDialog = <ui.Dialog>ui.createDialog([
-          util.createElement('div', { props : {
-              textContent : title + ' - ' + (<any>cell).label },
-            style : { margin : '2px' } }),
-          op1.$el, rdGrp, op2.$el,
+          util.createElement('div', { props : { textContent : title },
+            style : { margin : '2px' },
+            on: {
+              mousedown: function(event) {
+                var mousemoveHandler = function(event : any) {
+                  dialogPos.left = event.pageX - dragPoint.left;
+                  dialogPos.top = event.pageY - dragPoint.top;
+                  cfDialog.$el.style.left = dialogPos.left + 'px';
+                  cfDialog.$el.style.top = dialogPos.top + 'px';
+                };
+                var mouseupHandler = function(event : any) {
+                  util.$(document)
+                    .off('mousemove', mousemoveHandler)
+                    .off('mouseup', mouseupHandler);
+                };
+
+                event.preventDefault();
+                util.$(document)
+                  .on('mousemove', mousemoveHandler)
+                  .on('mouseup', mouseupHandler);
+                var dragPoint = {
+                  left: event.pageX - dialogPos.left,
+                  top: event.pageY - dialogPos.top
+                };
+              }
+            } }),
+          util.createElement('fieldset', [
+            util.createElement('legend', { props : {
+              textContent: '"' + (<any>cell).label +'"' } }),
+            op1.$el, rdGrp, op2.$el ]),
           util.createElement('div',
             { style : { textAlign : 'right' } }, [
             ui.createButton(messages.OK, (event)=>{
@@ -377,12 +406,12 @@ namespace comfortable {
             })
           ])
         ]).on('beforeshow', function() {
-          var left = document.documentElement.scrollLeft +
+          dialogPos.left = document.documentElement.scrollLeft +
             ( (window.innerWidth - this.$el.offsetWidth) / 2 );
-          var top = document.documentElement.scrollTop +
+          dialogPos.top = document.documentElement.scrollTop +
             ( (window.innerHeight - this.$el.offsetHeight) / 2 );
-          this.$el.style.left = left + 'px';
-          this.$el.style.top = top + 'px';
+          this.$el.style.left = dialogPos.left + 'px';
+          this.$el.style.top = dialogPos.top + 'px';
         });
 
         cfDialog.show();
