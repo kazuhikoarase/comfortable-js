@@ -321,6 +321,7 @@ namespace comfortable {
             }
           },
           wheel : (event) => {
+            event.preventDefault();
             this.hViewPane.scrollLeft += event.deltaX;
             this.vViewPane.scrollTop += event.deltaY;
           }
