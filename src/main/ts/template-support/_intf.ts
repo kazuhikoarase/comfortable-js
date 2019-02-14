@@ -74,7 +74,9 @@ namespace comfortable {
     filterFactory : () => Filter;
     getFilter : (dataField : string) => Filter;
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
-    headerCells : { [ dataField : string ] : TableTemplateCellStyle };
+    headCells : { [ dataField : string ] : TableTemplateCellStyle };
+    bodyCells : { [ dataField : string ] : TableTemplateCellStyle };
+    footCells : { [ dataField : string ] : TableTemplateCellStyle };
     items : any[];
     filteredItems : any[];
     resetFilter : () => void;
@@ -88,6 +90,10 @@ namespace comfortable {
     hoverRow : number;
     setTableState : (tableState : TemplateTableState) => void;
     getTableState : () => TemplateTableState;
+    forEachItemCells : (
+      callback: (
+        cell : TableTemplateCellStyle,
+        item : any, row : number, col : number) => boolean) => void;
   }
 
   export interface TemplateTableState {

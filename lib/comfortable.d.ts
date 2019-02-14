@@ -524,7 +524,13 @@ declare namespace comfortable {
         filterFactory: () => Filter;
         getFilter: (dataField: string) => Filter;
         defaultHeaderCellRendererFactory: TableCellRendererFactory;
-        headerCells: {
+        headCells: {
+            [dataField: string]: TableTemplateCellStyle;
+        };
+        bodyCells: {
+            [dataField: string]: TableTemplateCellStyle;
+        };
+        footCells: {
             [dataField: string]: TableTemplateCellStyle;
         };
         items: any[];
@@ -542,6 +548,7 @@ declare namespace comfortable {
         hoverRow: number;
         setTableState: (tableState: TemplateTableState) => void;
         getTableState: () => TemplateTableState;
+        forEachItemCells: (callback: (cell: TableTemplateCellStyle, item: any, row: number, col: number) => boolean) => void;
     }
     interface TemplateTableState {
         lockColumn: number;

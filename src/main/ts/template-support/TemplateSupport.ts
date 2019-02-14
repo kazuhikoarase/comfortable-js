@@ -434,6 +434,7 @@ namespace comfortable {
           if (typeof cell.columnResizable == 'boolean') {
             columnResizable[col] = cell.columnResizable;
           }
+          (<any>td)['.col'] = col;
           style[col] = td;
           col += cell.colSpan;
           c += 1;
@@ -443,14 +444,20 @@ namespace comfortable {
       });
     }();
 
-    var headerCells : { [ dataField : string ] : TableTemplateCellStyle } = {};
-    template.thead.forEach(function(row) {
-      row.forEach(function(cell) {
-        if (cell.dataField && !headerCells[cell.dataField]) {
-          headerCells[cell.dataField] = cell;
-        }
+    var getCellsByDataField = function(cellList: TableTemplateCellStyle[][]) {
+      var cells : { [ dataField : string ] : TableTemplateCellStyle } = {};
+      cellList.forEach(function(tr, row) {
+        tr.forEach(function(td : any) {
+          if (td.dataField && !cells[td.dataField]) {
+            cells[td.dataField] = util.extend(
+              { row: row, col: td['.col']}, td);
+          }
+          // delete temporary.
+          delete td['.col'];
+        });
       });
-    });
+      return cells;
+    };
 
     var getCellStyleAt = function(
         model : TemplateTableModel, row : number, col : number) {
@@ -491,7 +498,9 @@ namespace comfortable {
 
     class TemplateTableModelImpl
     extends DefaultTableModel implements TemplateTableModel {
-      public headerCells = headerCells;
+      public headCells = getCellsByDataField(template.thead);
+      public bodyCells = getCellsByDataField(template.tbody);
+      public footCells = getCellsByDataField(template.tfoot);
       public lockLeft = template.lockColumn || 0;
       public lockRight = 0;
       public enableLockColumn = true;
@@ -537,7 +546,7 @@ namespace comfortable {
       public selectedRows : { [ row : number ] : boolean } = {};
       public resetFilter() {
         this.sort = null;
-        for (var dataField in this.headerCells) {
+        for (var dataField in this.headCells) {
           this.getFilter(dataField).setState(null);
         }
         this.filteredItems = null;
@@ -554,6 +563,53 @@ namespace comfortable {
           this.orderedColumnIndices = createDefaultOrderedColumnIndices(this);
         }
         return this.orderedColumnIndices[col];
+      }
+      public getRawColumnAt(col : number) {
+        for (var i = 0; i < this.orderedColumnIndices.length; i += 1) {
+          if (this.orderedColumnIndices[i] == col) {
+            return i;
+          }
+        }
+        return 0;
+      }
+      public forEachItemCells(
+          callback : (
+            cell : TableTemplateCellStyle,
+            item : any, row : number, col : number) => boolean) : void {
+
+        var cells : { dataField : string, row : number, col : number}[]= [];
+        !function() {
+          for (var dataField in this.bodyCells) {
+            var cell = this.bodyCells[dataField];
+            cells.push({
+              dataField : dataField,
+              row : cell.row,
+              col : this.getRawColumnAt(cell.col)
+            });
+          }
+        }.bind(this)();
+        cells.sort(function(c1, c2) {
+          if (c1.row != c2.row) {
+            return c1.row < c2.row? -1 : 1;
+          }
+          return c1.col < c2.col? -1 : 1;
+        });
+
+        var lineRowOffset = this.getLineRowCountAt(0);
+        var lineRowCount = this.getLineRowCountAt(this.getLockTop() );
+        var items = this.filteredItems || this.items;
+
+        for (var r = 0; r < items.length; r += 1) {
+          var item = items[r];
+          for (var c = 0; c < cells.length; c += 1) {
+            var cell = cells[c];
+            var col = cell.col;
+            var row = lineRowOffset + r * lineRowCount + cell.row;
+            if (callback(cell, item, row, col) ) {
+              return;
+            }
+          }
+        }
       }
       public getItemIndexAt(row : number, col : number) : ItemIndex {
         if (row < headLength) {
@@ -717,7 +773,7 @@ namespace comfortable {
         if (this.sort) {
           filtered = true;
         }
-        for (var dataField in this.headerCells) {
+        for (var dataField in this.headCells) {
           var filter = tableState.filters[dataField];
           this.getFilter(dataField).setState(filter || null);
           if (filter) {
@@ -744,7 +800,7 @@ namespace comfortable {
         for (col in this.hiddenColumns) {
           hiddenColumns.push(col);
         }
-        for (var dataField in this.headerCells) {
+        for (var dataField in this.headCells) {
           var filter = this.getFilter(dataField);
           if (filter.enabled() ) {
             filters[dataField] = filter.getState();
@@ -817,7 +873,7 @@ namespace comfortable {
 
       var filters : { [ dataField : string ] : Filter } = {};
       !function() {
-        for (var dataField in this.headerCells) {
+        for (var dataField in this.headCells) {
           var filter = this.getFilter(dataField);
           if (filter.enabled() ) {
             filters[dataField] = filter;
@@ -847,7 +903,7 @@ namespace comfortable {
         var dataField = sort.dataField;
         var indexField = '.index';
         var sortKeyField = '.sortKey';
-        var comparator = this.headerCells[dataField].comparator;
+        var comparator = this.headCells[dataField].comparator;
         filteredItems.forEach(function(item, i) {
           item[indexField] = i;
           item[sortKeyField] = (item[dataField] === null ||

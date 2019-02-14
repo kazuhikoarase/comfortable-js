@@ -23,7 +23,7 @@ namespace comfortable {
 
   var getFilterValues = function(
       tableModel : TemplateTableModel, dataField : string) {
-    var comparator = tableModel.headerCells[dataField].comparator;
+    var comparator = tableModel.headCells[dataField].comparator;
     var exists : { [ value : string ] : boolean } = {};
     var filterValues : string[] = [];
     var items = tableModel.items;
