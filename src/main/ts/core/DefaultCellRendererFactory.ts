@@ -29,11 +29,27 @@ namespace comfortable {
     constructor(opts : TextEditorOptions) {
       this.opts = opts;
 
-      this.textfield = <HTMLInputElement>util.createElement('input', {
-        attrs : { type : 'text', 'class' : '${prefix}-editor' },
-        on : { blur : (event) => {
-          this.tableModel.trigger('valuecommit', this.cell); } }
-      });
+      if (opts.dataType == 'multi-line-string') {
+        this.textfield = <HTMLInputElement>util.createElement('textarea', {
+          attrs : { 'class' : '${prefix}-editor', rows : '1' },
+          on : {
+            blur : (event) => {
+              this.tableModel.trigger('valuecommit', this.cell);
+            },
+            keydown : (event) => {
+              if (event.key == 'Enter') {
+                event.stopPropagation();
+              }
+            }
+          }
+        });
+      } else {
+        this.textfield = <HTMLInputElement>util.createElement('input', {
+          attrs : { type : 'text', 'class' : '${prefix}-editor' },
+          on : { blur : (event) => {
+            this.tableModel.trigger('valuecommit', this.cell); } }
+        });
+      }
 
       if (this.opts.dataType == 'number' ||
           this.opts.dataType == 'date') {
@@ -290,7 +306,7 @@ namespace comfortable {
         return util.parseDate(
             util.toNarrowNumber(this.textfield.value) );
       }
-      return this.textfield.value;
+      return util.rtrim(this.textfield.value);
     }
     public isValid() {
       if (this.opts.dataType == 'number') {
@@ -653,7 +669,8 @@ namespace comfortable {
       if (typeof renderIsEditor == 'undefined') {
         renderIsEditor = opts.dataType == 'boolean' ||
           opts.dataType == 'select-one' ||
-          opts.dataType == 'date';
+          opts.dataType == 'date' ||
+          opts.dataType == 'multi-line-string';
       }
 
       var editing = false;

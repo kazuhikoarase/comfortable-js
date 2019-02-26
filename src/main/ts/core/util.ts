@@ -239,6 +239,11 @@ namespace comfortable {
       return value.replace(this.trimRe, '');
     },
 
+    rtrimRe : /[\s\u3000]+$/g,
+    rtrim : function(value : string) {
+      return value.replace(this.rtrimRe, '');
+    },
+
     format : function(msg : string, ...args : any[]) {
       for (var i = 0; i < args.length; i += 1) {
         msg = msg.replace(new RegExp('\\{' + i + '\\}'), '' + args[i]);

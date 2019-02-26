@@ -42,7 +42,7 @@ namespace comfortable {
     }
     public trigger(type : string, detail? : any) {
       var ctx = this;
-      (this.listeners(type)).forEach(function(listener : EventListener) {
+      this.listeners(type).forEach(function(listener : EventListener) {
         listener.call(ctx, { type : type }, detail);
       });
       return this;

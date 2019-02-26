@@ -449,6 +449,8 @@ declare namespace comfortable {
         translate: (val1: number, min1: number, max1: number, min2: number, max2: number, log?: string) => number;
         trimRe: RegExp;
         trim: (value: string) => string;
+        rtrimRe: RegExp;
+        rtrim: (value: string) => string;
         format: (msg: string, ...args: any[]) => string;
         numRe: RegExp;
         formatNumber: (value: string, digits?: number, s1?: string, s2?: string) => string;
