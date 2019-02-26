@@ -37,7 +37,7 @@ namespace comfortable {
               this.tableModel.trigger('valuecommit', this.cell);
             },
             keydown : (event) => {
-              if (event.key == 'Enter') {
+              if (event.keyCode == 13) { // Enter
                 event.stopPropagation();
               }
             }
@@ -72,9 +72,8 @@ namespace comfortable {
               return;
             }
 
-            switch(event.key) {
-            case 'Escape':
-            case 'Esc':
+            switch(event.keyCode) {
+            case 27: // Esc
               this.setValue(this.defaultValue);
               break;
             }
@@ -106,12 +105,11 @@ namespace comfortable {
           }
 
           var canceled = false;
-          switch(event.key) {
-          case 'Escape':
-          case 'Esc':
+          switch(event.keyCode) {
+          case 27: // Esc
             // fall through.
             canceled = true;
-          case 'Enter':
+          case 13: // Enter
             if (cal) {
               event.preventDefault();
               event.stopPropagation();
@@ -123,24 +121,21 @@ namespace comfortable {
               }
             }
             break;
-          case 'Spacebar':
-          case '\u0020':
+          case 32: // Space
             event.preventDefault();
             if (cal) {
             } else {
               showCal();
             }
             break;
-          case 'Left':
-          case 'ArrowLeft':
+          case 37: // Left
             if (cal != null) {
               event.preventDefault();
               cal.rollDate(-1);
               setSelectedDate(cal.getSelectedDate() );
             }
             break;
-          case 'Up':
-          case 'ArrowUp':
+          case 38: // Up
             event.preventDefault();
             if (cal != null) {
               cal.rollDate(-7);
@@ -150,16 +145,14 @@ namespace comfortable {
               this.textfield.select();
             }
             break;
-          case 'Right':
-          case 'ArrowRight':
+          case 39: // Right
             if (cal != null) {
               event.preventDefault();
               cal.rollDate(1);
               setSelectedDate(cal.getSelectedDate() );
             }
             break;
-          case 'Down':
-          case 'ArrowDown':
+          case 40: // Down
             event.preventDefault(); 
             if (cal != null) {
               cal.rollDate(7);
@@ -343,9 +336,8 @@ namespace comfortable {
             return;
           }
 
-          switch(event.key) {
-          case 'Escape':
-          case 'Esc':
+          switch(event.keyCode) {
+          case 27: // Esc
             this.setValue(this.defaultValue);
             break;
           }
@@ -413,9 +405,8 @@ namespace comfortable {
             return;
           }
 
-          switch(event.key) {
-          case 'Escape':
-          case 'Esc':
+          switch(event.keyCode) {
+          case 27: // Esc
             this.setValue(this.defaultValue);
             break;
           }
