@@ -292,7 +292,9 @@ namespace comfortable {
           'GREATER_THAN_OR_EQUALS',
           'LESS_THAN',
           'LESS_THAN_OR_EQUALS'].map(optMap) );
-        if (dataType == 'string' || dataType == 'date') {
+        if (dataType == 'string' ||
+            dataType == 'multi-line-string' ||
+            dataType == 'date') {
           opOpts = opOpts.concat([
             'STARTS_WITH',
             'NOT_STARTS_WITH',
@@ -425,6 +427,7 @@ namespace comfortable {
         messages.TEXT_FILTERS);
 
       if (!(dataType == 'string' ||
+          dataType == 'multi-line-string' ||
           dataType == 'number' ||
           dataType == 'date') ) {
         customFilterButton.$el.style.display = 'none';
