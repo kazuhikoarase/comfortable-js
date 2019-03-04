@@ -108,6 +108,7 @@ namespace comfortable {
       var filterValues = getFilterValues(tableModel, dataField);
 
       var rejects : any = {};
+      var valid = true;
 
       var filterItems : FilterItem[] = [ messages.SELECT_ALL ]
         .concat(filterValues)
@@ -448,6 +449,22 @@ namespace comfortable {
             activeCustomFilter(customFilter) );
         },
         getState : () => {
+
+          if (!valid) {
+            rejects = {};
+            filterItems.forEach(function(filterItem, i) {
+              if (i > 0) {
+                rejects[filterItem.value] = true;
+              }
+            });
+            filterItemList.items.forEach(function(filterItem) {
+              if (filterItem.checked) {
+                delete rejects[filterItem.value];
+              }
+            });
+            valid = true;
+          }
+
           customFilter.dataType = dataType;
           return {
             rejects : setToList(rejects),
@@ -464,9 +481,12 @@ namespace comfortable {
               placeHolder: messages.SEARCH },
             style : { width : '150px', margin : '4px 0px' },
             on : { keyup : function(event) {
+              valid = false;
               var value = event.currentTarget.value;
-              filterItemList.items = filterItems.filter(function(filterItem) {
-                return !(value && filterItem.label.indexOf(value) == -1);
+              filterItemList.items = filterItems.
+                  filter(function(filterItem, i) {
+                return !(i > 0 && value &&
+                  filterItem.label.indexOf(value) == -1);
               });
               filterItemList.invalidate();
             }} }),
