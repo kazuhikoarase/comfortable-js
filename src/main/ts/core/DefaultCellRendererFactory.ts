@@ -25,6 +25,7 @@ namespace comfortable {
     public $el : HTMLElement;
     private textfield : HTMLInputElement;
     private button : HTMLElement;
+    private enableEvent = true;
 
     constructor(opts : TextEditorOptions) {
       this.opts = opts;
@@ -47,7 +48,9 @@ namespace comfortable {
         this.textfield = <HTMLInputElement>util.createElement('input', {
           attrs : { type : 'text', 'class' : '${prefix}-editor' },
           on : { blur : (event) => {
-            this.tableModel.trigger('valuecommit', this.cell); } }
+            if (this.enableEvent) {
+              this.tableModel.trigger('valuecommit', this.cell); } }
+            }
         });
       }
 
@@ -186,6 +189,7 @@ namespace comfortable {
             setSelectedDate(date);
             hideCal();
           });
+        this.enableEvent = false;
         var off = util.offset(this.textfield);
         util.set(cal.$el, { style: {
           position: 'absolute',
@@ -199,8 +203,9 @@ namespace comfortable {
           document.body.removeChild(cal.$el);
           util.$(document).off('mousedown', mousedownHandler);
           cal = null;
+          this.enableEvent = true;
         }
-      };
+      }.bind(this);
       var button = util.createElement('span', {
         attrs : { 'class' : '${prefix}-cal-icon-button' },
         on : {
