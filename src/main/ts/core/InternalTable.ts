@@ -251,15 +251,16 @@ namespace comfortable {
       var trIndex = 0;
       while (row < rowCount && top < height) {
         var cellHeight = this.model.getCellHeightAt(row);
-        this.getOrCrt('tr', trIndex, this.tbody).
-          $el.style.height = cellHeight + 'px';
+        var tr = this.getOrCrt('tr', trIndex, this.tbody);
+        tr.$el.style.height = cellHeight + 'px';
+        tr.$el.style.display = '';
         tableState.height += cellHeight;
         top += cellHeight;
         row += 1;
         trIndex += 1;
       }
       for (;trIndex < this._tbody.childNodes.length; trIndex += 1) {
-        (<HTMLElement>this._tbody.childNodes[trIndex]).style.height = '0px';
+        (<HTMLElement>this._tbody.childNodes[trIndex]).style.display = 'none';
       }
       tableState.maxRow = Math.min(rowCount, tableState.minRow +
           (this.tbody.children? this.tbody.children.length : 0) ) - 1;
