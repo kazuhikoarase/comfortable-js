@@ -54,6 +54,7 @@ namespace comfortable {
 
   export interface TableTemplate {
     lockColumn? : number;
+    columnDraggable? : boolean;
     thead? : TableTemplateCellStyle[][];
     tbody? : TableTemplateCellStyle[][];
     tfoot? : TableTemplateCellStyle[][];

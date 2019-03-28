@@ -395,7 +395,6 @@ namespace comfortable {
     var columnCount = 0;
     var cellWidth : { [k : number] : number } = {};
     var cellHeight : { [k : number] : number } = {};
-    var columnDraggable : { [k : number] : boolean } = {};
     var columnResizable : { [k : number] : boolean } = {};
 
     var styles = function() {
@@ -427,9 +426,6 @@ namespace comfortable {
           }
           if (typeof cell.height == 'number') {
             cellHeight[row] = cell.height;
-          }
-          if (typeof cell.columnDraggable == 'boolean') {
-            columnDraggable[col] = cell.columnDraggable;
           }
           if (typeof cell.columnResizable == 'boolean') {
             columnResizable[col] = cell.columnResizable;
@@ -492,7 +488,10 @@ namespace comfortable {
               showColumnEditDialog(table);
             }
           }
-        ];
+        ].filter(function(menuitem, i) {
+            return !(!table.model.isColumnDraggable() &&
+              menuitem.label == messages.EDIT_COLUMNS);
+        });
       }
     }
 
@@ -528,7 +527,7 @@ namespace comfortable {
         createDefaultHeaderCellRendererFactory();
       public cellWidth = cellWidth;
       public cellHeight = cellHeight;
-      public columnDraggable = columnDraggable;
+      public columnDraggable = template.columnDraggable;
       public columnResizable = columnResizable;
       public orderedColumnIndices : number[] = null;
       public sort : Sort = null;
@@ -663,9 +662,8 @@ namespace comfortable {
         var v = this.cellHeight[row];
         return typeof v == 'number'? v : this.defaultCellHeight;
       }
-      public isColumnDraggableAt(col : number) {
-        var orderedCol = this.getOrderedColumnIndexAt(col);
-        var v = this.columnDraggable[orderedCol];
+      public isColumnDraggable() {
+        var v = this.columnDraggable;
         return typeof v == 'boolean'? v : true;
       }
       public isColumnResizableAt(col : number) {

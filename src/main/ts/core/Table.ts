@@ -138,7 +138,7 @@ namespace comfortable {
                 return;
               }
               if (td.row < this.model.getLockTop() &&
-                  this.model.isColumnDraggableAt(td.col) &&
+                  this.model.isColumnDraggable() &&
                   !event.defaultPrevented) {
                 event.preventDefault();
                 var mousemoveHandler = (event : Event) => {

@@ -88,7 +88,7 @@ declare namespace comfortable {
             col: number;
         };
         isColumnResizableAt: (col: number) => boolean;
-        isColumnDraggableAt: (col: number) => boolean;
+        isColumnDraggable: () => boolean;
     }
     interface TextEditorOptions {
         dataType: string;
@@ -508,6 +508,7 @@ declare namespace comfortable {
     type Comparator = (v1: any, v2: any) => number;
     interface TableTemplate {
         lockColumn?: number;
+        columnDraggable?: boolean;
         thead?: TableTemplateCellStyle[][];
         tbody?: TableTemplateCellStyle[][];
         tfoot?: TableTemplateCellStyle[][];

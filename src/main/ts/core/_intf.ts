@@ -91,7 +91,7 @@ namespace comfortable {
     getCellAt : (row : number, col : number) => TableCell;
     checkSpaned : (row : number, col : number) => { row : number, col : number };
     isColumnResizableAt : (col : number) => boolean;
-    isColumnDraggableAt : (col : number) => boolean;
+    isColumnDraggable : () => boolean;
   }
 
   export interface TextEditorOptions {
