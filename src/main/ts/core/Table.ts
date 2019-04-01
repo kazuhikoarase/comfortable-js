@@ -266,11 +266,17 @@ namespace comfortable {
           left : '0px', top : '0px', width : '100px', height : '100px' });
 
         this.frame.appendChild(viewPane);
-        this.barSize = {
+        var barSize = {
           width : viewPane.offsetWidth - viewPane.clientWidth,
           height : viewPane.offsetHeight - viewPane.clientHeight
         };
         this.frame.removeChild(viewPane);
+        if (barSize.width > 0 && barSize.height > 0) {
+          // cache
+          this.barSize = barSize;
+        } else {
+          return barSize;
+        }
       }
       return this.barSize;
     };
