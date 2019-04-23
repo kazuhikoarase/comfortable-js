@@ -179,7 +179,7 @@ namespace comfortable {
                 orderedColumnIndices.push(i + column.col);
               }
               if (column.hidden) {
-                hiddenColumns[tableModel.getOrderedColumnIndexAt(column.col)] = true;
+                hiddenColumns[column.col] = true;
               }
             } else if (column.type == ColumnType.LOCK_COLUMN) {
               lockColumn = col < columns.length - 1? col : 0;
