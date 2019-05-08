@@ -1,13 +1,3 @@
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     interface Editor {
         endEdit: () => void;
@@ -127,28 +117,8 @@ declare namespace comfortable {
         setVisible: (visible: boolean) => void;
     }
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     var createDefaultCellRendererFactoryOpts: () => CellRendererFactoryOpts;
     var createDefaultCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
@@ -157,16 +127,6 @@ declare namespace comfortable {
         setVisible: (visible: boolean) => void;
     };
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     interface Event {
         type: string;
@@ -185,28 +145,8 @@ declare namespace comfortable {
         off: (type: string, listener: EventListener) => EventTarget;
     }
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable.i18n {
     interface I18N {
         messages: Messages;
@@ -248,68 +188,18 @@ declare namespace comfortable.i18n {
     var getInstance: (lang: string) => I18N;
     var getMessages: () => Messages;
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable.i18n {
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable.i18n {
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     interface UIEventTarget extends EventTarget {
         invalidate: () => void;
         render: () => void;
     }
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     interface List<T, C extends ListCell> extends UIEventTarget {
         $el: HTMLElement;
@@ -324,42 +214,12 @@ declare namespace comfortable {
         row: number;
     }
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     var classNamePrefix: string;
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     var createTable: () => Table;
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable.ui {
     interface Menu {
         dispose: () => void;
@@ -389,16 +249,6 @@ declare namespace comfortable.ui {
     var createCalIcon: (r?: number) => HTMLElement;
     var createCalendar: (selectedDate: Date) => any;
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     interface ElementOptions {
         attrs?: {
@@ -457,28 +307,12 @@ declare namespace comfortable {
         toNarrowNumber: (value: string) => string;
         fillLeftZero: (s: string, digits: number) => string;
         formatYM: (year: number, month: number) => string;
-        /**
-         * format string(8)
-         */
         formatDate: (date: any) => string;
-        /**
-         * parse into string(8)
-         */
         dateRe: RegExp;
         parseDate: (value: any) => string;
         isHoliday: (date: Date) => boolean;
     };
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     interface TableTemplateCellStyle extends TableCellStyle, CellRendererFactoryOpts {
         width?: number;
@@ -486,23 +320,15 @@ declare namespace comfortable {
         columnDraggable?: boolean;
         columnResizable?: boolean;
         dataField?: string;
-        /** one of 'string(default)', 'number', 'boolean', 'select-one' */
         dataType?: string;
-        /** dataType : 'string', 'number' */
         maxLength?: number;
-        /** dataType : 'number' */
         decimalDigits?: number;
-        /** dataType : 'boolean',
-          2 elements array like [falseValue, trueValue].
-         */
         booleanValues?: any[];
-        /** dataType : 'select-one' */
         options?: (any[] | ((row: number, col: number) => any[]));
         labelField?: string;
         valueField?: string;
         factory?: TableCellRendererFactory;
         label?: (string | ((model: TemplateTableModel) => string));
-        /** dataType : 'number' */
         comparator?: Comparator;
     }
     type Comparator = (v1: any, v2: any) => number;
@@ -515,7 +341,6 @@ declare namespace comfortable {
     }
     interface ItemIndex {
         row: number;
-        /** col will be string if dataField is defined. */
         col: (number | string);
     }
     interface TemplateTableModel extends TableModel {
@@ -594,16 +419,6 @@ declare namespace comfortable {
     interface TemplateTable extends Table {
     }
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     class DefaultFilter implements Filter {
         createUI(dialog: () => EventTarget, opts: FilterDialogOptions, tableModel: TemplateTableModel, cell: TemplateTableCell): FilterUI;
@@ -617,16 +432,6 @@ declare namespace comfortable {
         getState(): any;
     }
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     interface FilterDialogOptions extends CellRendererFactoryOpts {
         sortOrder: string;
@@ -641,29 +446,9 @@ declare namespace comfortable {
     };
     var createDefaultHeaderCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     var fromTemplate: (template: TableTemplate) => TemplateTable;
 }
-/*!
- * comfortable
- *
- * Copyright (c) 2018 Kazuhiko Arase
- *
- * URL: https://github.com/kazuhikoarase/comfortable-js/
- *
- * Licensed under the MIT license:
- *  http://www.opensource.org/licenses/mit-license.php
- */
 declare namespace comfortable {
     var vueComponents: {
         table: {

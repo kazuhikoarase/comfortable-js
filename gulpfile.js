@@ -21,6 +21,7 @@ var mainTsProject = ts.createProject({
   noImplicitAny : true,
   declaration : true,
   stripInternal : true,
+  removeComments : true,
   outFile : `${targetName}.js`
 });
 
