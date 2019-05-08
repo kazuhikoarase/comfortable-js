@@ -35,7 +35,9 @@ namespace comfortable {
           attrs : { 'class' : '${prefix}-editor', rows : '1' },
           on : {
             blur : (event) => {
-              this.tableModel.trigger('valuecommit', this.cell);
+              if (this.$el.style.display) {
+                this.tableModel.trigger('valuecommit', this.cell);
+              }
             },
             keydown : (event) => {
               if (event.keyCode == 13) { // Enter
@@ -48,7 +50,7 @@ namespace comfortable {
         this.textfield = <HTMLInputElement>util.createElement('input', {
           attrs : { type : 'text', 'class' : '${prefix}-editor' },
           on : { blur : (event) => {
-            if (this.enableEvent) {
+            if (this.enableEvent && this.$el.style.display) {
               this.tableModel.trigger('valuecommit', this.cell); } }
             }
         });
