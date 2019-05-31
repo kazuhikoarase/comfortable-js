@@ -739,9 +739,9 @@ namespace comfortable {
 
         tableState.lockColumn = tableState.lockColumn || 0;
         tableState.enableLockColumn = !!tableState.enableLockColumn;
-        tableState.cellWidths = tableState.cellWidths || <any>{};
-        tableState.cellHeights = tableState.cellHeights || <any>{};
-        tableState.hiddenColumns = tableState.hiddenColumns || <any>{};
+        tableState.cellWidths = tableState.cellWidths || [];
+        tableState.cellHeights = tableState.cellHeights || [];
+        tableState.hiddenColumns = tableState.hiddenColumns || [];
         tableState.sort = tableState.sort || null;
         tableState.filters = tableState.filters || {};
         tableState.orderedColumnIndices =
