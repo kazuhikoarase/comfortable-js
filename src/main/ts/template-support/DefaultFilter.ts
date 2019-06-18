@@ -32,7 +32,7 @@ namespace comfortable {
       if (typeof value == 'undefined') {
         continue;
       }
-      value = '' + value;
+      value = value === null? '' : '' + value;
       if (!exists[value]) {
         if (value != '') {
           filterValues.push(value);
@@ -94,6 +94,12 @@ namespace comfortable {
   };
 
   export class DefaultFilter implements Filter {
+
+    private dataType : string;
+
+    constructor(dataType : string) {
+      this.dataType = dataType;
+    }
 
     public createUI(
       dialog : () => EventTarget,
@@ -512,9 +518,17 @@ namespace comfortable {
     }
 
     public accept(value : any) {
-      if (this.rejects[value]) {
+      if (this.rejects[value === null? '' : '' + value]) {
         return false;
-      } else if (!this.customFilterAccept(value) ) {
+      }
+      if (value === null) {
+        if (this.dataType == 'number') {
+          value = 0;
+        } else {
+          value = '';
+        }
+      }
+      if (!this.customFilterAccept(value) ) {
         return false;
       } else {
         return true;

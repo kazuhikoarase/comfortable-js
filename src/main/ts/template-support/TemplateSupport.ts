@@ -532,10 +532,12 @@ namespace comfortable {
       public orderedColumnIndices : number[] = null;
       public sort : Sort = null;
       private filters : { [ dataField : string ] : Filter } = {};
-      public filterFactory() : Filter { return new DefaultFilter(); }
+      public filterFactory(dataField : string) : Filter {
+        return new DefaultFilter(this.headCells[dataField].dataType || 'string');
+      }
       public getFilter(dataField : string) : Filter {
         return this.filters[dataField] ||
-          (this.filters[dataField] = this.filterFactory() );
+          (this.filters[dataField] = this.filterFactory(dataField) );
       }
       public hiddenColumns : { [ orderedCol : number ] : boolean } = {};
       public items : any[] = [];

@@ -349,7 +349,7 @@ declare namespace comfortable {
         setLockLeft: (lockLeft: number) => void;
         setLockRight: (lockLeft: number) => void;
         sort: Sort;
-        filterFactory: () => Filter;
+        filterFactory: (dataField: string) => Filter;
         getFilter: (dataField: string) => Filter;
         defaultHeaderCellRendererFactory: TableCellRendererFactory;
         headCells: {
@@ -421,6 +421,8 @@ declare namespace comfortable {
 }
 declare namespace comfortable {
     class DefaultFilter implements Filter {
+        private dataType;
+        constructor(dataType: string);
         createUI(dialog: () => EventTarget, opts: FilterDialogOptions, tableModel: TemplateTableModel, cell: TemplateTableCell): FilterUI;
         enabled(): boolean;
         accept(value: any): boolean;

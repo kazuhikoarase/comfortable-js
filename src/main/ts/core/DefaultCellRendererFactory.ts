@@ -294,7 +294,7 @@ namespace comfortable {
       } else if (this.opts.dataType == 'date') {
         value = util.formatDate(value);
       }
-      this.textfield.value = value;
+      this.textfield.value = value || '';
     }
     public getValue() {
       if (this.opts.dataType == 'number') {

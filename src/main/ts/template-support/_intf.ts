@@ -72,7 +72,7 @@ namespace comfortable {
     setLockLeft : (lockLeft : number) => void;
     setLockRight : (lockLeft : number) => void;
     sort : Sort;
-    filterFactory : () => Filter;
+    filterFactory : (dataField : string) => Filter;
     getFilter : (dataField : string) => Filter;
     defaultHeaderCellRendererFactory : TableCellRendererFactory;
     headCells : { [ dataField : string ] : TableTemplateCellStyle };
