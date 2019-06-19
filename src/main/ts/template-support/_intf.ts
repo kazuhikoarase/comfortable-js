@@ -37,6 +37,7 @@ namespace comfortable {
       2 elements array like [falseValue, trueValue].
      */
     booleanValues? : any[];
+    showGroupCheck? : boolean;
 
     /** dataType : 'select-one' */
     options? : (any[] | ((row : number, col : number) => any[]) );

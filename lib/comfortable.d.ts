@@ -324,6 +324,7 @@ declare namespace comfortable {
         maxLength?: number;
         decimalDigits?: number;
         booleanValues?: any[];
+        showGroupCheck?: boolean;
         options?: (any[] | ((row: number, col: number) => any[]));
         labelField?: string;
         valueField?: string;

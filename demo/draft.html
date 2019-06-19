@@ -16,7 +16,7 @@
 var table = comfortable.fromTemplate({
   thead: [
     [
-      { dataField: 'b', label: 'Boolean' },
+      { dataField: 'b', label: 'Boolean', showGroupCheck : false },
       { dataField: 's', label: 'String' },
       { dataField: 'n', label: 'Number' },
       { dataField: 'ns', label: 'NumberS' },
@@ -45,7 +45,7 @@ table.model.on('valuechange', function(event, detail) {
 });
 var items = [];
 for (var i = 0; i < 100; i += 1) {
-  items.push({ b: i%2==0?'T':'F',s: 'x', ns: '' + i, n: i, d: '20190101', x:'n/a' });
+  items.push({ b: i%2==0?'T':'F',s: i%2==0?null:'', ns: '' + i, n: i, d: '20190101', x:'n/a' });
 }
 table.model.items = items;
 

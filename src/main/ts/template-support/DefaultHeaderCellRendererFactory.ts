@@ -315,20 +315,24 @@ namespace comfortable {
 
       var valuechangeHandler : (event : any, detail : any) => void = null;
 
+      var showGroupCheck  = function(cell : any) {
+        return cell.dataType == 'boolean' && cell.showGroupCheck !== false;
+      };
+
       return {
         render : function(cell) {
 
           labelRenderer.setLabel(cell.value || '\u00a0');
 
           // checckBox
-          if (cell.dataType == 'boolean') {
+          if (showGroupCheck(cell) ) {
             if (!checkBox) {
               initCheckBox();
             }
             (<any>checkBox).cell = cell;
           }
           if (checkBox) {
-            if (cell.dataType == 'boolean') {
+            if (showGroupCheck(cell) ) {
               checkBox.$el.style.display = 'inline-block';
               updateCheckBoxState();
             } else {
