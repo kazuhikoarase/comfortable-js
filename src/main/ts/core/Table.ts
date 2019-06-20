@@ -863,7 +863,10 @@ namespace comfortable {
         impl : null,
         cell : null,
         beginEdit : function(row, col, makeVisible) {
-          this.endEdit();
+          if (this.cell && !(this.cell.row == row && this.cell.col == col) ) {
+            // current editing cell changed.
+            this.endEdit();
+          }
           if (makeVisible) {
             table.render({ row : row, col : col });
           }
