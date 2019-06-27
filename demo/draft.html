@@ -16,6 +16,7 @@
 var table = comfortable.fromTemplate({
   thead: [
     [
+      {},
       { dataField: 'b', label: 'Boolean', showGroupCheck : false },
       { dataField: 's', label: 'String' },
       { dataField: 'n', label: 'Number' },
@@ -25,6 +26,11 @@ var table = comfortable.fromTemplate({
   ],
   tbody: [
     [
+      { dataField: 'se', dataType : 'select-one', options : [
+        { value : '', label : '' },
+        { value : '1', label : 'A' },
+        { value : '2', label : 'B' }
+      ] },
       { dataField: 'b', dataType : 'boolean', width:20, booleanValues:['F','T'] },
       { dataField: 's', dataType : 'string', width:20 },
       { dataField: 'n', dataType : 'number' },
