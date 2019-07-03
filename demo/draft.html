@@ -1,8 +1,8 @@
 <!doctype html>
 <html>
 <head>
-<meta charset="UTF-8" />
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta charset="UTF-8" />
 <link rel="stylesheet" href="../lib/comfortable.css" />
 <script src="../lib/comfortable.js"></script>
 <style>
@@ -47,11 +47,13 @@ table.model.defaultCellStyle.borderRight = '1px solid silver';
 table.model.defaultCellStyle.borderBottom = '1px solid silver';
 table.$el.style.border = '1px solid silver';
 table.model.on('valuechange', function(event, detail) {
-  console.log(event, detail);
+  console.log('valuechange', event, detail);
 });
 var items = [];
 for (var i = 0; i < 100; i += 1) {
-  items.push({ b: i%2==0?'T':'F',s: i%2==0?null:'', ns: '' + i, n: i, d: '20190101', x:'n/a' });
+  items.push({ b: i%2==0?'T':'F',s: i%2==0?null:'', ns: '' + i,
+      nsTooltip : (i % 2 == 0? null : 'hi!'),
+      n: i, d: '20190101', x:'n/a' });
 }
 table.model.items = items;
 

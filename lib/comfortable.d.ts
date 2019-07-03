@@ -121,6 +121,7 @@ declare namespace comfortable {
 }
 declare namespace comfortable {
     var createDefaultCellRendererFactoryOpts: () => CellRendererFactoryOpts;
+    var attachTooltipFeature: (td: TdWrapper, renderer: TableCellRenderer) => TableCellRenderer;
     var createDefaultCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
     var createMultiLineLabelRenderer: (parent: HTMLElement) => {
         setLabel: (label: string) => void;
