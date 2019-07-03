@@ -345,7 +345,8 @@ namespace comfortable {
               td.renderer.dispose();
             }
             td.$el.innerHTML = '';
-            td.renderer = td.factory(<TdWrapper>td);
+            td.renderer = attachTooltipFeature(
+              <TdWrapper>td, td.factory(<TdWrapper>td) );
           }
 
           util.set(td.$el, this.getCellStyle(cell) );

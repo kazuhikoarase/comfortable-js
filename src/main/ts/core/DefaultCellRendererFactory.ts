@@ -638,6 +638,41 @@ namespace comfortable {
     };
   };
 
+  export var attachTooltipFeature = function(
+      td : TdWrapper, renderer : TableCellRenderer) : TableCellRenderer {
+
+    var tooltip : Tooltip = null;
+
+    return {
+      render : function(cell) {
+        if (cell.tooltip) {
+          if (!tooltip) {
+            tooltip = createTooltip(td);
+            td.$el.appendChild(tooltip.$el);
+          }
+          tooltip.text = cell.tooltip;
+          tooltip.$el.style.display = '';
+        } else {
+          if (tooltip) {
+            tooltip.text = '';
+            tooltip.$el.style.display = 'none';
+          }
+        }
+        renderer.render(cell);
+      },
+      beginEdit : function(cell) {
+        return renderer.beginEdit(cell);
+      },
+      dispose : function() {
+        renderer.dispose();
+        if (tooltip) {
+          tooltip.dispose();
+          tooltip = null;
+        }
+      }
+    };
+  };
+
   export var createDefaultCellRendererFactory =
       function(opts? : CellRendererFactoryOpts) :
         TableCellRendererFactory {
@@ -649,8 +684,6 @@ namespace comfortable {
       var labelRenderer = createMultiLineLabelRenderer(td.$el);
       var editor : CellEditor<any> = null;
       var oldValue : any = null;
-
-      var tooltip : Tooltip = null;
 
       var beginEdit = function(cell : EditorCell) {
         if (editor == null) {
@@ -675,21 +708,6 @@ namespace comfortable {
 
       return {
         render : function(cell) {
-
-          if (cell.tooltip) {
-            if (!tooltip) {
-              tooltip = createTooltip(td);
-              td.$el.appendChild(tooltip.$el);
-            }
-            tooltip.text = cell.tooltip;
-            tooltip.$el.style.display = '';
-          } else {
-            if (tooltip) {
-              tooltip.text = '';
-              tooltip.$el.style.display = 'none';
-            }
-          }
-
           if (!renderIsEditor) {
             labelRenderer.setLabel(opts.labelFunction(cell.value, cell) );
             if (!cell.textAlign && opts.dataType == 'number') {
@@ -723,10 +741,6 @@ namespace comfortable {
           };
         },
         dispose : function() {
-          if (tooltip) {
-            tooltip.dispose();
-            tooltip = null;
-          }
         }
       };
     };
