@@ -168,5 +168,4 @@ namespace comfortable.renderer {
       style : { display: 'flex', width: '100%', height: '100%' },
     }, [ editor.textfield, button ] ), button : button };
   }
-
 }

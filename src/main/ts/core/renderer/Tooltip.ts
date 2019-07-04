@@ -11,7 +11,6 @@
 
 namespace comfortable.renderer {
 
-
   interface Tooltip {
     $el : HTMLElement;
     text : string;

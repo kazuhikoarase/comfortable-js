@@ -159,5 +159,4 @@ namespace comfortable.renderer {
       return true;
     }
   }
-
 }

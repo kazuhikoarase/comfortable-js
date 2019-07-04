@@ -138,5 +138,4 @@ namespace comfortable.renderer {
       return options || [];
     }
   }
-
 }
