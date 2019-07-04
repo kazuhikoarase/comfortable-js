@@ -11,8 +11,6 @@
 
 namespace comfortable.i18n {
 
-  'use strict';
-
   export interface I18N {
     messages : Messages
   }

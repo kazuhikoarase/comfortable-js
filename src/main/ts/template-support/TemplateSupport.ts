@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   var createDefaultOrderedColumnIndices = function(tableModel : TableModel) {
     var orderedColumnIndices : number[] = [];
     var columnCount = tableModel.getColumnCount();

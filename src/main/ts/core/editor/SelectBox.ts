@@ -11,8 +11,6 @@
 
 namespace comfortable.editor {
 
-  'use strict';
-
   export class SelectBox implements CellEditor<HTMLSelectElement> {
 
     private opts : SelectBoxOptions;

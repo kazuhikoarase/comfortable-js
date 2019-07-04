@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   export interface ElementOptions {
     attrs? : { [ key : string ] : string };
     style? : { [ key : string ] : string };

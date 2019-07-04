@@ -11,8 +11,6 @@
 
 namespace comfortable.ui {
 
-  'use strict';
-
   export interface Menu {
     dispose : () => void;
   }

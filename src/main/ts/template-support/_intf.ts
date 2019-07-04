@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   export interface TableTemplateCellStyle
   extends TableCellStyle, CellRendererFactoryOpts {
 

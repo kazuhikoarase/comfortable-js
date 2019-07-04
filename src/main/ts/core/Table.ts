@@ -13,8 +13,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   interface CellRect {
     left : number;
     top : number;

@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   interface Selector {
     $el : HTMLElement,
     selected : boolean,

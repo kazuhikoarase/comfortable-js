@@ -13,8 +13,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   export interface UIEventTarget extends EventTarget {
     invalidate : () => void;
     render : () => void;

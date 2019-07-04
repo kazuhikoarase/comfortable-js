@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   export var classNamePrefix = 'ctj';
 
 }

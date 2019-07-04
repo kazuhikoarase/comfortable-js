@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   export interface Event {
     type : string;
     target? : any;

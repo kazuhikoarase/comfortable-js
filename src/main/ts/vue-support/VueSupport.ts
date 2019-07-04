@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   var table = {
     template: '<div class="comfortable"></div>',
     props : {

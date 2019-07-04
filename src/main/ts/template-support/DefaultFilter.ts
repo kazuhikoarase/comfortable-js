@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   interface FilterItem {
     index: number;
     label: any;

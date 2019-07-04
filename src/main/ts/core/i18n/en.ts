@@ -11,8 +11,6 @@
 
 namespace comfortable.i18n {
 
-  'use strict';
-
   /**
    * @internal
    */

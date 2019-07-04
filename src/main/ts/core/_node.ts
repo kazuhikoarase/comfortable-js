@@ -11,8 +11,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   // export
   declare var exports : any, module : any;
   if (typeof exports === 'object') {

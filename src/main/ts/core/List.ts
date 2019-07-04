@@ -13,8 +13,6 @@
 
 namespace comfortable {
 
-  'use strict';
-
   export interface List<T,C extends ListCell> extends UIEventTarget {
     $el : HTMLElement;
     getItemAt : (index : number) => T;

@@ -11,8 +11,6 @@
 
 namespace comfortable.editor {
 
-  'use strict';
-
   export class TextEditor implements CellEditor<HTMLElement> {
 
     private opts : TextEditorOptions;
