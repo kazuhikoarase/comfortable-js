@@ -9,7 +9,7 @@
  *  http://www.opensource.org/licenses/mit-license.php
  */
 
-namespace comfortable.editor {
+namespace comfortable.renderer {
 
   export class SelectBox implements CellEditor<HTMLSelectElement> {
 

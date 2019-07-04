@@ -343,7 +343,7 @@ namespace comfortable {
               td.renderer.dispose();
             }
             td.$el.innerHTML = '';
-            td.renderer = attachTooltipFeature(
+            td.renderer = renderer.attachTooltipFeature(
               <TdWrapper>td, td.factory(<TdWrapper>td) );
           }
 
