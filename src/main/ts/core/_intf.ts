@@ -26,6 +26,7 @@ namespace comfortable {
   }
 
   export interface TableCellRenderer {
+    getCellStyle? : (cell : any) => ElementOptions;
     render : (cell : any) => void;
     beginEdit : (cell : any) => {
       focus() : void;

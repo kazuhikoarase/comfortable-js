@@ -288,7 +288,7 @@ namespace comfortable {
         }
 
         if (changed) {
-          this.invalidate();
+          this.render(null, true);
           this.model.trigger('rowselectionchange',
               { selectedRows : this.model.selectedRows });
         }

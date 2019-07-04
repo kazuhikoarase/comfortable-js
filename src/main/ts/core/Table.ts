@@ -692,7 +692,8 @@ namespace comfortable {
           style : { display : 'none', left : '0px', height : '0px' } });
       }
     }
-    public render(visibleCell? : { row : number, col : number }) {
+    public render(visibleCell? : { row : number, col : number },
+        cellStyleOnly? : boolean) {
 
       var renderParams = this.getRenderParams();
 
@@ -789,11 +790,11 @@ namespace comfortable {
         util.extend(table.$el.style, {
           left : rect.left + 'px', top : rect.top + 'px',
           width : rect.width + 'px', height : rect.height + 'px' });
-        table.render();
+        table.render(!!cellStyleOnly);
 
       });
 
-      if (this.editor.cell != null) {
+      if (this.editor.cell != null && !cellStyleOnly) {
         this.editor.beginEdit(this.editor.cell.row, this.editor.cell.col);
       }
 

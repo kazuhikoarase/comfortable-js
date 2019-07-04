@@ -69,7 +69,7 @@ namespace comfortable {
     calcCellPosition : (left : number, top : number) => {
       left : number, top : number, row : number, col : number};
     preRender : () => TableState;
-    render : () => void;
+    render : (cellStyleOnly : boolean) => void;
   }
 
   var createTableState = function() : TableState {
@@ -286,7 +286,7 @@ namespace comfortable {
       return tableState;
     }
 
-    public render() {
+    public render(cellStyleOnly : boolean) {
 
       var tableState = this.preRender();
       var spaned : { [id : string] : boolean } = {};
@@ -350,7 +350,13 @@ namespace comfortable {
           }
 
           util.set(td.$el, this.getCellStyle(cell) );
-          td.renderer.render(cell);
+          if (td.renderer.getCellStyle) {
+            util.set(td.$el, td.renderer.getCellStyle(cell) );
+          }
+
+          if (!cellStyleOnly) {
+            td.renderer.render(cell);
+          }
 
           tdIndex += 1;
         }
