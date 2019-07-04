@@ -21,6 +21,7 @@ namespace comfortable.renderer {
     setValue(value : any) : void;
     visibleState : string;
     readOnlyText? : boolean;
+    beginEdit? : (td : TdWrapper, cell : TableCell) => void;
   }
 
   export class TextEditor implements CellEditor<HTMLElement> {
@@ -147,6 +148,9 @@ namespace comfortable.renderer {
       util.set(this.textfield, opts);
       if (this.delegator) {
         this.delegator.button.style.opacity = cell.editable? '' : '0.5';
+        if (this.delegator.beginEdit) {
+          this.delegator.beginEdit(td, cell);
+        }
       }
     }
     public focus() {

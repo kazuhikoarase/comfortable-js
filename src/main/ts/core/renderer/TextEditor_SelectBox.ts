@@ -10,16 +10,21 @@
  */
 
 namespace comfortable.renderer {
-  var createOptions = function() {
-    return util.extend(new EventTargetImpl(), {
-      $el: util.createElement('div', { props : { textContent : 'hi!' } }) });
+
+  /**
+   * @internal
+   */
+  export interface OptionsData {
+    options : any[];
+    labelField : string;
+    valueField : string;
   }
 
   export var createTextEditorSelectBox =
       function(editor : TextEditor) : TextEditorDelegator {
 
-    var setSelectedDate = (date : Date) => {
-      editor.textfield.value = util.formatDate(util.parseDate(date) );
+    var setSelectedOption = (option : any) => {
+//      editor.textfield.value = util.formatDate(util.parseDate(date) );
     };
 
     util.set(editor.textfield, {
@@ -85,6 +90,7 @@ namespace comfortable.renderer {
     });
 
     var options : any = null;
+    var optionsData : OptionsData = null;
 
     var mousedownHandler = function(event : any) {
       if (options && util.closest(event.target, { $el: options.$el }) ) {
@@ -97,9 +103,10 @@ namespace comfortable.renderer {
       if (options) {
         hideOptions();
       }
-      options = createOptions()
-        .on('click', function(event : any, date : Date) {
-          setSelectedDate(date);
+      console.log('showOptions:::', optionsData);
+      options = ui.createOptions('', optionsData)
+        .on('click', function(event : any, option : any) {
+          setSelectedOption(option);
           hideOptions();
         });
       editor.enableEvent = false;
@@ -120,7 +127,7 @@ namespace comfortable.renderer {
       }
     };
     var button = util.createElement('span', {
-      attrs : { 'class' : '${prefix}-cal-icon-button' },
+      attrs : { 'class' : '${prefix}-options-icon-button' },
       on : {
         mousedown : function(event) {
           event.preventDefault();
@@ -136,7 +143,7 @@ namespace comfortable.renderer {
           }
         }
       }
-    }, [ ui.createCalIcon(), ui.createSpacer() ]);
+    }, [ ui.createOptionsIcon(), ui.createSpacer() ]);
 
     var setValue = function(value : any)  {
       value = util.formatDate(value);
@@ -147,6 +154,13 @@ namespace comfortable.renderer {
           util.toNarrowNumber(editor.textfield.value) );
     }
     var visibleState = 'flex';
+    var beginEdit =  function(td : TdWrapper, cell : SelectBoxCell) {
+      optionsData = {
+        options : SelectBox.getOptions(cell),
+        labelField : cell.labelField || 'label',
+        valueField : cell.valueField || 'value'
+      };
+    };
 
     return {
       body : util.createElement('div', {
@@ -157,7 +171,8 @@ namespace comfortable.renderer {
       setValue : setValue,
       getValue : getValue,
       visibleState : visibleState,
-      readOnlyText : true
+      readOnlyText : true,
+      beginEdit : beginEdit
     };
   }
 }
