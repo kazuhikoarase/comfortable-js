@@ -61,7 +61,7 @@ namespace comfortable {
       // create an editor
       createEditor : function() {
         if (this.dataType == 'select-one') {
-          return new renderer.SelectBox(this);
+          //return new renderer.SelectBox(this);
         } else if (this.dataType == 'boolean') {
           return new renderer.CheckBox(this);
         }

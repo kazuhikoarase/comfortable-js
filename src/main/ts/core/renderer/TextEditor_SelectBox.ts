@@ -10,33 +10,16 @@
  */
 
 namespace comfortable.renderer {
+  var createOptions = function() {
+    return util.extend(new EventTargetImpl(), {
+      $el: util.createElement('div', { props : { textContent : 'hi!' } }) });
+  }
 
-  export var createTextEditorDateField =
+  export var createTextEditorSelectBox =
       function(editor : TextEditor) : TextEditorDelegator {
-
-    var getDate = function() : Date {
-      if (editor.isValid() ) {
-        var value = <string>editor.getValue();
-        if (value) {
-          return new Date(
-            +value.substring(0, 4),
-            +value.substring(4, 6) - 1,
-            +value.substring(6, 8) );
-        }
-      }
-      return null;
-    };
 
     var setSelectedDate = (date : Date) => {
       editor.textfield.value = util.formatDate(util.parseDate(date) );
-    };
-
-    var rollDate = (offset : number) => {
-      var date = getDate();
-      if (date) {
-        date.setDate(date.getDate() + offset);
-        setSelectedDate(date);
-      }
     };
 
     util.set(editor.textfield, {
@@ -53,10 +36,10 @@ namespace comfortable.renderer {
           // fall through.
           canceled = true;
         case 13: // Enter
-          if (cal) {
+          if (options) {
             event.preventDefault();
             event.stopPropagation();
-            hideCal();
+            hideOptions();
             editor.textfield.select();
           } else {
             if (canceled) {
@@ -66,43 +49,33 @@ namespace comfortable.renderer {
           break;
         case 32: // Space
           event.preventDefault();
-          if (cal) {
+          if (options) {
           } else {
-            showCal();
+            showOptions();
           }
           break;
         case 37: // Left
-          if (cal != null) {
-            event.preventDefault();
-            cal.rollDate(-1);
-            setSelectedDate(cal.getSelectedDate() );
-          }
           break;
         case 38: // Up
           event.preventDefault();
-          if (cal != null) {
-            cal.rollDate(-7);
-            setSelectedDate(cal.getSelectedDate() );
+          if (options != null) {
+//            cal.rollDate(-7);
+//            setSelectedDate(cal.getSelectedDate() );
           } else {
-            rollDate(-1);
-            editor.textfield.select();
+//            rollDate(-1);
+//            editor.textfield.select();
           }
           break;
         case 39: // Right
-          if (cal != null) {
-            event.preventDefault();
-            cal.rollDate(1);
-            setSelectedDate(cal.getSelectedDate() );
-          }
           break;
         case 40: // Down
           event.preventDefault(); 
-          if (cal != null) {
-            cal.rollDate(7);
-            setSelectedDate(cal.getSelectedDate() );
+          if (options != null) {
+//            cal.rollDate(7);
+//            setSelectedDate(cal.getSelectedDate() );
           } else {
-            rollDate(1);
-            editor.textfield.select();
+//            rollDate(1);
+//            editor.textfield.select();
           }
           break;
         default:
@@ -111,38 +84,38 @@ namespace comfortable.renderer {
       } }
     });
 
-    var cal : any = null;
+    var options : any = null;
 
     var mousedownHandler = function(event : any) {
-      if (cal && util.closest(event.target, { $el: cal.$el }) ) {
+      if (options && util.closest(event.target, { $el: options.$el }) ) {
       } else if (util.closest(event.target, { $el: button }) ) {
       } else {
-        hideCal();
+        hideOptions();
       }
     };
-    var showCal = function() {
-      if (cal) {
-        hideCal();
+    var showOptions = function() {
+      if (options) {
+        hideOptions();
       }
-      cal = ui.createCalendar(getDate() || new Date() )
+      options = createOptions()
         .on('click', function(event : any, date : Date) {
           setSelectedDate(date);
-          hideCal();
+          hideOptions();
         });
       editor.enableEvent = false;
       var off = util.offset(editor.textfield);
-      util.set(cal.$el, { style: {
+      util.set(options.$el, { style: {
         position: 'absolute',
         left : off.left + 'px',
         top : (off.top + editor.textfield.offsetHeight) + 'px' } });
-      document.body.appendChild(cal.$el);
+      document.body.appendChild(options.$el);
       util.$(document).on('mousedown', mousedownHandler);
     };
-    var hideCal = function() {
-      if (cal) {
-        document.body.removeChild(cal.$el);
+    var hideOptions = function() {
+      if (options) {
+        document.body.removeChild(options.$el);
         util.$(document).off('mousedown', mousedownHandler);
-        cal = null;
+        options = null;
         editor.enableEvent = true;
       }
     };
@@ -156,10 +129,10 @@ namespace comfortable.renderer {
           if (!editor.cell.editable) {
             return;
           }
-          if (cal) {
-            hideCal();
+          if (options) {
+            hideOptions();
           } else {
-            showCal() ;
+            showOptions() ;
           }
         }
       }
@@ -183,7 +156,8 @@ namespace comfortable.renderer {
       button : button,
       setValue : setValue,
       getValue : getValue,
-      visibleState : visibleState
+      visibleState : visibleState,
+      readOnlyText : true
     };
   }
 }
