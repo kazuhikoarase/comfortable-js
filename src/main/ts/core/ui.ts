@@ -351,14 +351,18 @@ namespace comfortable.ui {
     return cal;
   };
 
-  export var createOptions = function(
-      selectedValue : any,
-      optionsData : renderer.OptionsData) {
+  export var createOptions = function(optionsData : renderer.OptionsData) {
+    var cont = util.createElement('div');
+    optionsData.options.forEach(function(option : any) {
+      cont.appendChild(util.createElement('div', {
+        props : { textContent : option[optionsData.labelField] + '\u00a0' }
+      }) );
+    });
     return util.extend(new EventTargetImpl(), {
       $el: util.createElement('div', {
-        props : { textContent : 'hi!' },
+        props : { },
         attrs : { 'class': '${prefix}-options' }
-      }) });
+      }, [cont]) });
   };
 
   export var createOptionsIcon = function(size? : number) {

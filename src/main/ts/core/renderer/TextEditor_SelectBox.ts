@@ -15,6 +15,7 @@ namespace comfortable.renderer {
    * @internal
    */
   export interface OptionsData {
+    selectedIndex : number;
     options : any[];
     labelField : string;
     valueField : string;
@@ -29,64 +30,69 @@ namespace comfortable.renderer {
 
     util.set(editor.textfield, {
       style : { flex: '1 1 0%' },
-      on : { keydown : (event) => {
+      on : {
+        keydown : (event) => {
 
-        if (!editor.cell.editable) {
-          return;
-        }
+          if (!editor.cell.editable) {
+            return;
+          }
 
-        var canceled = false;
-        switch(event.keyCode) {
-        case 27: // Esc
-          // fall through.
-          canceled = true;
-        case 13: // Enter
-          if (options) {
-            event.preventDefault();
-            event.stopPropagation();
-            hideOptions();
-            editor.textfield.select();
-          } else {
-            if (canceled) {
-              editor.setValue(editor.defaultValue);
+          var canceled = false;
+          switch(event.keyCode) {
+          case 27: // Esc
+            // fall through.
+            canceled = true;
+          case 13: // Enter
+            if (options) {
+              event.preventDefault();
+              event.stopPropagation();
+              hideOptions();
+              editor.textfield.select();
+            } else {
+              if (canceled) {
+                editor.setValue(editor.defaultValue);
+              }
             }
+            break;
+          case 32: // Space
+            event.preventDefault();
+            if (options) {
+            } else {
+              showOptions();
+            }
+            break;
+          case 37: // Left
+            break;
+          case 38: // Up
+            event.preventDefault();
+            if (options != null) {
+  //            cal.rollDate(-7);
+  //            setSelectedDate(cal.getSelectedDate() );
+            } else {
+  //            rollDate(-1);
+  //            editor.textfield.select();
+            }
+            break;
+          case 39: // Right
+            break;
+          case 40: // Down
+            event.preventDefault(); 
+            if (options != null) {
+  //            cal.rollDate(7);
+  //            setSelectedDate(cal.getSelectedDate() );
+            } else {
+  //            rollDate(1);
+  //            editor.textfield.select();
+            }
+            break;
+          default:
+            break;
           }
-          break;
-        case 32: // Space
-          event.preventDefault();
-          if (options) {
-          } else {
-            showOptions();
-          }
-          break;
-        case 37: // Left
-          break;
-        case 38: // Up
-          event.preventDefault();
-          if (options != null) {
-//            cal.rollDate(-7);
-//            setSelectedDate(cal.getSelectedDate() );
-          } else {
-//            rollDate(-1);
-//            editor.textfield.select();
-          }
-          break;
-        case 39: // Right
-          break;
-        case 40: // Down
-          event.preventDefault(); 
-          if (options != null) {
-//            cal.rollDate(7);
-//            setSelectedDate(cal.getSelectedDate() );
-          } else {
-//            rollDate(1);
-//            editor.textfield.select();
-          }
-          break;
-        default:
-          break;
+        },
+        blur : function() {
+          hideOptions();
         }
-      } }
+      }
     });
 
     var options : any = null;
@@ -100,21 +106,25 @@ namespace comfortable.renderer {
       }
     };
     var showOptions = function() {
+
       if (options) {
         hideOptions();
       }
-      console.log('showOptions:::', optionsData);
-      options = ui.createOptions('', optionsData)
+
+      options = ui.createOptions(optionsData)
         .on('click', function(event : any, option : any) {
           setSelectedOption(option);
           hideOptions();
         });
       editor.enableEvent = false;
-      var off = util.offset(editor.textfield);
+      var target = editor.$el;
+      var off = util.offset(target);
       util.set(options.$el, { style: {
         position: 'absolute',
         left : off.left + 'px',
-        top : (off.top + editor.textfield.offsetHeight) + 'px' } });
+        top : (off.top + target.offsetHeight) + 'px',
+        minWidth : target.offsetWidth + 'px',
+        maxHeight : '200px' } });
       document.body.appendChild(options.$el);
       util.$(document).on('mousedown', mousedownHandler);
     };
@@ -154,8 +164,9 @@ namespace comfortable.renderer {
           util.toNarrowNumber(editor.textfield.value) );
     }
     var visibleState = 'flex';
-    var beginEdit =  function(td : TdWrapper, cell : SelectBoxCell) {
+    var beginEdit = function(td : TdWrapper, cell : SelectBoxCell) {
       optionsData = {
+        selectedIndex : -1,
         options : SelectBox.getOptions(cell),
         labelField : cell.labelField || 'label',
         valueField : cell.valueField || 'value'
