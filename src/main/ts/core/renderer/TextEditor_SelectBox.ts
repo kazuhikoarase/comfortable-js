@@ -24,8 +24,20 @@ namespace comfortable.renderer {
   export var createTextEditorSelectBox =
       function(editor : TextEditor) : TextEditorDelegator {
 
-    var setSelectedOption = (option : any) => {
-//      editor.textfield.value = util.formatDate(util.parseDate(date) );
+    var setSelectedIndex = (index : number) => {
+      optionsData.selectedIndex = index;
+      editor.textfield.value = index == -1? '' :
+        optionsData.options[index][optionsData.labelField];
+    };
+    var rollIndex = (offset : number) => {
+      var index = Math.max(0,
+        Math.min(optionsData.selectedIndex + offset,
+          optionsData.options.length - 1) );
+      if (0 <= index && index < optionsData.options.length) {
+        setSelectedIndex(index);
+      } else {
+        setSelectedIndex(-1);
+      }
     };
 
     util.set(editor.textfield, {
@@ -66,11 +78,11 @@ namespace comfortable.renderer {
           case 38: // Up
             event.preventDefault();
             if (options != null) {
-  //            cal.rollDate(-7);
-  //            setSelectedDate(cal.getSelectedDate() );
+              options.rollIndex(-1);
+              setSelectedIndex(options.getSelectedIndex() );
             } else {
-  //            rollDate(-1);
-  //            editor.textfield.select();
+              rollIndex(-1);
+              editor.textfield.select();
             }
             break;
           case 39: // Right
@@ -78,11 +90,11 @@ namespace comfortable.renderer {
           case 40: // Down
             event.preventDefault(); 
             if (options != null) {
-  //            cal.rollDate(7);
-  //            setSelectedDate(cal.getSelectedDate() );
+              options.rollIndex(1);
+              setSelectedIndex(options.getSelectedIndex() );
             } else {
-  //            rollDate(1);
-  //            editor.textfield.select();
+              rollIndex(1);
+              editor.textfield.select();
             }
             break;
           default:
@@ -112,8 +124,8 @@ namespace comfortable.renderer {
       }
 
       options = ui.createOptions(optionsData)
-        .on('click', function(event : any, option : any) {
-          setSelectedOption(option);
+        .on('click', function(event : any, detail : any) {
+          setSelectedIndex(detail.index);
           hideOptions();
         });
       editor.enableEvent = false;
@@ -156,13 +168,20 @@ namespace comfortable.renderer {
     }, [ ui.createOptionsIcon(), ui.createSpacer() ]);
 
     var setValue = function(value : any)  {
-      value = util.formatDate(value);
-      editor.textfield.value = (value === null)? '' : value;
-    }
+      var selectedIndex = -1;
+      optionsData.options.forEach(function(option, i) {
+        if (selectedIndex == -1 &&
+            option[optionsData.valueField] === value) {
+          selectedIndex = i;
+        }
+      });
+      setSelectedIndex(selectedIndex);
+    };
     var getValue = function() : any  {
-      return util.parseDate(
-          util.toNarrowNumber(editor.textfield.value) );
-    }
+      return optionsData.selectedIndex == -1? null :
+        optionsData.options[optionsData.selectedIndex]
+        [optionsData.valueField];
+    };
     var visibleState = 'flex';
     var beginEdit = function(td : TdWrapper, cell : SelectBoxCell) {
       optionsData = {

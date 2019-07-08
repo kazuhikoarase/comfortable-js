@@ -352,17 +352,64 @@ namespace comfortable.ui {
   };
 
   export var createOptions = function(optionsData : renderer.OptionsData) {
+
     var cont = util.createElement('div');
-    optionsData.options.forEach(function(option : any) {
+    var selectedIndex = optionsData.selectedIndex;
+
+    optionsData.options.forEach(function(option : any, index : number) {
       cont.appendChild(util.createElement('div', {
-        props : { textContent : option[optionsData.labelField] + '\u00a0' }
+        attrs : { 'class': '${prefix}-option' },
+        props : { textContent : option[optionsData.labelField] + '\u00a0' },
+        on: {
+          mousedown: function(event) { event.preventDefault(); },
+          click: function() {
+            selectedIndex = index;
+            options.trigger('click', { index : index });
+          } } 
       }) );
     });
-    return util.extend(new EventTargetImpl(), {
+
+    var updateUI = function() {
+      var options = cont.childNodes;
+      var selectedOption : any = null;
+      for (var i = 0; i < options.length; i += 1) {
+        var option = options[i];
+        util.$(<any>option).addClass('${prefix}-option-selected',
+          i != selectedIndex);
+        if (i == selectedIndex) {
+          selectedOption = option;
+        }
+      }
+      if (selectedOption) {
+        selectedOption.scrollIntoView();
+      }
+    };
+
+    updateUI();
+
+    var options = util.extend(new EventTargetImpl(), {
       $el: util.createElement('div', {
         props : { },
-        attrs : { 'class': '${prefix}-options' }
-      }, [cont]) });
+        attrs : { 'class': '${prefix}-options' },
+        style : { overflow : 'auto' }
+      }, [cont]),
+      rollIndex : function(offset : number) {
+        var index = Math.max(0,
+          Math.min(selectedIndex + offset,
+            optionsData.options.length - 1) );
+        if (0 <= index && index < optionsData.options.length) {
+          selectedIndex = index;
+        } else {
+          selectedIndex = -1;
+        }
+        updateUI();
+      },
+      getSelectedIndex : function() {
+        return selectedIndex;
+      }
+    });
+
+    return options;
   };
 
   export var createOptionsIcon = function(size? : number) {

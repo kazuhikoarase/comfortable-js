@@ -19,8 +19,10 @@ namespace comfortable {
     $el : HTMLElement;
     model : TableModel;
     editor : Editor;
-    forEachCells : (callback : (cell : {
-      $el : HTMLElement, row : number, col : number }) => void) => void;
+    forEachCells : (callback : (
+      cell : {
+        $el : HTMLElement, row : number, col : number 
+      }) => boolean) => void;
   }
 
   export interface TableCellRenderer {

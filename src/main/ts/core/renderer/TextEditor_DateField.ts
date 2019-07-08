@@ -173,11 +173,11 @@ namespace comfortable.renderer {
     var setValue = function(value : any)  {
       value = util.formatDate(value);
       editor.textfield.value = (value === null)? '' : value;
-    }
+    };
     var getValue = function() : any  {
       return util.parseDate(
           util.toNarrowNumber(editor.textfield.value) );
-    }
+    };
     var visibleState = 'flex';
 
     return {

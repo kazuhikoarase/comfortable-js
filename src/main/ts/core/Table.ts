@@ -902,13 +902,17 @@ namespace comfortable {
 
     public $el = this.frame;
     public forEachCells(callback : any) {
-      this.tables.forEach(function(table) {
-        (table.tbody.children || []).forEach(function(tr) {
-          (tr.children || []).forEach(function(cell) {
-            callback(<any>cell);
-          });
-        });
-      });
+      for (var t = 0; t < this.tables.length; t += 1) {
+        var rows = this.tables[t].tbody.children || [];
+        for (var r = 0; r < rows.length; r += 1) {
+          var cells = rows[r].children || [];
+          for (var c = 0; c < cells.length; c += 1) {
+            if (callback(cells[c]) === true) {
+              return;
+            }
+          }
+        }
+      }
     }
     public editor = this.createInternalEditor();
     public model : TableModel = null;
