@@ -207,8 +207,8 @@ namespace comfortable.ui {
           }
         }
         return util.createElement('td',
-            { props: { textContent: '' + date.getDate() },
-              attrs: { 'class': className },
+            { props: { textContent : '' + date.getDate() },
+              attrs: { 'class' : className },
               on: { mousedown: function(event) { event.preventDefault(); },
                 click: function() {
                   table.trigger('click', date);
@@ -217,16 +217,16 @@ namespace comfortable.ui {
     }
     var table = util.extend(new EventTargetImpl(), {
       $el: util.createElement('table',
-        { attrs: { 'class': '${prefix}-cal-table' } }, [ thead, tbody ])
+        { attrs: { 'class' : '${prefix}-cal-table' } }, [ thead, tbody ])
     });
     return table;
   };
 
   var createCalButton = function(prev : boolean, action : () => void) {
     return util.createElement('span',
-        { style: { display: 'inline-block', float: prev? 'left' : 'right' },
-          attrs: { 'class': '${prefix}-cal-button' },
-          on: { mousedown: function(event) { event.preventDefault(); },
+        { style: { display : 'inline-block', float: prev? 'left' : 'right' },
+          attrs: { 'class' : '${prefix}-cal-button' },
+          on: { mousedown : function(event) { event.preventDefault(); },
             click: action } },
         [ util.createSVGElement('svg',
             { attrs: { width: '16', height: '16',
@@ -241,16 +241,18 @@ namespace comfortable.ui {
   };
 
   export var createSpacer = function() {
-    return util.createElement('span',{ style: { verticalAlign:'middle',
-        display:'inline-block', height: '100%' } });
+    return util.createElement('span',{ style: {
+        verticalAlign :'middle',
+        display :'inline-block',
+        height : '100%' } });
   };
 
   export var createCalIcon = function(r? : number) {
     r = r || 3;
     var w = r * 5 + 1;
     var calIcon = util.createElement('canvas', {
-      style : { verticalAlign: 'middle' },
-      props : { width: '' + w, height: '' + w,
+      style : { verticalAlign : 'middle' },
+      props : { width : '' + w, height : '' + w,
          },
       on : {
         click : function(event) {
@@ -261,7 +263,7 @@ namespace comfortable.ui {
     ctx.clearRect(0, 0, w, w);
     for (var x = 0; x < w; x += 1) {
       for (var y = 0; y < w; y += 1) {
-        if (x % r== 0 || y % r == 0) {
+        if (x % r == 0 || y % r == 0) {
           if (0 < y && y < r && r < x && x < r * 4) {
           } else {
             ctx.fillStyle = '#333';
@@ -298,20 +300,20 @@ namespace comfortable.ui {
     });
 
     var title = util.createElement('span',
-        { style: { verticalAlign: 'middle' } });
+        { style: { verticalAlign : 'middle' } });
     var titleBody = util.createElement('span',
-        { style: { flex: '1 1 0%', textAlign: 'center' },
+        { style: { flex: '1 1 0%', textAlign : 'center' },
           on: { mousedown: function(event : any) { event.preventDefault(); },
             click: function() {
               setDisplayDate(defaultSelected);
               update();
             } } }, [ title, createSpacer() ]);
     var header = util.createElement('div',
-        { style: { display: 'flex' } }, [ prev, titleBody, next ]);
+        { style: { display : 'flex' } }, [ prev, titleBody, next ]);
 
     var cal = util.extend(new EventTargetImpl(), {
       $el: util.createElement('div', [ header ],
-        { attrs: { 'class': '${prefix}-calendar' } }),
+        { attrs: { 'class' : '${prefix}-calendar' } }),
       rollDate: function(offset : number) {
         selectedDate = new Date(
           selectedDate.getFullYear(),
@@ -348,5 +350,93 @@ namespace comfortable.ui {
 
     return cal;
   };
+
+  export var createOptions = function(optionsData : renderer.OptionsData) {
+
+    var cont = util.createElement('div');
+    var selectedIndex = optionsData.selectedIndex;
+
+    optionsData.options.forEach(function(option : any, index : number) {
+      cont.appendChild(util.createElement('div', {
+        attrs : { 'class': '${prefix}-option' },
+        props : { textContent : option[optionsData.labelField] + '\u00a0' },
+        on: {
+          mousedown: function(event) { event.preventDefault(); },
+          click: function() {
+            selectedIndex = index;
+            options.trigger('click', { index : index });
+          } } 
+      }) );
+    });
+
+    var updateUI = function() {
+      var options = cont.childNodes;
+      var selectedOption : any = null;
+      for (var i = 0; i < options.length; i += 1) {
+        var option = options[i];
+        util.$(<any>option).addClass('${prefix}-option-selected',
+          i != selectedIndex);
+        if (i == selectedIndex) {
+          selectedOption = option;
+        }
+      }
+      if (selectedOption) {
+        selectedOption.scrollIntoView();
+      }
+    };
+
+    updateUI();
+
+    var options = util.extend(new EventTargetImpl(), {
+      $el: util.createElement('div', {
+        props : { },
+        attrs : { 'class': '${prefix}-options' },
+        style : { overflow : 'auto' }
+      }, [cont]),
+      rollIndex : function(offset : number) {
+        var index = Math.max(0,
+          Math.min(selectedIndex + offset,
+            optionsData.options.length - 1) );
+        if (0 <= index && index < optionsData.options.length) {
+          selectedIndex = index;
+        } else {
+          selectedIndex = -1;
+        }
+        updateUI();
+      },
+      getSelectedIndex : function() {
+        return selectedIndex;
+      }
+    });
+
+    return options;
+  };
+
+  export var createOptionsIcon = function(size? : number) {
+
+    var w = size || 16;
+    var hGap = 3;
+    var vGap = 5;
+
+    var optionsIcon = util.createSVGElement('svg', {
+      style : { verticalAlign : 'middle' },
+      attrs : { width : '' + w, height : '' + w },
+      on : {
+        click : function(event) {
+        }
+      }
+    }, [ util.createSVGElement('path', {
+      attrs : { d : 'M' + hGap + ' ' + vGap +
+          'L' + (w / 2) + ' ' + (w - vGap) +
+          'L' + (w - hGap) + ' ' + vGap,
+        fill : 'none', stroke : '#333',
+        'stroke-width' : '2',
+        'stroke-linecap' : 'round',
+        'stroke-linejoin' : 'round' }
+      }) ]);
+
+    return optionsIcon;
+  };
+
 
 }

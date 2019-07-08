@@ -11,6 +11,19 @@
 
 namespace comfortable.renderer {
 
+  /**
+   * @internal
+   */
+  export interface TextEditorDelegator {
+    body : HTMLElement;
+    button : HTMLElement;
+    getValue() : any;
+    setValue(value : any) : void;
+    visibleState : string;
+    readOnlyText? : boolean;
+    beginEdit? : (td : TdWrapper, cell : TableCell) => void;
+  }
+
   export class TextEditor implements CellEditor<HTMLElement> {
 
     private opts : TextEditorOptions;
@@ -22,8 +35,9 @@ namespace comfortable.renderer {
 
     public $el : HTMLElement;
     public textfield : HTMLInputElement;
-    private button : HTMLElement;
     public enableEvent = true;
+
+    private delegator : TextEditorDelegator;
 
     constructor(opts : TextEditorOptions) {
 
@@ -60,10 +74,17 @@ namespace comfortable.renderer {
 
       if (this.opts.dataType == 'date') {
 
-        var df = createDateField(this);
+        var df = createTextEditorDateField(this);
 
         this.$el = df.body;
-        this.button = df.button;
+        this.delegator = df;
+
+      } else if (this.opts.dataType == 'select-one') {
+
+        var sb = createTextEditorSelectBox(this);
+
+        this.$el = sb.body;
+        this.delegator = sb;
 
       } else {
 
@@ -83,13 +104,14 @@ namespace comfortable.renderer {
         });
 
         this.$el = this.textfield;
-        this.button = null;
+        this.delegator = null;
       }
     }
 
     public setVisible(visible : boolean) {
-      if (this.opts.dataType == 'date') {
-        this.$el.style.display = visible? 'flex' : 'none';
+      if (this.delegator) {
+        this.$el.style.display = visible?
+          this.delegator.visibleState : 'none';
       } else {
         this.$el.style.display = visible? '' : 'none';
       }
@@ -100,9 +122,15 @@ namespace comfortable.renderer {
       this.tableModel = td.tableModel;
       this.cell = cell;
 
+      var readOnly = !cell.editable;
+      if (this.delegator && this.delegator.readOnlyText) {
+        // force readOnly
+        readOnly = true;
+      }
+
       var cs = window.getComputedStyle(td.$el, null);
       var opts : ElementOptions = {
-          props : { readOnly : !cell.editable },
+          props : { readOnly : readOnly },
           style : {
             textAlign : cs.textAlign,
             verticalAlign : cs.verticalAlign,
@@ -118,8 +146,11 @@ namespace comfortable.renderer {
         (<any>opts.props).maxLength = cell.maxLength;
       }
       util.set(this.textfield, opts);
-      if (this.button) {
-        this.button.style.opacity = cell.editable? '' : '0.5';
+      if (this.delegator) {
+        this.delegator.button.style.opacity = cell.editable? '' : '0.5';
+        if (this.delegator.beginEdit) {
+          this.delegator.beginEdit(td, cell);
+        }
       }
     }
     public focus() {
@@ -132,23 +163,24 @@ namespace comfortable.renderer {
     public setValue(value : any) {
       this.defaultValue = value;
       this.valueType = typeof value;
-      if (this.opts.dataType == 'number') {
-      } else if (this.opts.dataType == 'date') {
-        value = util.formatDate(value);
+      if (this.delegator) {
+        this.delegator.setValue(value);
+      //} else if (this.opts.dataType == 'number') {
+      } else {
+        this.textfield.value = (value === null)? '' : value;
       }
-      this.textfield.value = (value === null)? '' : value;
     }
     public getValue() {
-      if (this.opts.dataType == 'number') {
+      if (this.delegator) {
+        return this.delegator.getValue();
+      } else if (this.opts.dataType == 'number') {
         var value = util.formatNumber(
             util.toNarrowNumber(this.textfield.value),
             this.opts.decimalDigits, '');
         return this.valueType == 'number'? +value : value;
-      } else if (this.opts.dataType == 'date') {
-        return util.parseDate(
-            util.toNarrowNumber(this.textfield.value) );
+      } else {
+        return util.rtrim(this.textfield.value);
       }
-      return util.rtrim(this.textfield.value);
     }
     public isValid() {
       if (this.opts.dataType == 'number') {

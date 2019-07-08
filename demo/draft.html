@@ -9,15 +9,28 @@
 </style>
 </head>
 <body>
+<div id="log"></div>
+<button id="btn"> test </button>
 <script>
 
 'use strict';
 
+var options = [
+  { value : null, label : '' },
+  { value : '1', label : 'A' },
+  { value : '2', label : 'B' }
+];
+
+options = [];
+for (var i = 0; i < 100; i += 1) {
+  options.push({ label : 'LABEL' + i, value : i });
+}
+
 var table = comfortable.fromTemplate({
   thead: [
     [
-      {},
-      { dataField: 'b', label: 'Boolean', showGroupCheck : false },
+      { dataField: 'se', dataType : 'select-one', options : options },
+      { dataField: 'b', label: 'Boolean', _showGroupCheck : false },
       { dataField: 's', label: 'String' },
       { dataField: 'n', label: 'Number' },
       { dataField: 'ns', label: 'NumberS' },
@@ -26,11 +39,7 @@ var table = comfortable.fromTemplate({
   ],
   tbody: [
     [
-      { dataField: 'se', dataType : 'select-one', options : [
-        { value : '', label : '' },
-        { value : '1', label : 'A' },
-        { value : '2', label : 'B' }
-      ] },
+      { dataField: 'se', dataType : 'select-one', options : options },
       { dataField: 'b', dataType : 'boolean', width:20, booleanValues:['F','T'] },
       { dataField: 's', dataType : 'string', width:20 },
       { dataField: 'n', dataType : 'number' },
@@ -58,7 +67,7 @@ for (var i = 0; i < 100; i += 1) {
 table.model.items = items;
 
 //
-table.$el.style.width = '500px';
+table.$el.style.width = '800px';
 table.$el.style.height = '250px';
 
 //request rendering.
@@ -67,6 +76,12 @@ table.invalidate();
 table.model.setTableState({});
 
 document.body.appendChild(table.$el);
+
+document.getElementById('btn').addEventListener('click', function() {
+
+  document.getElementById('log').textContent = JSON.stringify(table.model.items[0]);
+
+});
 
 </script>
 

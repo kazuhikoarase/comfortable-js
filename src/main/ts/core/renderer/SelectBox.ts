@@ -86,7 +86,7 @@ namespace comfortable.renderer {
         }
         return false;
       }.bind(this)();
-      console.log('beginEdit, changed:' + changed);
+
       if (changed) {
         while (this.$el.childNodes.length < options.length) {
           this.$el.appendChild(util.createElement('option') );

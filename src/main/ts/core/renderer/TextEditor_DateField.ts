@@ -11,7 +11,8 @@
 
 namespace comfortable.renderer {
 
-  export var createDateField = function(editor : TextEditor) {
+  export var createTextEditorDateField =
+      function(editor : TextEditor) : TextEditorDelegator {
 
     var getDate = function() : Date {
       if (editor.isValid() ) {
@@ -40,74 +41,79 @@ namespace comfortable.renderer {
 
     util.set(editor.textfield, {
       style : { flex: '1 1 0%' },
-      on : { keydown : (event) => {
+        on : {
+          keydown : (event) => {
 
-        if (!editor.cell.editable) {
-          return;
-        }
+          if (!editor.cell.editable) {
+            return;
+          }
 
-        var canceled = false;
-        switch(event.keyCode) {
-        case 27: // Esc
-          // fall through.
-          canceled = true;
-        case 13: // Enter
-          if (cal) {
-            event.preventDefault();
-            event.stopPropagation();
-            hideCal();
-            editor.textfield.select();
-          } else {
-            if (canceled) {
-              editor.setValue(editor.defaultValue);
+          var canceled = false;
+          switch(event.keyCode) {
+          case 27: // Esc
+            // fall through.
+            canceled = true;
+          case 13: // Enter
+            if (cal) {
+              event.preventDefault();
+              event.stopPropagation();
+              hideCal();
+              editor.textfield.select();
+            } else {
+              if (canceled) {
+                editor.setValue(editor.defaultValue);
+              }
             }
-          }
-          break;
-        case 32: // Space
-          event.preventDefault();
-          if (cal) {
-          } else {
-            showCal();
-          }
-          break;
-        case 37: // Left
-          if (cal != null) {
+            break;
+          case 32: // Space
             event.preventDefault();
-            cal.rollDate(-1);
-            setSelectedDate(cal.getSelectedDate() );
-          }
-          break;
-        case 38: // Up
-          event.preventDefault();
-          if (cal != null) {
-            cal.rollDate(-7);
-            setSelectedDate(cal.getSelectedDate() );
-          } else {
-            rollDate(-1);
-            editor.textfield.select();
-          }
-          break;
-        case 39: // Right
-          if (cal != null) {
+            if (cal) {
+            } else {
+              showCal();
+            }
+            break;
+          case 37: // Left
+            if (cal != null) {
+              event.preventDefault();
+              cal.rollDate(-1);
+              setSelectedDate(cal.getSelectedDate() );
+            }
+            break;
+          case 38: // Up
             event.preventDefault();
-            cal.rollDate(1);
-            setSelectedDate(cal.getSelectedDate() );
+            if (cal != null) {
+              cal.rollDate(-7);
+              setSelectedDate(cal.getSelectedDate() );
+            } else {
+              rollDate(-1);
+              editor.textfield.select();
+            }
+            break;
+          case 39: // Right
+            if (cal != null) {
+              event.preventDefault();
+              cal.rollDate(1);
+              setSelectedDate(cal.getSelectedDate() );
+            }
+            break;
+          case 40: // Down
+            event.preventDefault(); 
+            if (cal != null) {
+              cal.rollDate(7);
+              setSelectedDate(cal.getSelectedDate() );
+            } else {
+              rollDate(1);
+              editor.textfield.select();
+            }
+            break;
+          default:
+            break;
           }
-          break;
-        case 40: // Down
-          event.preventDefault(); 
-          if (cal != null) {
-            cal.rollDate(7);
-            setSelectedDate(cal.getSelectedDate() );
-          } else {
-            rollDate(1);
-            editor.textfield.select();
-          }
-          break;
-        default:
-          break;
+        },
+        blur : function() {
+          hideCal();
         }
-      } }
+      }
     });
 
     var cal : any = null;
@@ -164,8 +170,25 @@ namespace comfortable.renderer {
       }
     }, [ ui.createCalIcon(), ui.createSpacer() ]);
 
-    return { body : util.createElement('div', {
-      style : { display: 'flex', width: '100%', height: '100%' },
-    }, [ editor.textfield, button ] ), button : button };
+    var setValue = function(value : any)  {
+      value = util.formatDate(value);
+      editor.textfield.value = (value === null)? '' : value;
+    };
+    var getValue = function() : any  {
+      return util.parseDate(
+          util.toNarrowNumber(editor.textfield.value) );
+    };
+    var visibleState = 'flex';
+
+    return {
+      body : util.createElement('div', {
+          style : { display: visibleState,
+            width: '100%', height: '100%' }
+        }, [ editor.textfield, button ] ),
+      button : button,
+      setValue : setValue,
+      getValue : getValue,
+      visibleState : visibleState
+    };
   }
 }

@@ -10,9 +10,10 @@ declare namespace comfortable {
             $el: HTMLElement;
             row: number;
             col: number;
-        }) => void) => void;
+        }) => boolean) => void;
     }
     interface TableCellRenderer {
+        getCellStyle?: (cell: any) => ElementOptions;
         render: (cell: any) => void;
         beginEdit: (cell: any) => {
             focus(): void;
@@ -121,7 +122,6 @@ declare namespace comfortable {
 }
 declare namespace comfortable {
     var createDefaultCellRendererFactoryOpts: () => CellRendererFactoryOpts;
-    var attachTooltipFeature: (td: TdWrapper, renderer: TableCellRenderer) => TableCellRenderer;
     var createDefaultCellRendererFactory: (opts?: CellRendererFactoryOpts) => TableCellRendererFactory;
     var createMultiLineLabelRenderer: (parent: HTMLElement) => {
         setLabel: (label: string) => void;
@@ -215,6 +215,73 @@ declare namespace comfortable {
         row: number;
     }
 }
+declare namespace comfortable.renderer {
+    class CheckBox implements CellEditor<HTMLInputElement> {
+        private opts;
+        private booleanValues;
+        private defaultValue;
+        private tableModel;
+        private cell;
+        constructor(opts: CheckBoxOptions);
+        $el: HTMLInputElement;
+        setVisible(visible: boolean): void;
+        beginEdit(td: TdWrapper, cell: CheckBoxCell): void;
+        focus(): void;
+        blur(): void;
+        setValue(value: any): void;
+        getValue(): any;
+        isValid(): boolean;
+    }
+}
+declare namespace comfortable.renderer {
+    class SelectBox implements CellEditor<HTMLSelectElement> {
+        private opts;
+        private defaultValue;
+        private lastOptions;
+        private tableModel;
+        private cell;
+        constructor(opts: SelectBoxOptions);
+        $el: HTMLSelectElement;
+        setVisible(visible: boolean): void;
+        beginEdit(td: TdWrapper, cell: SelectBoxCell): void;
+        focus(): void;
+        blur(): void;
+        setValue(value: any): void;
+        getValue(): string;
+        isValid(): boolean;
+        static getOptions(cell: SelectBoxCell): any[];
+    }
+}
+declare namespace comfortable.renderer {
+    var createTextEditorDateField: (editor: TextEditor) => TextEditorDelegator;
+}
+declare namespace comfortable.renderer {
+    var createTextEditorSelectBox: (editor: TextEditor) => TextEditorDelegator;
+}
+declare namespace comfortable.renderer {
+    class TextEditor implements CellEditor<HTMLElement> {
+        private opts;
+        defaultValue: any;
+        private valueType;
+        private tableModel;
+        cell: TableCell;
+        $el: HTMLElement;
+        textfield: HTMLInputElement;
+        enableEvent: boolean;
+        private delegator;
+        constructor(opts: TextEditorOptions);
+        setVisible(visible: boolean): void;
+        beginEdit(td: TdWrapper, cell: TextEditorCell): void;
+        focus(): void;
+        blur(): void;
+        setValue(value: any): void;
+        getValue(): any;
+        isValid(): boolean;
+    }
+}
+declare namespace comfortable.renderer {
+    var attachTooltipFeature: (td: TdWrapper, renderer: TableCellRenderer) => TableCellRenderer;
+}
 declare namespace comfortable {
     var classNamePrefix: string;
 }
@@ -249,6 +316,8 @@ declare namespace comfortable.ui {
     var createSpacer: () => HTMLElement;
     var createCalIcon: (r?: number) => HTMLElement;
     var createCalendar: (selectedDate: Date) => any;
+    var createOptions: (optionsData: renderer.OptionsData) => any;
+    var createOptionsIcon: (size?: number) => HTMLElement;
 }
 declare namespace comfortable {
     interface ElementOptions {
