@@ -139,6 +139,8 @@ namespace comfortable.renderer {
         maxHeight : '200px' } });
       document.body.appendChild(options.$el);
       util.$(document).on('mousedown', mousedownHandler);
+      // force updateUI
+      options.rollIndex(0);
     };
     var hideOptions = function() {
       if (options) {

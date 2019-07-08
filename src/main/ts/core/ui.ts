@@ -380,12 +380,12 @@ namespace comfortable.ui {
           selectedOption = option;
         }
       }
-      if (selectedOption) {
-        selectedOption.scrollIntoView();
+      if (selectedOption && cont.parentNode) {
+        // avoid body scrolling.
+        //selectedOption.scrollIntoView();
+        (<any>cont.parentNode).scrollTop = selectedOption.offsetTop;
       }
     };
-
-    updateUI();
 
     var options = util.extend(new EventTargetImpl(), {
       $el: util.createElement('div', {
