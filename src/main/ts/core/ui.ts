@@ -243,7 +243,10 @@ namespace comfortable.ui {
   export var createSpacer = function() {
     return util.createElement('span',{ style: {
         verticalAlign :'middle',
+        padding : '0px',
+        margin : '0px',
         display :'inline-block',
+        width : '0px',
         height : '100%' } });
   };
 
