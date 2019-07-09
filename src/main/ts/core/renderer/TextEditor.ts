@@ -159,6 +159,10 @@ namespace comfortable.renderer {
     }
     public blur() {
       this.textfield.blur();
+      // deselect
+      var value =  this.textfield.value;
+      this.textfield.value = '';
+      this.textfield.value = value;
     }
     public setValue(value : any) {
       this.defaultValue = value;
