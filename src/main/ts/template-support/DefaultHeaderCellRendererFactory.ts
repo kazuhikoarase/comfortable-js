@@ -243,16 +243,29 @@ namespace comfortable {
             var cell = (<any>checkBox).cell;
             var booleanValues = cell.booleanValues || [ false, true ];
             var itemCount = tableModel.getItemCount();
+            var editable : boolean[] = [];
+            var editableCount = 0;
             var trueCount = 0;
             for (var i = 0; i < itemCount; i += 1) {
-              if (tableModel.getItemAt(i)[cell.dataField] === booleanValues[1]) {
-                trueCount += 1;
+              var item = tableModel.getItemAt(i);
+              editable.push(!(tableModel.getItemStyleAt &&
+                tableModel.getItemStyleAt({
+                  row : i,
+                  col : cell.dataField
+                }).editable === false) );
+              if (editable[i]) {
+                editableCount += 1;
+                if (tableModel.getItemAt(i)[cell.dataField] === booleanValues[1]) {
+                  trueCount += 1;
+                }
               }
             }
-            var checked = trueCount != itemCount;
+            var checked = trueCount != editableCount;
             for (var i = 0; i < itemCount; i += 1) {
               var item = tableModel.getItemAt(i);
-              item[cell.dataField] = booleanValues[checked? 1 : 0];
+              if (editable[i]) {
+                item[cell.dataField] = booleanValues[checked? 1 : 0];
+              }
             }
             updateCheckBoxState();
           }}});
