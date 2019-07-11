@@ -14,6 +14,7 @@ namespace comfortable.renderer {
   interface Tooltip {
     $el : HTMLElement;
     text : string;
+    show : (text : string) => void;
     dispose : () => void;
   }
 
@@ -42,13 +43,17 @@ namespace comfortable.renderer {
     var mark = {
       $el : util.createSVGElement('svg', {
         style : { position : 'absolute', right : '0px', top : '0px'},
-          attrs : { width : '' + size, height : '' + size,
-        'class' : '${prefix}-tooltip-corner' } }, [
+        attrs : { width : '' + size, height : '' + size,
+          'class' : '${prefix}-tooltip-corner' } }, [
         util.createSVGElement('path', {
           attrs : { d : 'M0 0L' + size + ' 0L' + size + ' ' + size + 'Z' }
         })
       ]),
       text : '',
+      show : function(text : string) {
+        this.text = text;
+        this.$el.style.display = text? '' : 'none';
+      },
       dispose : function() {
         util.$(td.$el)
           .off('mouseover', mouseoverHandler)
@@ -57,6 +62,25 @@ namespace comfortable.renderer {
       }
     };
     return mark;
+  };
+
+  var calcOffset = function(td : TdWrapper) {
+    var off = util.offset(td.$el);
+    var frame = util.closest(td.$el, { tagName : 'DIV' });
+    var frameOff = util.offset(frame);
+    var offsetWidth = td.$el.offsetWidth;
+    var displayWidth = offsetWidth;
+    /*
+    if (off.left + displayWidth > frameOff.left + frame.offsetWidth) {
+      displayWidth = frameOff.left + frame.offsetWidth - off.left;
+    }
+    */
+    return {
+      left : off.left,
+      top : off.top,
+      offsetWidth : offsetWidth,
+      displayWidth : displayWidth
+    };
   };
 
   var showTooltip = function(td : TdWrapper, text : string) {
@@ -79,13 +103,14 @@ namespace comfortable.renderer {
     bar.style.stroke = cs.borderColor || cs.borderBottomColor;
     bar.style.fill = 'none';
 
-    var off = util.offset(td.$el);
     //box.textContent = text;
     createMultiLineLabelRenderer(box).setLabel(text);
 
-    box.style.left = (off.left + td.$el.offsetWidth + barW - 1) + 'px';
+    var off = calcOffset(td);
+
+    box.style.left = (off.left + off.displayWidth + barW - 1) + 'px';
     box.style.top = (off.top - barH + 1) + 'px';
-    bar.style.left = (off.left + td.$el.offsetWidth) + 'px';
+    bar.style.left = (off.left + off.displayWidth) + 'px';
     bar.style.top = (off.top - barH + 1) + 'px';
 
     return {
@@ -109,12 +134,10 @@ namespace comfortable.renderer {
             tooltip = createTooltip(td);
             td.$el.appendChild(tooltip.$el);
           }
-          tooltip.text = cell.tooltip;
-          tooltip.$el.style.display = '';
+          tooltip.show(cell.tooltip);
         } else {
           if (tooltip) {
-            tooltip.text = '';
-            tooltip.$el.style.display = 'none';
+            tooltip.show('');
           }
         }
         renderer.render(cell);
