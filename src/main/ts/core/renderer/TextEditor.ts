@@ -183,7 +183,11 @@ namespace comfortable.renderer {
             this.opts.decimalDigits, '');
         return this.valueType == 'number'? +value : value;
       } else {
-        return util.rtrim(this.textfield.value);
+        if (this.defaultValue === null && this.textfield.value == '') {
+          return null;
+        } else {
+          return util.rtrim(this.textfield.value);
+        }
       }
     }
     public isValid() {
