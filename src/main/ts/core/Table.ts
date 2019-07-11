@@ -325,10 +325,22 @@ namespace comfortable {
             }
           },
           wheel : (event) => {
-            event.preventDefault();
+
             this.editor.endEdit();
+
+            var last = {
+              scrollLeft : this.hViewPane.scrollLeft,
+              scrollTop : this.vViewPane.scrollTop
+            };
+
             this.hViewPane.scrollLeft += event.deltaX;
             this.vViewPane.scrollTop += event.deltaY;
+
+            if (last.scrollLeft != this.hViewPane.scrollLeft ||
+                last.scrollTop != this.vViewPane.scrollTop) {
+              // consumed.
+              event.preventDefault();
+            }
           }
         }
       }, [this.hViewPane, this.vViewPane].concat(
