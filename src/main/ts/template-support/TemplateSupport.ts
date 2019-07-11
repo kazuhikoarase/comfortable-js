@@ -84,7 +84,8 @@ namespace comfortable {
               }
               indexTo = columnItems.indexOf(listitem);
               var off = util.offset(listitem);
-              var top = listitem.offsetTop - 2 - (<HTMLElement>listitem.parentNode).scrollTop;
+              var top = listitem.offsetTop - 2 -
+                    (<HTMLElement>listitem.parentNode).scrollTop;
               if (off.top + listitem.offsetHeight / 2 < event.pageY) {
                 indexTo += 1;
                 top += listitem.offsetHeight;
@@ -822,6 +823,19 @@ namespace comfortable {
     var table = new TemplateTableImpl(
         new TemplateTableModelImpl() );
 
+    // append itemIndex to events.
+    [ 'valuechange' ].
+    forEach(function(type) {
+      table.model.on(type, function(event : Event, detail : any) {
+        detail.itemIndex = this.getItemIndexAt(detail.row, detail.col);
+      });
+    });
+    tableEventTypes.forEach(function(type) {
+      table.on(type, function(event : Event, detail : any) {
+        detail.itemIndex = this.model.getItemIndexAt(detail.row, detail.col);
+      });
+    });
+
     table.on('mousedown', function(event : Event, detail : any) {
       if (detail.row < this.model.getLockTop() ) {
         // on header.
@@ -849,6 +863,7 @@ namespace comfortable {
     });
 
     table.model.on('valuechange', function(event : Event, detail : any) {
+      this.trigger('beforevaluechange', detail);
       this.setValueAt(detail.row, detail.col, detail.newValue);
     }).on('cellsizechange', function(event : Event, detail : any) {
       if (typeof detail.col == 'number') {
@@ -932,19 +947,6 @@ namespace comfortable {
       }
       this.filteredItems = filteredItems;
       table.invalidate();
-    });
-
-    // append itemIndex to events.
-    [ 'valuechange' ].
-    forEach(function(type) {
-      table.model.on(type, function(event : Event, detail : any) {
-        detail.itemIndex = this.getItemIndexAt(detail.row, detail.col);
-      });
-    });
-    tableEventTypes.forEach(function(type) {
-      table.on(type, function(event : Event, detail : any) {
-        detail.itemIndex = this.model.getItemIndexAt(detail.row, detail.col);
-      });
     });
 
     enableHover(table);

@@ -130,7 +130,7 @@ namespace comfortable {
               editor.focus();
             },
             endEdit : function() {
-              editing =false;
+              editing = false;
               if (!renderIsEditor) {
                 labelRenderer.setVisible(true);
                 editor.setVisible(false);
