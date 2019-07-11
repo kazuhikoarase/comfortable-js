@@ -9,6 +9,7 @@
 </style>
 </head>
 <body>
+<div style="width:2000px;height:2000px;background-color:rgba(0,0,0,0.1)"></div>
 <div id="log"></div>
 <button id="btn"> test </button>
 <script>
@@ -58,11 +59,26 @@ table.$el.style.border = '1px solid silver';
 table.model.on('valuechange', function(event, detail) {
   console.log('valuechange', event, detail);
 });
+table.model.getItemStyleAt = function(itemIndex) {
+  var item = this.getItemAt(itemIndex.row);
+  if (itemIndex.col == 'b' && item.s == 'X') {
+    return { editable : false };
+  }
+  return {};
+};
+
 var items = [];
 for (var i = 0; i < 100; i += 1) {
-  items.push({ b: i%2==0?'T':'F',s: i%2==0?null:'', ns: '' + i,
-      nsTooltip : (i % 2 == 0? null : 'hi!'),
-      n: i, d: '20190101', x:'n/a' });
+  items.push({
+    b: i % 2 == 0? 'T':'F',
+    s: i % 2 == 0? null : '',
+    ns: '' + i,
+    nsTooltip: i % 2 == 0? null : 'hi!',
+    n: i,
+    d: '20190101',
+    x:'n/a',
+    se : null
+  });
 }
 table.model.items = items;
 
@@ -84,6 +100,6 @@ document.getElementById('btn').addEventListener('click', function() {
 });
 
 </script>
-
+<div style="width:2000px;height:2000px;background-color:rgba(0,0,0,0.1)"></div>
 </body>
 </html>
