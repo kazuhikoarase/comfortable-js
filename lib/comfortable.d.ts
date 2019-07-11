@@ -84,9 +84,10 @@ declare namespace comfortable {
     interface TextEditorOptions {
         dataType: string;
         decimalDigits?: number;
+        maxLength?: number;
+        imeMode?: string;
     }
     interface TextEditorCell extends TableCell {
-        maxLength?: number;
     }
     interface CheckBoxOptions {
     }

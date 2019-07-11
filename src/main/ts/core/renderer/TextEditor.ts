@@ -67,9 +67,18 @@ namespace comfortable.renderer {
         });
       }
 
-      if (this.opts.dataType == 'number' ||
-          this.opts.dataType == 'date') {
-        this.textfield.style.imeMode = 'disabled';
+      if (typeof this.opts.imeMode == 'string') {
+        this.textfield.style.imeMode = this.opts.imeMode;
+      } else {
+        if (this.opts.dataType == 'number' ||
+            this.opts.dataType == 'date' ||
+            this.opts.dataType == 'select-one') {
+          this.textfield.style.imeMode = 'disabled';
+        }
+      }
+
+      if (typeof this.opts.maxLength == 'number') {
+        this.textfield.maxLength = this.opts.maxLength;
       }
 
       if (this.opts.dataType == 'date') {
@@ -142,9 +151,6 @@ namespace comfortable.renderer {
             outline : cell.editable? '' : 'none'
           }
         };
-      if (typeof cell.maxLength == 'number') {
-        (<any>opts.props).maxLength = cell.maxLength;
-      }
       util.set(this.textfield, opts);
       if (this.delegator) {
         this.delegator.button.style.opacity = cell.editable? '' : '0.5';
@@ -175,7 +181,9 @@ namespace comfortable.renderer {
       }
     }
     public getValue() {
-      if (this.delegator) {
+      if (this.defaultValue === null && this.textfield.value == '') {
+        return null;
+      } else if (this.delegator) {
         return this.delegator.getValue();
       } else if (this.opts.dataType == 'number') {
         var value = util.formatNumber(
@@ -183,11 +191,7 @@ namespace comfortable.renderer {
             this.opts.decimalDigits, '');
         return this.valueType == 'number'? +value : value;
       } else {
-        if (this.defaultValue === null && this.textfield.value == '') {
-          return null;
-        } else {
-          return util.rtrim(this.textfield.value);
-        }
+        return util.rtrim(this.textfield.value);
       }
     }
     public isValid() {

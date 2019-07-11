@@ -98,9 +98,10 @@ namespace comfortable {
   export interface TextEditorOptions {
     dataType : string;
     decimalDigits? : number;
+    maxLength? : number;
+    imeMode? : string;
   }
   export interface TextEditorCell extends TableCell {
-    maxLength? : number;
   }
 
   export interface CheckBoxOptions {
