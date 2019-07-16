@@ -278,13 +278,15 @@ namespace comfortable {
       return this.barSize;
     };
 
+    private scrollHandler = (event : any) => { this.render(); };
+
     private hScr = util.createElement('div', {
         style : { position : 'absolute' } });
 
     private hViewPane = util.createElement('div', {
         style : { position : 'absolute',
           overflowX : 'auto', overflowY : 'hidden' },
-        on : { scroll : (event) => { this.render(); } }
+        on : { scroll : this.scrollHandler }
       }, [ this.hScr ]);
 
     private vScr = util.createElement('div', {
@@ -293,7 +295,7 @@ namespace comfortable {
     private vViewPane = util.createElement('div', {
         style : { position : 'absolute',
           overflowX : 'hidden', overflowY : 'auto' },
-        on : { scroll : (event) => { this.render(); } }
+        on : { scroll : this.scrollHandler }
       }, [ this.vScr ]);
 
     private frame = util.createElement('div', {
