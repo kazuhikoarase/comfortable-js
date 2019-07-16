@@ -380,17 +380,19 @@ namespace comfortable {
       } else if (top + cellRect.height > scrollRect.height) {
         delta.top = top + cellRect.height - scrollRect.height;
       }
+      var clientWidth =  this.hViewPane.clientWidth;
+      var clientHeight =  this.vViewPane.clientHeight;
       var scroll = {
-        left : renderParams.viewWidth > this.hViewPane.clientWidth?
+        left : renderParams.viewWidth > clientWidth?
             util.translate(-this.tables[CM_INDEX].left + delta.left,
             ltRect.width,
-            ltRect.width + renderParams.viewWidth - this.hViewPane.clientWidth,
-            0, renderParams.scrWidth - this.hViewPane.clientWidth, 'scroll.left') : 0,
-        top : renderParams.viewHeight > this.vViewPane.clientHeight?
+            ltRect.width + renderParams.viewWidth - clientWidth,
+            0, renderParams.scrWidth - clientWidth, 'scroll.left') : 0,
+        top : renderParams.viewHeight > clientHeight?
             util.translate(-this.tables[CM_INDEX].top + delta.top,
             ltRect.height,
-            ltRect.height + renderParams.viewHeight - this.vViewPane.clientHeight,
-            0, renderParams.scrHeight - this.vViewPane.clientHeight, 'scroll.top') : 0
+            ltRect.height + renderParams.viewHeight - clientHeight,
+            0, renderParams.scrHeight - clientHeight, 'scroll.top') : 0
       };
       if (row >= this.model.getLockTop() ) {
         this.vViewPane.scrollTop = scroll.top;
@@ -738,8 +740,10 @@ namespace comfortable {
 
       var hViewPane = this.hViewPane;
       var vViewPane = this.vViewPane;
-      var barWidth = vViewPane.offsetWidth - vViewPane.clientWidth;
-      var barHeight = hViewPane.offsetHeight - hViewPane.clientHeight;
+      var clientWidth = vViewPane.clientWidth;
+      var clientHeight = hViewPane.clientHeight;
+      var barWidth = vViewPane.offsetWidth - clientWidth;
+      var barHeight = hViewPane.offsetHeight - clientHeight;
 
       this.tables.forEach( (table, i) => {
         var rect = renderParams.rects[i];
@@ -772,21 +776,19 @@ namespace comfortable {
       this.tables.forEach( (table, i) => {
         var rect = renderParams.rects[i];
         if (table.col == 1) {
-          table.left = -(renderParams.scrWidth > hViewPane.clientWidth?
+          table.left = -(renderParams.scrWidth > clientWidth?
                 util.translate(hViewPane.scrollLeft,
-                0, renderParams.scrWidth - hViewPane.clientWidth,
+                0, renderParams.scrWidth - clientWidth,
                 ltRect.width,
-                ltRect.width +
-                  renderParams.viewWidth - hViewPane.clientWidth,
+                ltRect.width + renderParams.viewWidth - clientWidth,
                 'table.left') : ltRect.width);
         }
         if (table.row == 1) {
-          table.top = -(renderParams.scrHeight > vViewPane.clientHeight?
+          table.top = -(renderParams.scrHeight > clientHeight?
                 util.translate(vViewPane.scrollTop,
-                0, renderParams.scrHeight - vViewPane.clientHeight,
+                0, renderParams.scrHeight - clientHeight,
                 ltRect.height,
-                ltRect.height +
-                  renderParams.viewHeight - vViewPane.clientHeight,
+                ltRect.height + renderParams.viewHeight - clientHeight,
                 'table.top') : ltRect.height);
         }
         if (table.col == 2) {
