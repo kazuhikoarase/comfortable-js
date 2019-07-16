@@ -774,11 +774,13 @@ namespace comfortable {
         this.makeVisible(renderParams, visibleCell.row, visibleCell.col);
       }
 
+      var scrollLeft = hViewPane.scrollLeft;
+      var scrollTop = vViewPane.scrollTop;
       this.tables.forEach( (table, i) => {
         var rect = renderParams.rects[i];
         if (table.col == 1) {
           table.left = -(renderParams.scrWidth > clientWidth?
-                util.translate(hViewPane.scrollLeft,
+                util.translate(scrollLeft,
                 0, renderParams.scrWidth - clientWidth,
                 ltRect.width,
                 ltRect.width + renderParams.viewWidth - clientWidth,
@@ -786,7 +788,7 @@ namespace comfortable {
         }
         if (table.row == 1) {
           table.top = -(renderParams.scrHeight > clientHeight?
-                util.translate(vViewPane.scrollTop,
+                util.translate(scrollTop,
                 0, renderParams.scrHeight - clientHeight,
                 ltRect.height,
                 ltRect.height + renderParams.viewHeight - clientHeight,
