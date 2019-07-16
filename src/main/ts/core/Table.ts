@@ -254,8 +254,7 @@ namespace comfortable {
           style : { position : 'absolute' } });
   
         var viewPane = util.createElement('div', {
-          style : { position : 'absolute', overflow : 'auto' },
-          on : { scroll : (event) => { this.render(); } }
+          style : { position : 'absolute', overflow : 'auto' }
         }, [ scr ]);
 
         util.extend(scr.style, {
