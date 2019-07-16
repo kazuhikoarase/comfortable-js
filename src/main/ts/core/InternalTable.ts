@@ -18,6 +18,7 @@ namespace comfortable {
    */
   export interface ElmCache {
     $el : HTMLElement;
+    opts? : ElementOptions;
     tableModel? : TableModel; 
     row? : number;
     col? : number;
@@ -76,6 +77,26 @@ namespace comfortable {
       minRow : 0, maxRow : 0, minCol : 0, maxCol : 0,
       indexById : {}
     };
+  }
+
+  var applyCellStyle = function(elm : ElmCache, opts : ElementOptions) {
+    var diffOpts : ElementOptions = { attrs : {}, style : {}, props : {} };
+    applyCellStyleProps(elm, opts, 'attrs', diffOpts);
+    applyCellStyleProps(elm, opts, 'style', diffOpts);
+    applyCellStyleProps(elm, opts, 'props', diffOpts);
+    util.set(elm.$el, diffOpts);
+  }
+  var applyCellStyleProps = function(elm : any, opts : any,
+      propsName : string, diffOpts : any) {
+    var props = opts[propsName];
+    if (props) {
+      for (var k in props) {
+        var v = props[k];
+        if (elm.opts[propsName][k] !== v) {
+          diffOpts[propsName][k] = elm.opts[propsName][k] = v;
+        }
+      }
+    }
   }
 
   /**
@@ -308,6 +329,7 @@ namespace comfortable {
 
       var tableModel : TableModel = this.model;
       var initCell = function(td : ElmCache) {
+        td.opts = { attrs : {}, style : {}, props : {} };
         td.renderer = null;
         td.tableModel = tableModel;
         td.$el.style.overflow = 'hidden';
@@ -347,9 +369,9 @@ namespace comfortable {
               <TdWrapper>td, td.factory(<TdWrapper>td) );
           }
 
-          util.set(td.$el, this.getCellStyle(cell) );
+          applyCellStyle(td, this.getCellStyle(cell) );
           if (td.renderer.getCellStyle) {
-            util.set(td.$el, td.renderer.getCellStyle(cell) );
+            applyCellStyle(td, td.renderer.getCellStyle(cell) );
           }
 
           if (!cellStyleOnly) {

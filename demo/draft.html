@@ -42,8 +42,9 @@ var table = comfortable.fromTemplate({
     [
       { dataField: 'se', dataType : 'select-one', options : options },
       { dataField: 'b', dataType : 'boolean', width:20, booleanValues:['F','T'] },
-      { dataField: 's', dataType : 'string', width:20 },
-      { dataField: 'n', dataType : 'number' },
+      { dataField: 's', dataType : 'string', width:20, imeMode : 'disabled',
+        maxLength: 2},
+      { dataField: 'n', dataType : 'number', myData : { aaa : 435345} },
       { dataField: 'ns', dataType : 'number' },
       { dataField: 'd', dataType : 'date' },
       { dataField: 'd', dataType : 'string', editable: false }
@@ -56,9 +57,19 @@ var table = comfortable.fromTemplate({
 table.model.defaultCellStyle.borderRight = '1px solid silver';
 table.model.defaultCellStyle.borderBottom = '1px solid silver';
 table.$el.style.border = '1px solid silver';
-table.model.on('valuechange', function(event, detail) {
+table.model.on('beforevaluechange', function(event, detail) {
+  console.log('beforevaluechange', event, detail);
+  console.log('beforevaluechange', this.getCellStyleAt(detail.row, detail.col));
+  
+  if (detail.itemIndex.col == 's') {
+    detail.newValue = detail.newValue === null? null :
+      detail.newValue.toUpperCase();
+  }
+}).on('valuechange', function(event, detail) {
   console.log('valuechange', event, detail);
 });
+
+
 table.model.getItemStyleAt = function(itemIndex) {
   var item = this.getItemAt(itemIndex.row);
   if (itemIndex.col == 'b' && item.s == 'X') {
@@ -69,7 +80,7 @@ table.model.getItemStyleAt = function(itemIndex) {
 
 var items = [];
 for (var i = 0; i < 100; i += 1) {
-  items.push({
+  var item = {
     b: i % 2 == 0? 'T':'F',
     s: i % 2 == 0? null : '',
     ns: '' + i,
@@ -78,7 +89,11 @@ for (var i = 0; i < 100; i += 1) {
     d: '20190101',
     x:'n/a',
     se : null
-  });
+  };
+  for (var k in item) {
+    //item[k] = null;
+  }
+  items.push(item);
 }
 table.model.items = items;
 
