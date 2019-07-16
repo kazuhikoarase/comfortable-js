@@ -27,6 +27,8 @@ namespace comfortable.renderer {
   export class TextEditor implements CellEditor<HTMLElement> {
 
     private opts : TextEditorOptions;
+    private lastStyle : any;
+
     public defaultValue : any;
     private valueType : string;
 
@@ -42,6 +44,7 @@ namespace comfortable.renderer {
     constructor(opts : TextEditorOptions) {
 
       this.opts = opts;
+      this.lastStyle = {};
 
       if (opts.dataType == 'multi-line-string') {
         this.textfield = <HTMLInputElement>util.createElement('textarea', {
@@ -140,7 +143,7 @@ namespace comfortable.renderer {
       var cs = window.getComputedStyle(td.$el, null);
       var opts : ElementOptions = {
           props : { readOnly : readOnly },
-          style : {
+          style : this.getChangedStyle({
             textAlign : cs.textAlign,
             verticalAlign : cs.verticalAlign,
             color : cs.color,
@@ -149,7 +152,7 @@ namespace comfortable.renderer {
             fontSize : cs.fontSize,
             fontWeight : cs.fontWeight,
             outline : cell.editable? '' : 'none'
-          }
+          })
         };
       util.set(this.textfield, opts);
       if (this.delegator) {
@@ -158,6 +161,16 @@ namespace comfortable.renderer {
           this.delegator.beginEdit(td, cell);
         }
       }
+    }
+    private getChangedStyle(style : any) : any {
+      var changed : any = {};
+      for (var k in style) {
+        var v = style[k];
+        if (this.lastStyle[k] !== v) {
+          this.lastStyle[k] = changed[k] = v;
+        }
+      }
+      return changed;
     }
     public focus() {
       this.textfield.focus();

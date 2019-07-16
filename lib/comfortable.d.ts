@@ -262,6 +262,7 @@ declare namespace comfortable.renderer {
 declare namespace comfortable.renderer {
     class TextEditor implements CellEditor<HTMLElement> {
         private opts;
+        private lastStyle;
         defaultValue: any;
         private valueType;
         private tableModel;
@@ -273,6 +274,7 @@ declare namespace comfortable.renderer {
         constructor(opts: TextEditorOptions);
         setVisible(visible: boolean): void;
         beginEdit(td: TdWrapper, cell: TextEditorCell): void;
+        private getChangedStyle;
         focus(): void;
         blur(): void;
         setValue(value: any): void;
