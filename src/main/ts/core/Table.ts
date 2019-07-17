@@ -13,7 +13,10 @@
 
 namespace comfortable {
 
-  interface CellRect {
+  /**
+   * @internal
+   */
+  export interface Rect {
     left : number;
     top : number;
     width : number;
@@ -23,7 +26,7 @@ namespace comfortable {
   interface CellSizeCache {
     viewWidth : number;
     viewHeight : number;
-    rects : CellRect[];
+    rects : Rect[];
     rowCount : number;
     columnCount :number;
     lockTop : number;
@@ -37,7 +40,7 @@ namespace comfortable {
   interface RenderParams {
     width : number;
     height : number;
-    rects : CellRect[],
+    rects : Rect[],
     viewWidth : number;
     viewHeight : number;
     scrWidth : number;
@@ -802,9 +805,7 @@ namespace comfortable {
         }
 
         table.model = this.model;
-        util.extend(table.$el.style, {
-          left : rect.left + 'px', top : rect.top + 'px',
-          width : rect.width + 'px', height : rect.height + 'px' });
+        table.setBounds(rect);
         table.render(!!cellStyleOnly);
 
       });

@@ -152,8 +152,13 @@ namespace comfortable {
 
   export var createMultiLineLabelRenderer = function(parent : HTMLElement) {
     var elms : HTMLElement[] = null;
+    var lastLabel : string = null;
     return {
       setLabel : function(label : string) {
+        if (lastLabel === label) {
+          return;
+        }
+        lastLabel = label;
         if (elms == null) {
           elms = [ document.createElement('span') ];
           parent.appendChild(elms[0]);

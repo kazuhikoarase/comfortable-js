@@ -67,7 +67,7 @@ namespace comfortable {
     offsetCache : OffsetCache;
     calcCellPosition : (left : number, top : number) => {
       left : number, top : number, row : number, col : number};
-    preRender : () => TableState;
+    setBounds : (rect : Rect) => void;
     render : (cellStyleOnly : boolean) => void;
   }
 
@@ -250,10 +250,10 @@ namespace comfortable {
       return { left : left, col : col, top : top, row : row };
     }
 
-    public preRender() {
+    private preRender() {
 
-      var width = this.$el.offsetWidth;
-      var height = this.$el.offsetHeight;
+      var width = this.rect.width;
+      var height = this.rect.height;
       var rowCount = this.model.getRowCount();
       var columnCount = this.model.getColumnCount();
 
@@ -304,7 +304,13 @@ namespace comfortable {
 
       return tableState;
     }
-
+    private rect : Rect;
+    public setBounds(rect : Rect) {
+      this.rect = rect;
+      util.extend(this.$el.style, {
+        left : rect.left + 'px', top : rect.top + 'px',
+        width : rect.width + 'px', height : rect.height + 'px' });
+    }
     public render(cellStyleOnly : boolean) {
 
       var tableState = this.preRender();
@@ -364,7 +370,11 @@ namespace comfortable {
             if (td.renderer) {
               td.renderer.dispose();
             }
-            td.$el.innerHTML = '';
+
+            while (td.$el.firstChild) {
+              td.$el.removeChild(td.$el.firstChild);
+            }
+
             td.renderer = renderer.attachTooltipFeature(
               <TdWrapper>td, td.factory(<TdWrapper>td) );
           }
