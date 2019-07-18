@@ -676,7 +676,8 @@ namespace comfortable {
       var rbRect = renderParams.rects[RB_INDEX];
       var clientWidth = rbRect.left + rbRect.width;
       var clientHeight = rbRect.top + rbRect.height;
-      this.tables.forEach( (table, i) => {
+      for (var i = 0; i < this.tables.length; i += 1) {
+        var table = this.tables[i];
         if (table.row == 0) {
           // header
           var rect = renderParams.rects[i];
@@ -702,7 +703,7 @@ namespace comfortable {
             handle.left = left;
           }
         }
-      });
+      }
       for (; handleIndex < this.colResizeHandles.length; handleIndex += 1) {
         util.set(this.colResizeHandles[handleIndex].$el, {
           style : { display : 'none', left : '0px', height : '0px' } });
@@ -749,7 +750,8 @@ namespace comfortable {
       var barWidth = vViewPane.offsetWidth - clientWidth;
       var barHeight = hViewPane.offsetHeight - clientHeight;
 
-      this.tables.forEach( (table, i) => {
+      for (var i = 0; i < this.tables.length; i += 1) {
+        var table = this.tables[i];
         var rect = renderParams.rects[i];
         if (rbRect.left + rbRect.width + barWidth > renderParams.width) {
           if (table.col == 1) {
@@ -771,7 +773,7 @@ namespace comfortable {
             rect.top -= barHeight;
           }
         }
-      });
+      }
 
       if (visibleCell) {
         this.makeVisible(renderParams, visibleCell.row, visibleCell.col);
@@ -779,7 +781,8 @@ namespace comfortable {
 
       var scrollLeft = hViewPane.scrollLeft;
       var scrollTop = vViewPane.scrollTop;
-      this.tables.forEach( (table, i) => {
+      for (var i = 0; i < this.tables.length; i += 1) {
+        var table = this.tables[i];
         var rect = renderParams.rects[i];
         if (table.col == 1) {
           table.left = -(renderParams.scrWidth > clientWidth?
@@ -808,7 +811,7 @@ namespace comfortable {
         table.setBounds(rect);
         table.render(!!cellStyleOnly);
 
-      });
+      }
 
       if (this.editor.cell != null && !cellStyleOnly) {
         this.editor.beginEdit(this.editor.cell.row, this.editor.cell.col);

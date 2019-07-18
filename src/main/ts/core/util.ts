@@ -71,13 +71,13 @@ namespace comfortable {
     public addClass(className : string, remove? : boolean) {
       className = replaceClassNamePrefix(className);
       var classes = '';
-      ((<HTMLElement>this.elm).getAttribute('class') || '').split(/\s+/g).
-          forEach(function(c : string) {
+      var classList = ((<HTMLElement>this.elm).getAttribute('class') || '').split(/\s+/g);
+      for (var i = 0; i < classList.length; i += 1) {
+        var c = classList[i];
         if (c != className) {
           classes += ' ' + c;
-          return;
         }
-      } );
+      }
       if (!remove) {
         classes += ' ' + className;
       }
@@ -147,14 +147,18 @@ namespace comfortable {
     createElement : function(tagName : string) {
       var args = parseArguments(arguments);
       var elm = document.createElement(tagName);
-      args.children.forEach(function(child) { elm.appendChild(child); });
+      for (var i = 0; i < args.children.length; i += 1) {
+        elm.appendChild(args.children[i]);
+      }
       return this.set(elm, args.opts);
     } as CreateElement,
 
     createSVGElement : function(tagName : string) {
       var args = parseArguments(arguments);
       var elm = document.createElementNS('http://www.w3.org/2000/svg', tagName);
-      args.children.forEach(function(child) { elm.appendChild(child); });
+      for (var i = 0; i < args.children.length; i += 1) {
+        elm.appendChild(args.children[i]);
+      }
       return this.set(elm, args.opts);
     } as CreateElement,
 

@@ -171,12 +171,13 @@ namespace comfortable.renderer {
 
     var setValue = function(value : any)  {
       var selectedIndex = -1;
-      optionsData.options.forEach(function(option, i) {
+      for (var i = 0; i < optionsData.options.length; i += 1) {
+        var option = optionsData.options[i];
         if (selectedIndex == -1 &&
             option[optionsData.valueField] === value) {
           selectedIndex = i;
         }
-      });
+      }
       setSelectedIndex(selectedIndex);
     };
     var getValue = function() : any  {
