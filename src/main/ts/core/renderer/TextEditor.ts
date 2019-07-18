@@ -147,7 +147,7 @@ namespace comfortable.renderer {
             textAlign : cs.textAlign,
             verticalAlign : cs.verticalAlign,
             color : cs.color,
-            backgroundColor : cs.backgroundColor,
+            backgroundColor : 'transparent',
             fontFamily : cs.fontFamily,
             fontSize : cs.fontSize,
             fontWeight : cs.fontWeight,
