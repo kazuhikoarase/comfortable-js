@@ -319,12 +319,10 @@ namespace comfortable {
           keydown : (event) => {
             switch(event.keyCode) {
             case 9: // Tab
-              event.preventDefault();
-              this.move({ row : 0, col : event.shiftKey? -1 : 1 });
+              this.move(event, { row : 0, col : event.shiftKey? -1 : 1 });
               break;
             case 13: // Enter
-              event.preventDefault();
-              this.move({ row : event.shiftKey? -1 : 1, col : 0 });
+              this.move(event, { row : event.shiftKey? -1 : 1, col : 0 });
               break;
             }
           },
@@ -526,14 +524,28 @@ namespace comfortable {
     private isEditableAt(row : number, col : number) {
       return this.model.getCellAt(row, col).editable;
     }
-    private move(offset : { row : number, col : number }) {
+    private move(event : any, offset : { row : number, col : number }) {
 
       if (this.editor.cell == null) {
         return;
       }
       var row = this.editor.cell.row;
       var col = this.editor.cell.col;
-      var tableModel = this.model;
+
+      var prevented = false;
+      var moveHandler = function(event : Event) {
+        prevented = event.defaultPrevented;
+      };
+      this.on('move', moveHandler).
+        trigger('move', { row : row, col : col, offset : offset,
+          originalEvent : event }).
+        off('move', moveHandler);
+      if (prevented) {
+        return;
+      }
+
+      // preventDefault of keyevent.
+      event.preventDefault();
 
       var beginEditIfEditable = () => {
         if (this.isEditableAt(row, col) ) {
@@ -543,6 +555,7 @@ namespace comfortable {
         return false;
       };
 
+      var tableModel = this.model;
       var rowCount = tableModel.getRowCount();
       var columnCount = tableModel.getColumnCount();
 

@@ -13,11 +13,11 @@ namespace comfortable {
 
   export interface Event {
     type : string;
+    preventDefault : () => void;
+    defaultPrevented : boolean;
     target? : any;
     currentTarget? : any;
-    preventDefault? : () => void;
     which? : number;
-    defaultPrevented? : boolean;
     pageX? : number;
     pageY? : number;
   }
@@ -40,8 +40,9 @@ namespace comfortable {
     }
     public trigger(type : string, detail? : any) {
       var ctx = this;
+      var event = new EventImpl(type);
       this.listeners(type).forEach(function(listener : EventListener) {
-        listener.call(ctx, { type : type }, detail);
+        listener.call(ctx, event, detail);
       });
       return this;
     }
@@ -54,6 +55,17 @@ namespace comfortable {
         return listener != l;
       });
       return this;
+    }
+  }
+
+  class EventImpl implements Event {
+    public type : string;
+    public defaultPrevented = false;
+    constructor(type : string) {
+      this.type = type;
+    }
+    public preventDefault() {
+      this.defaultPrevented = true;
     }
   }
 

@@ -132,11 +132,11 @@ declare namespace comfortable {
 declare namespace comfortable {
     interface Event {
         type: string;
+        preventDefault: () => void;
+        defaultPrevented: boolean;
         target?: any;
         currentTarget?: any;
-        preventDefault?: () => void;
         which?: number;
-        defaultPrevented?: boolean;
         pageX?: number;
         pageY?: number;
     }
