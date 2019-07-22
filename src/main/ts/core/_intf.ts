@@ -23,6 +23,11 @@ namespace comfortable {
       cell : {
         $el : HTMLElement, row : number, col : number 
       }) => boolean) => void;
+    findNextEditable : (
+        row : number, col : number,
+        offset : { row : number, col : number },
+        found : (row : number, col : number) => void
+      ) => void;
   }
 
   export interface TableCellRenderer {

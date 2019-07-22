@@ -11,6 +11,10 @@ declare namespace comfortable {
             row: number;
             col: number;
         }) => boolean) => void;
+        findNextEditable: (row: number, col: number, offset: {
+            row: number;
+            col: number;
+        }, found: (row: number, col: number) => void) => void;
     }
     interface TableCellRenderer {
         getCellStyle?: (cell: any) => ElementOptions;

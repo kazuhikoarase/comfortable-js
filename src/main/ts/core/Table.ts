@@ -546,10 +546,21 @@ namespace comfortable {
 
       // preventDefault of keyevent.
       event.preventDefault();
+      this.findNextEditable(row, col, offset,
+        (row : number, col : number) => {
+          this.editor.beginEdit(row, col, true);
+        });
+    }
+
+    public findNextEditable(
+      row : number, col : number,
+      offset : { row : number, col : number },
+      found : (row : number, col : number) => void
+    ) {
 
       var beginEditIfEditable = () => {
         if (this.isEditableAt(row, col) ) {
-          this.editor.beginEdit(row, col, true);
+          found(row, col);
           return true;
         }
         return false;
@@ -605,8 +616,10 @@ namespace comfortable {
             }
           } while (tableModel.checkSpaned(row, col) );
         } while (!beginEditIfEditable() );
+
       }
-    }
+    };
+
     private renderColumnResizeHandlers(renderParams : RenderParams) {
       var mousedownHandler = (event : Event) => {
         var mouseupHandler = (event : Event) => {
