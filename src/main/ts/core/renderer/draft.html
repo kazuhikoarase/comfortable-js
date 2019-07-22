@@ -12,8 +12,6 @@
 <div style="width:2000px;height:2000px;background-color:rgba(0,0,0,0.1)"></div>
 <div id="log"></div>
 <button id="btn"> test </button>
-<input type="text" />
-
 <script>
 
 'use strict';
@@ -54,9 +52,6 @@ var table = comfortable.fromTemplate({
     [{ dataField: 'x' }]
   ]
 });
-table.on('move', function(event) {
-//  event.preventDefault();
-});
 
 // set border style.
 table.model.defaultCellStyle.borderRight = '1px solid silver';
@@ -82,60 +77,6 @@ table.model.getItemStyleAt = function(itemIndex) {
   }
   return {};
 };
-
-table.on("move", function(event, detail) {
-  var tableModel = this.model;
-  var isEditableAt = function(row, col) {
-    return tableModel.getCellAt(row, col).editable;
-  };
-  var trigger = function(type) {
-    event.preventDefault();
-    console.log(type, detail)
-    table.trigger(type, detail);
-  };
-
-  var row = detail.row;
-  var col = detail.col;
-
-  if (detail.offset.col == -1) {
-    // prev
-    var l = tableModel.getLockLeft();
-    while (l <= col - 1) {
-      col -= 1;
-      if (isEditableAt(row, col)) {
-        return;
-      }
-    }
-    trigger("prevfocus");
-  } else if (detail.offset.row == -1) {
-    var t = tableModel.getLockTop();
-    while (t <= row - 1) {
-      row -= 1;
-      if (isEditableAt(row, col)) {
-        return;
-      }
-    }
-    trigger("prevfocus");
-  } else if (detail.offset.col == 1) {
-    var r = tableModel.getColumnCount() - tableModel.getLockRight();
-    while (r > col + 1) {
-      col += 1;
-      if (isEditableAt(row, col)) {
-        return;
-      }
-    }
-    trigger("nextfocus");
-  } else if (detail.offset.row == 1) {
-    var b = tableModel.getRowCount() - tableModel.getLockBottom();
-    while (b > row + 1) {
-      row += 1;
-      if (isEditableAt(row, col)) {
-        return;
-      }
-    }
-    trigger("nextfocus");
-  }
-});
 
 var items = [];
 for (var i = 0; i < 100; i += 1) {
@@ -174,7 +115,6 @@ document.getElementById('btn').addEventListener('click', function() {
 });
 
 </script>
-<input type="text" />
 <div style="width:2000px;height:2000px;background-color:rgba(0,0,0,0.1)"></div>
 </body>
 </html>
