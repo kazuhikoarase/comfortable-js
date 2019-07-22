@@ -44,6 +44,7 @@ namespace comfortable.renderer {
       $el : util.createSVGElement('svg', {
         style : { position : 'absolute', right : '0px', top : '0px'},
         attrs : { width : '' + size, height : '' + size,
+          tabindex: '-1', focusable: 'false',
           'class' : '${prefix}-tooltip-corner' } }, [
         util.createSVGElement('path', {
           attrs : { d : 'M0 0L' + size + ' 0L' + size + ' ' + size + 'Z' }
@@ -93,7 +94,8 @@ namespace comfortable.renderer {
       attrs : { 'class' : '${prefix}-tooltip-box' } });
     var bar = util.createSVGElement('svg', {
         style : { position : 'absolute' },
-        attrs : { width : '' + barW, height : '' + barH } },
+        attrs : { width : '' + barW, height : '' + barH,
+          tabindex: '-1', focusable: 'false' } },
       [ util.createSVGElement('path', {
           attrs : { d : 'M0 ' + barH + 'L' + barW + ' 0' } }) ]);
     document.body.appendChild(box);

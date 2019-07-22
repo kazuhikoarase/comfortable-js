@@ -236,8 +236,6 @@ namespace comfortable {
 
       var initCheckBox = function() {
         checkBox = ui.createCheckBox();
-        util.set(checkBox.$el.firstChild, {
-          attrs : { tabindex: '-1', focusable: 'false' } });
         util.set(checkBox.$el, {
           style : { verticalAlign: 'middle', marginRight: '2px' },
           on : { mousedown : function(event) {

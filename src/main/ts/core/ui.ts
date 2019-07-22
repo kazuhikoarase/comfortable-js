@@ -67,7 +67,8 @@ namespace comfortable.ui {
           width : '12px', height : '12px' }
         )}, [
           util.createSVGElement('svg', {
-            attrs : { width : '12', height : '12' },
+            attrs : { width : '12', height : '12',
+                tabindex: '-1', focusable: 'false' },
             style : antiBsGlobals }, [ path ])
         ] ),
       checked : true,
