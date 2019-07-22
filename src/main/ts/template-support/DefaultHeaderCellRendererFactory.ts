@@ -236,6 +236,8 @@ namespace comfortable {
 
       var initCheckBox = function() {
         checkBox = ui.createCheckBox();
+        util.set(checkBox.$el.firstChild, {
+          attrs : { tabindex: '-1', focusable: 'false' } });
         util.set(checkBox.$el, {
           style : { verticalAlign: 'middle', marginRight: '2px' },
           on : { mousedown : function(event) {
@@ -298,6 +300,7 @@ namespace comfortable {
       var initFilterButton = function() {
         filterButton = createFilterButton();
         util.set(filterButton.$el, {
+          attrs : { tabindex: '-1', focusable: 'false' },
           on : { mousedown : function(event) {
               event.preventDefault();
               if (dialog == null) {

@@ -230,7 +230,8 @@ namespace comfortable.ui {
             click: action } },
         [ util.createSVGElement('svg',
             { attrs: { width: '16', height: '16',
-              'class': '${prefix}-cal-button-symbol' },
+                tabindex: '-1', focusable: 'false',
+                'class': '${prefix}-cal-button-symbol' },
               style: { verticalAlign: 'middle' } },
             [ util.createSVGElement('path',
                 { attrs: { d: 'M3 2L13 8L3 14Z',
@@ -423,7 +424,8 @@ namespace comfortable.ui {
 
     var optionsIcon = util.createSVGElement('svg', {
       style : { verticalAlign : 'middle' },
-      attrs : { width : '' + w, height : '' + w },
+      attrs : { width : '' + w, height : '' + w,
+        tabindex: '-1', focusable: 'false' },
       on : {
         click : function(event) {
         }

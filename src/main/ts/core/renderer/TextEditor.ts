@@ -143,6 +143,7 @@ namespace comfortable.renderer {
       var cs = window.getComputedStyle(td.$el, null);
       var opts : ElementOptions = {
           props : { readOnly : readOnly },
+          attrs : { tabindex : cell.editable? '0' : '-1' },
           style : this.getChangedStyle({
             textAlign : cs.textAlign,
             verticalAlign : cs.verticalAlign,
