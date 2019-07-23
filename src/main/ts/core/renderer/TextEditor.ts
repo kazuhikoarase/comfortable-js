@@ -51,7 +51,8 @@ namespace comfortable.renderer {
 
       if (dataType == 'multi-line-string') {
         this.textfield = <HTMLInputElement>util.createElement('textarea', {
-          attrs : { 'class' : '${prefix}-editor', rows : '1' },
+          attrs : { 'class' : '${prefix}-editor', rows : '1',
+            tabindex : '-1' },
           on : {
             blur : (event) => {
               this.tableModel.trigger('valuecommit', this.cell);
@@ -65,7 +66,8 @@ namespace comfortable.renderer {
         });
       } else {
         this.textfield = <HTMLInputElement>util.createElement('input', {
-          attrs : { type : 'text', 'class' : '${prefix}-editor' },
+          attrs : { type : 'text', 'class' : '${prefix}-editor',
+            tabindex : '-1' },
           on : { blur : (event) => {
             if (this.enableEvent) {
               this.tableModel.trigger('valuecommit', this.cell); } }
@@ -150,7 +152,6 @@ namespace comfortable.renderer {
       var cs = window.getComputedStyle(td.$el, null);
       var opts : ElementOptions = {
           props : { readOnly : readOnly },
-          attrs : { tabindex : cell.editable? '0' : '-1' },
           style : this.getChangedStyle({
             textAlign : cs.textAlign,
             verticalAlign : cs.verticalAlign,

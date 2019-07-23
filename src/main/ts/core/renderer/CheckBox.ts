@@ -27,7 +27,8 @@ namespace comfortable.renderer {
     }
 
     public $el = <HTMLInputElement>util.createElement('input', {
-      attrs : { type : 'checkbox', 'class' : '${prefix}-editor' },
+      attrs : { type : 'checkbox', 'class' : '${prefix}-editor',
+        tabindex : '-1' },
       on : {
         blur : (event) => {
           this.tableModel.trigger('valuecommit', this.cell);
