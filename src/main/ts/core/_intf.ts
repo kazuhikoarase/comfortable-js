@@ -101,7 +101,6 @@ namespace comfortable {
   }
 
   export interface TextEditorOptions {
-    dataType : string;
     decimalDigits? : number;
     maxLength? : number;
     imeMode? : string;
@@ -125,16 +124,22 @@ namespace comfortable {
   }
 
   export interface CellRendererFactoryOpts {
-    labelFunction? : (value : any, cell : EditorCell) => string;
-    createEditor? : () => CellEditor<any>;
-    renderIsEditor? : boolean;
     dataType? : string;
+    renderIsEditor? : boolean;
+    labelFunction? : (value : any, cell : EditorCell) => string;
+    editorPool? : EditorPool;
+  }
+
+  export interface EditorPool {
+    getEditor(dataType : string) : CellEditor<any,any>;
+    releaseEditor(dataType : string, editor : CellEditor<any,any>) : void;
   }
 
   export type EditorCell = TextEditorCell|CheckBoxCell|SelectBoxCell;
 
-  export interface CellEditor<E> {
+  export interface CellEditor<E,O> {
     $el : E;
+    init : (opts : O) => void;
     beginEdit : (td : TdWrapper, cell : EditorCell) => void;
     focus : () => void;
     blur : () => void;

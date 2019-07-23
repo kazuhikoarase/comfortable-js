@@ -11,17 +11,19 @@
 
 namespace comfortable.renderer {
 
-  export class SelectBox implements CellEditor<HTMLSelectElement> {
+  export class SelectBox
+  implements CellEditor<HTMLSelectElement,SelectBoxOptions> {
 
-    private opts : SelectBoxOptions;
     private defaultValue : any;
     private lastOptions : any[];
 
     private tableModel : TableModel;
     private cell : TableCell;
 
-    constructor(opts : SelectBoxOptions) {
-      this.opts = opts;
+    constructor() {
+    }
+
+    public init(opts : SelectBoxOptions) {
     }
 
     public $el = <HTMLSelectElement>util.createElement('select', {

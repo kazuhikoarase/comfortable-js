@@ -24,9 +24,9 @@ namespace comfortable.renderer {
     beginEdit? : (td : TdWrapper, cell : TableCell) => void;
   }
 
-  export class TextEditor implements CellEditor<HTMLElement> {
+  export class TextEditor
+  implements CellEditor<HTMLElement,TextEditorOptions> {
 
-    private opts : TextEditorOptions;
     private lastStyle : any;
 
     public defaultValue : any;
@@ -39,14 +39,17 @@ namespace comfortable.renderer {
     public textfield : HTMLInputElement;
     public enableEvent = true;
 
+    private dataType : string;
+    private decimalDigits : number;
     private delegator : TextEditorDelegator;
 
-    constructor(opts : TextEditorOptions) {
+    constructor(dataType : string) {
 
-      this.opts = opts;
+      this.dataType = dataType;
+
       this.lastStyle = {};
 
-      if (opts.dataType == 'multi-line-string') {
+      if (dataType == 'multi-line-string') {
         this.textfield = <HTMLInputElement>util.createElement('textarea', {
           attrs : { 'class' : '${prefix}-editor', rows : '1' },
           on : {
@@ -70,28 +73,14 @@ namespace comfortable.renderer {
         });
       }
 
-      if (typeof this.opts.imeMode == 'string') {
-        this.textfield.style.imeMode = this.opts.imeMode;
-      } else {
-        if (this.opts.dataType == 'number' ||
-            this.opts.dataType == 'date' ||
-            this.opts.dataType == 'select-one') {
-          this.textfield.style.imeMode = 'disabled';
-        }
-      }
-
-      if (typeof this.opts.maxLength == 'number') {
-        this.textfield.maxLength = this.opts.maxLength;
-      }
-
-      if (this.opts.dataType == 'date') {
+      if (dataType == 'date') {
 
         var df = createTextEditorDateField(this);
 
         this.$el = df.body;
         this.delegator = df;
 
-      } else if (this.opts.dataType == 'select-one') {
+      } else if (dataType == 'select-one') {
 
         var sb = createTextEditorSelectBox(this);
 
@@ -117,6 +106,24 @@ namespace comfortable.renderer {
 
         this.$el = this.textfield;
         this.delegator = null;
+      }
+    }
+
+    public init(opts : TextEditorOptions) {
+      delete this.textfield.style.imeMode;
+      delete this.textfield.maxLength;
+      this.decimalDigits = opts.decimalDigits;
+      if (typeof opts.imeMode == 'string') {
+        this.textfield.style.imeMode = opts.imeMode;
+      } else {
+        if (this.dataType == 'number' ||
+            this.dataType == 'date' ||
+            this.dataType == 'select-one') {
+          this.textfield.style.imeMode = 'disabled';
+        }
+      }
+      if (typeof opts.maxLength == 'number') {
+        this.textfield.maxLength = opts.maxLength;
       }
     }
 
@@ -199,19 +206,19 @@ namespace comfortable.renderer {
         return null;
       } else if (this.delegator) {
         return this.delegator.getValue();
-      } else if (this.opts.dataType == 'number') {
+      } else if (this.dataType == 'number') {
         var value = util.formatNumber(
             util.toNarrowNumber(this.textfield.value),
-            this.opts.decimalDigits, '');
+            this.decimalDigits, '');
         return this.valueType == 'number'? +value : value;
       } else {
         return util.rtrim(this.textfield.value);
       }
     }
     public isValid() {
-      if (this.opts.dataType == 'number') {
+      if (this.dataType == 'number') {
         return !!('' + this.getValue() ).match(util.numRe);
-      } else if (this.opts.dataType == 'date') {
+      } else if (this.dataType == 'date') {
         return !!('' + this.getValue() ).match(/^(\d{8})?$/);
       }
       return true;

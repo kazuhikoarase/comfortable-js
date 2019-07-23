@@ -11,17 +11,19 @@
 
 namespace comfortable.renderer {
 
-  export class CheckBox implements CellEditor<HTMLInputElement> {
+  export class CheckBox
+  implements CellEditor<HTMLInputElement,CheckBoxOptions> {
 
-    private opts : CheckBoxOptions;
     private booleanValues : any[] = null;
     private defaultValue : any;
 
     private tableModel : TableModel;
     private cell : TableCell;
 
-    constructor(opts : CheckBoxOptions) {
-      this.opts = opts;
+    constructor() {
+    }
+
+    public init(opts : CheckBoxOptions) {
     }
 
     public $el = <HTMLInputElement>util.createElement('input', {

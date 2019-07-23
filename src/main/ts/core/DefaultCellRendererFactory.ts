@@ -58,14 +58,33 @@ namespace comfortable {
 
         }
       },
-      // create an editor
-      createEditor : function() {
+      editorPool : createEditorPool()
+    };
+  };
+
+  var createEditorPool = function() : EditorPool {
+    var pool : { [ dataType : string ] : CellEditor<any,any>[] } = {}
+    var getPool = function(dataType :  string) : CellEditor<any,any>[] {
+      return pool[dataType] || (pool[dataType] = []);
+    };
+    return {
+      /**
+       * create or get an editor.
+       */
+      getEditor : function(dataType : string) : CellEditor<any,any> {
+        var pool = getPool(dataType);
+        if (pool.length > 0) {
+          return pool.shift();
+        }
         if (this.dataType == 'select-one') {
           //return new renderer.SelectBox(this);
-        } else if (this.dataType == 'boolean') {
-          return new renderer.CheckBox(this);
+        } else if (dataType == 'boolean') {
+          return new renderer.CheckBox();
         }
-        return new renderer.TextEditor(this);
+        return new renderer.TextEditor(dataType);
+      },
+      releaseEditor : function(dataType : string, editor : CellEditor<any,any>) {
+        getPool(dataType).push(editor);
       }
     };
   };
@@ -79,12 +98,13 @@ namespace comfortable {
     return function(td : TdWrapper) : TableCellRenderer {
 
       var labelRenderer = createMultiLineLabelRenderer(td.$el);
-      var editor : CellEditor<any> = null;
+      var editor : CellEditor<any,any> = null;
       var oldValue : any = null;
 
       var beginEdit = function(cell : EditorCell) {
         if (editor == null) {
-          editor = opts.createEditor();
+          editor = opts.editorPool.getEditor(opts.dataType);
+          editor.init(opts);
           td.$el.appendChild(editor.$el);
         }
         labelRenderer.setVisible(false);
@@ -143,6 +163,11 @@ namespace comfortable {
           };
         },
         dispose : function() {
+          if (editor != null) {
+            td.$el.removeChild(editor.$el);
+            opts.editorPool.releaseEditor(opts.dataType, editor);
+            editor = null;
+          }
         }
       };
     };
