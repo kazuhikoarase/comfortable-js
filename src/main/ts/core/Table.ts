@@ -66,10 +66,11 @@ namespace comfortable {
    */
   export interface InternalEditor extends Editor {
     td : ElmCache;
+    active : boolean,
     impl : any;
     cell : { row : number, col : number };
     beginEdit : (row : number, col : number, makeVisible? : boolean) => void;
-    endEdit : () => void;
+    endEdit : (reason : string) => void;
   }
 
   /**
@@ -303,17 +304,24 @@ namespace comfortable {
       }, [ this.vScr ]);
 
     private frame = util.createElement('div', {
+        attrs : { tabindex : '-1' },
         style : { position : 'relative', overflow : 'hidden',
           width : '400px', height : '200px' },
         on : {
+          focusin : (event) => {
+            this.editor.active = true;
+          },
+          focusout : (event) => {
+            this.editor.active = false;
+          },
           mousedown : (event) => {
             if (util.closest(event.target, {
                 $el : this.hViewPane, root : this.frame }) ) {
-              this.editor.endEdit();
+              this.editor.endEdit('hscr');
               this.render();
             } else if (util.closest(event.target, {
                 $el : this.vViewPane, root : this.frame }) ) {
-              this.editor.endEdit();
+              this.editor.endEdit('vscr');
               this.render();
             }
           },
@@ -329,7 +337,7 @@ namespace comfortable {
           },
           wheel : (event) => {
 
-            this.editor.endEdit();
+            this.editor.endEdit('wheel');
 
             var last = {
               scrollLeft : this.hViewPane.scrollLeft,
@@ -665,7 +673,7 @@ namespace comfortable {
           return;
         }
         event.preventDefault();
-        this.editor.endEdit();
+        this.editor.endEdit('mousedown');
         var handleIndex = this.colResizeHandles.map(function(handle) {
           return handle.$el; } ).indexOf(event.currentTarget);
         var handle = this.colResizeHandles[handleIndex];
@@ -915,22 +923,23 @@ namespace comfortable {
     private createInternalEditor() : InternalEditor {
       var table = this;
       var valuecommitHandler = function(event : any, detail : any) {
-        if (editor.cell && detail.row == editor.cell.row &&
-            detail.col == editor.cell.col) {
+        if (!editor.active/*editor.cell && detail.row == editor.cell.row &&
+            detail.col == editor.cell.col*/) {
           // still editing after lost focus.
           // then, force end edit.
-          editor.endEdit();
-          table.invalidate();
+          editor.endEdit('valuecommit');
+          table.render();
         }
       };
       var editor : InternalEditor = {
         td : null,
+        active : false,
         impl : null,
         cell : null,
         beginEdit : function(row, col, makeVisible) {
           if (this.cell && !(this.cell.row == row && this.cell.col == col) ) {
             // current editing cell changed.
-            this.endEdit();
+            this.endEdit('cellchange');
           }
           if (makeVisible) {
             table.render({ row : row, col : col });
@@ -947,7 +956,7 @@ namespace comfortable {
             util.$(this.td.$el).addClass('${prefix}-editing');
           }
         },
-        endEdit : function() {
+        endEdit : function(reason : string) {
           if (this.impl != null) {
             util.$(this.td.$el).removeClass('${prefix}-editing');
             table.model.trigger('editingcellchange', { cell : null });

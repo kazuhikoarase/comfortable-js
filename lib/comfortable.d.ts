@@ -1,6 +1,6 @@
 declare namespace comfortable {
     interface Editor {
-        endEdit: () => void;
+        endEdit: (reason: string) => void;
     }
     interface Table extends UIEventTarget {
         $el: HTMLElement;

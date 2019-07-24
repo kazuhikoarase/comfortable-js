@@ -12,7 +12,7 @@
 namespace comfortable {
 
   export interface Editor {
-    endEdit : () => void;
+    endEdit : (reason : string) => void;
   }
 
   export interface Table extends UIEventTarget {
