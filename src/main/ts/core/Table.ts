@@ -65,6 +65,7 @@ namespace comfortable {
    * @internal
    */
   export interface InternalEditor extends Editor {
+    td : ElmCache;
     impl : any;
     cell : { row : number, col : number };
     beginEdit : (row : number, col : number, makeVisible? : boolean) => void;
@@ -907,6 +908,7 @@ namespace comfortable {
         }
       };
       var editor : InternalEditor = {
+        td : null,
         impl : null,
         cell : null,
         beginEdit : function(row, col, makeVisible) {
@@ -921,14 +923,18 @@ namespace comfortable {
           var target = table.getTargetTable(row, col);
           var index = target.tableState.indexById[util.getCellId(row, col)];
           if (index) {
-            var td = target.tbody.children[index.trIndex].children[index.tdIndex];
-            this.impl = td.renderer.beginEdit(table.model.getCellAt(row, col) );
+            this.td = target.tbody.children[index.trIndex].children[index.tdIndex];
+            this.impl = this.td.renderer.beginEdit(table.model.getCellAt(row, col) );
             this.impl.focus();
             table.model.on('valuecommit', valuecommitHandler);
+            table.model.trigger('editingcellchange', { cell : this.cell });
+            util.$(this.td.$el).addClass('${prefix}-editing');
           }
         },
         endEdit : function() {
           if (this.impl != null) {
+            util.$(this.td.$el).removeClass('${prefix}-editing');
+            table.model.trigger('editingcellchange', { cell : null });
             table.model.off('valuecommit', valuecommitHandler);
             var endState = this.impl.endEdit();
             if (endState && !(endState.oldValue === endState.newValue) ) {

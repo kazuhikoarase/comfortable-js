@@ -543,6 +543,7 @@ namespace comfortable {
       public items : any[] = [];
       public filteredItems : any[] = null;
       public hoverRow = -1;
+      public editingCell : { row : number, col : number } = null;
       public multipleRowsSelectable = false;
       public selectedRows : { [ row : number ] : boolean } = {};
       public resetFilter() {
@@ -682,9 +683,17 @@ namespace comfortable {
             this.defaultCellRendererFactory);
       }
       public getCellStyleAt(row : number, col : number) : TableCellStyle {
+
         var orderedCol = this.getOrderedColumnIndexAt(col);
         var style = util.extend({}, getCellStyleAt(this, row, orderedCol) );
         style.className = style.className || '';
+
+        if (this.editingCell &&
+            this.editingCell.row == row &&
+            this.editingCell.col == col) {
+          style.className += ' ${prefix}-editing';
+        }
+
         if (row < headLength) {
           style.className += ' ${prefix}-header';
           style.editable = false;
@@ -703,9 +712,11 @@ namespace comfortable {
             util.extend(style, this.getItemStyleAt(itemIndex) );
           }
         }
+
         if (style.editable === false) {
           style.className += ' ${prefix}-readonly';
         }
+
         return style;
       }
 
@@ -865,6 +876,8 @@ namespace comfortable {
     table.model.on('valuechange', function(event : Event, detail : any) {
       this.trigger('beforevaluechange', detail);
       this.setValueAt(detail.row, detail.col, detail.newValue);
+    }).on('editingcellchange', function(event : Event, detail : any) {
+      this.editingCell = detail.cell;
     }).on('cellsizechange', function(event : Event, detail : any) {
       if (typeof detail.col == 'number') {
         var orderedCol = this.getOrderedColumnIndexAt(detail.col);

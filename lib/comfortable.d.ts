@@ -458,6 +458,10 @@ declare namespace comfortable {
             [orderedCol: number]: boolean;
         };
         hoverRow: number;
+        editingCell: {
+            row: number;
+            col: number;
+        };
         setTableState: (tableState: TemplateTableState) => void;
         getTableState: () => TemplateTableState;
         forEachItemCells: (callback: (cell: TableTemplateCellStyle, item: any, row: number, col: number) => boolean) => void;

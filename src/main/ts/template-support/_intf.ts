@@ -88,6 +88,7 @@ namespace comfortable {
     orderedColumnIndices : number[];
     hiddenColumns : { [ orderedCol : number ] : boolean };
     hoverRow : number;
+    editingCell : { row : number, col : number };
     setTableState : (tableState : TemplateTableState) => void;
     getTableState : () => TemplateTableState;
     forEachItemCells : (
