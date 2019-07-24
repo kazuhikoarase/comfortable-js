@@ -571,7 +571,23 @@ namespace comfortable {
       var rowCount = tableModel.getRowCount();
       var columnCount = tableModel.getColumnCount();
 
-      if (offset.row == -1 || offset.row == 1) {
+      if ( (offset.row == -1 || offset.row == 1) &&
+          tableModel.getLineRowCountAt(row) == 1) {
+
+        do {
+          do {
+            row += offset.row;
+            if (row < 0) {
+              row = rowCount - 1;
+              col = (col - 1 + columnCount) % columnCount;
+            } else if (row >= rowCount) {
+              row = 0;
+              col = (col + 1) % columnCount;
+            }
+          } while (tableModel.checkSpaned(row, col) );
+        } while (!beginEditIfEditable() );
+
+      } else if (offset.row == -1 || offset.row == 1) {
 
         do {
           do {
