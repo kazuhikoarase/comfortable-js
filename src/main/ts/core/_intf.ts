@@ -28,6 +28,7 @@ namespace comfortable {
         offset : { row : number, col : number },
         found : (row : number, col : number) => void
       ) => void;
+    dispose : () => void;
   }
 
   export interface TableCellRenderer {

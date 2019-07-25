@@ -194,6 +194,7 @@ TABLE.ctj-cal-table TD.ctj-current-date:hover {
 }
 
 .ctj-editing {
+	outline: 1px solid red;
 }
 
 .ctj-readonly {

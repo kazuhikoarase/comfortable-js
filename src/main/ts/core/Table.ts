@@ -96,9 +96,22 @@ namespace comfortable {
    */
   export class TableImpl extends UIEventTargetImpl implements Table {
 
+    private tabState = { keyCode : 0, shiftKey : false };
+    private document_keydownHandler = (event : any) => {
+      this.tabState = {
+        keyCode : event.keyCode,
+        shiftKey : event.shiftKey
+      };
+    };
+
     constructor(model : TableModel) {
       super();
       this.model = model;
+      document.addEventListener('keydown', this.document_keydownHandler);
+    }
+
+    public dispose() {
+      document.removeEventListener('keydown', this.document_keydownHandler);
     }
 
     private tables = ( () => {
@@ -304,17 +317,45 @@ namespace comfortable {
       }, [ this.vScr ]);
 
     private frame = util.createElement('div', {
-        attrs : { tabindex : '-1' },
+        attrs : { tabindex : '0' },
         style : { position : 'relative', overflow : 'hidden',
           width : '400px', height : '200px' },
         on : {
+          focus: (event) => {
+
+            var tabState = this.tabState;
+            var rowCount = this.model.getRowCount();
+            var columnCount = this.model.getColumnCount();
+
+            if (tabState.keyCode == 9 && rowCount > 0 && columnCount > 0) {
+
+              var row = tabState.shiftKey ? rowCount - 1 : 0;
+              var col = tabState.shiftKey ? columnCount - 1 : 0;
+
+              if (this.isEditableAt(row, col) ) {
+                this.editor.beginEdit(row, col, true);
+              } else {
+                this.findNextEditable(
+                  row,
+                  col,
+                  { row: 0, col: tabState.shiftKey ? -1 : 1 },
+                  (row, col) => {
+                    this.editor.beginEdit(row, col, true);
+                  }
+                );
+              }
+            }
+          },
           focusin : (event) => {
             this.editor.active = true;
+            this.$el.setAttribute('tabindex', '-1');
           },
           focusout : (event) => {
             this.editor.active = false;
+            this.$el.setAttribute('tabindex', '0');
           },
           mousedown : (event) => {
+            this.tabState = { keyCode: 0, shiftKey: event.shiftKey };
             if (util.closest(event.target, {
                 $el : this.hViewPane, root : this.frame }) ) {
               this.editor.endEdit('hscr');
@@ -541,15 +582,22 @@ namespace comfortable {
       var row = this.editor.cell.row;
       var col = this.editor.cell.col;
 
-      var prevented = false;
-      var moveHandler = function(event : Event) {
-        prevented = event.defaultPrevented;
-      };
-      this.on('move', moveHandler).
-        trigger('move', { row : row, col : col, offset : offset,
-          originalEvent : event }).
-        off('move', moveHandler);
-      if (prevented) {
+      var found = false;
+      this.findNextEditable(row, col, offset,
+        function(r, c) {
+          if (offset.row == -1 || offset.col == -1) {
+            found = !(row < r && col < c);
+          } else if (offset.row == 1 || offset.col == 1) {
+            found = !(row > r && col > c);
+          }
+        });
+
+      if (!found) {
+        if (offset.row == -1 || offset.col == -1) {
+          this.trigger('prevfocus');
+        } else if (offset.row == 1 || offset.col == 1) {
+          this.trigger('nextfocus');
+        }
         return;
       }
 
@@ -567,7 +615,14 @@ namespace comfortable {
       found : (row : number, col : number) => void
     ) {
 
+      var initialRow = row;
+      var initialCol = col;
+
       var beginEditIfEditable = () => {
+        if (row == initialRow && col == initialCol) {
+          // break.
+          return true;
+        }
         if (this.isEditableAt(row, col) ) {
           found(row, col);
           return true;

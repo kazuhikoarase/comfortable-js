@@ -21,6 +21,7 @@
 }
 
 .ctj-editing {
+	outline: 1px solid red;
 }
 
 .ctj-readonly {
