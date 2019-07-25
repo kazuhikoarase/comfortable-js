@@ -823,31 +823,27 @@ namespace comfortable {
       var ltRect = renderParams.rects[LT_INDEX];
       var rbRect = renderParams.rects[RB_INDEX];
 
-      var viewWidth = renderParams.width - ltRect.width;
-      var viewHeight = renderParams.height - ltRect.height;
+      var viewWidth = renderParams.width - ltRect.width - rbRect.width;
+      var viewHeight = renderParams.height - ltRect.height - rbRect.height;
 
       // check if scrollbar shown.
       var barSize = this.measureBarSize();
-      var vBarShown = renderParams.scrWidth >
-        viewWidth - rbRect.width - barSize.width;
-      var hBarShown = renderParams.scrHeight >
-        viewHeight - rbRect.height - barSize.height;
+      var vBarShown = renderParams.scrWidth > viewWidth - barSize.width;
+      var hBarShown = renderParams.scrHeight > viewHeight - barSize.height;
 
       util.extend(this.hScr.style, {
         width : renderParams.scrWidth + 'px', height : '1px' });
       util.extend(this.hViewPane.style, {
-        left : ltRect.width + 'px', top : ltRect.height + 'px',
-        width : (viewWidth - rbRect.width -
-          (hBarShown? barSize.width : 0) ) + 'px',
+        left : ltRect.width + 'px', top : (ltRect.height + rbRect.height) + 'px',
+        width : (viewWidth - (hBarShown? barSize.width : 0) ) + 'px',
         height : viewHeight + 'px' });
 
       util.extend(this.vScr.style, {
         width : '1px', height : renderParams.scrHeight + 'px' });
       util.extend(this.vViewPane.style, {
-        left : ltRect.width + 'px', top : ltRect.height + 'px',
+        left : (ltRect.width + rbRect.width) + 'px', top : ltRect.height + 'px',
         width : viewWidth + 'px',
-        height : (viewHeight - rbRect.height -
-          (vBarShown? barSize.height : 0) ) + 'px' });
+        height : (viewHeight - (vBarShown? barSize.height : 0) ) + 'px' });
 
       var hViewPane = this.hViewPane;
       var vViewPane = this.vViewPane;
