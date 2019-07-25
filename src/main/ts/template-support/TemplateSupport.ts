@@ -930,29 +930,37 @@ namespace comfortable {
         var dataField = sort.dataField;
         var indexField = '.index';
         var sortKeyField = '.sortKey';
-        var comparator = this.headCells[dataField].comparator;
+
+        // sort by custom comparator or default.
+        var comparator = this.headCells[dataField].comparator ||
+          function(v1 : any, v2 : any) { return v1 < v2? -1 : 1; };
+
         filteredItems.forEach(function(item, i) {
           item[indexField] = i;
           item[sortKeyField] = (item[dataField] === null ||
               typeof item[dataField] == 'undefined')? '' : item[dataField];
         });
-        if (comparator) {
-          // sort by custom comparator.
-          filteredItems.sort(function(item1, item2) {
-            var result = comparator(item1[sortKeyField], item2[sortKeyField]);
-            if (result != 0) {
-              return order * result;
-            }
-            return order * (item1[indexField] < item2[indexField]? -1 : 1);
-          });
-        } else {
-          filteredItems.sort(function(item1, item2) {
-            if (item1[sortKeyField] != item2[sortKeyField]) {
-              return order * (item1[sortKeyField] < item2[sortKeyField]? -1 : 1);
-            }
-            return order * (item1[indexField] < item2[indexField]? -1 : 1);
-          });
-        }
+
+        filteredItems.sort(function(item1, item2) {
+          var v1 = item1[sortKeyField];
+          var v2 = item2[sortKeyField];
+          if (v1 === null && v2 !== null) {
+            return 1;
+          } else if (v1 !== null && v2 === null) {
+            return -1;
+          } else if (v1 === '' && v2 !== '') {
+            return 1;
+          } else if (v1 !== '' && v2 === '') {
+            return -1;
+          }
+          var result = comparator(v1, v2);
+          if (result != 0) {
+            return order * result;
+          }
+          // index order.
+          return order * (item1[indexField] < item2[indexField]? -1 : 1);
+        });
+
         filteredItems.forEach(function(item) {
           delete item[indexField];
           delete item[sortKeyField];
