@@ -89,6 +89,8 @@ namespace comfortable {
     beforeDestroy : function() {
       // stop observing
       this.$options.alive = false;
+      // dispose
+      this.$options.table.dispose();
     }
   }
 
