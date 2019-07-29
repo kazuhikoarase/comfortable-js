@@ -92,6 +92,9 @@ declare namespace comfortable {
         imeMode?: string;
     }
     interface TextEditorCell extends TableCell {
+        maxLength?: number;
+        imeMode?: string;
+        decimalDigits?: number;
     }
     interface CheckBoxOptions {
     }
@@ -112,13 +115,12 @@ declare namespace comfortable {
         editorPool?: EditorPool;
     }
     interface EditorPool {
-        getEditor(dataType: string): CellEditor<any, any>;
-        releaseEditor(dataType: string, editor: CellEditor<any, any>): void;
+        getEditor(dataType: string): CellEditor<any>;
+        releaseEditor(dataType: string, editor: CellEditor<any>): void;
     }
     type EditorCell = TextEditorCell | CheckBoxCell | SelectBoxCell;
-    interface CellEditor<E, O> {
+    interface CellEditor<E> {
         $el: E;
-        init: (opts: O) => void;
         beginEdit: (td: TdWrapper, cell: EditorCell) => void;
         focus: () => void;
         blur: () => void;
@@ -226,13 +228,12 @@ declare namespace comfortable {
     }
 }
 declare namespace comfortable.renderer {
-    class CheckBox implements CellEditor<HTMLInputElement, CheckBoxOptions> {
+    class CheckBox implements CellEditor<HTMLInputElement> {
         private booleanValues;
         private defaultValue;
         private tableModel;
         private cell;
         constructor();
-        init(opts: CheckBoxOptions): void;
         $el: HTMLInputElement;
         setVisible(visible: boolean): void;
         beginEdit(td: TdWrapper, cell: CheckBoxCell): void;
@@ -244,13 +245,12 @@ declare namespace comfortable.renderer {
     }
 }
 declare namespace comfortable.renderer {
-    class SelectBox implements CellEditor<HTMLSelectElement, SelectBoxOptions> {
+    class SelectBox implements CellEditor<HTMLSelectElement> {
         private defaultValue;
         private lastOptions;
         private tableModel;
         private cell;
         constructor();
-        init(opts: SelectBoxOptions): void;
         $el: HTMLSelectElement;
         setVisible(visible: boolean): void;
         beginEdit(td: TdWrapper, cell: SelectBoxCell): void;
@@ -269,7 +269,7 @@ declare namespace comfortable.renderer {
     var createTextEditorSelectBox: (editor: TextEditor) => TextEditorDelegator;
 }
 declare namespace comfortable.renderer {
-    class TextEditor implements CellEditor<HTMLElement, TextEditorOptions> {
+    class TextEditor implements CellEditor<HTMLElement> {
         private lastStyle;
         defaultValue: any;
         private valueType;
@@ -282,7 +282,6 @@ declare namespace comfortable.renderer {
         private decimalDigits;
         private delegator;
         constructor(dataType: string);
-        init(opts: TextEditorOptions): void;
         setVisible(visible: boolean): void;
         beginEdit(td: TdWrapper, cell: TextEditorCell): void;
         private getChangedStyle;

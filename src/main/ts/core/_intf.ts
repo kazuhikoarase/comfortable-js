@@ -107,6 +107,9 @@ namespace comfortable {
     imeMode? : string;
   }
   export interface TextEditorCell extends TableCell {
+    maxLength? : number;
+    imeMode? : string;
+    decimalDigits? : number;
   }
 
   export interface CheckBoxOptions {
@@ -132,15 +135,14 @@ namespace comfortable {
   }
 
   export interface EditorPool {
-    getEditor(dataType : string) : CellEditor<any,any>;
-    releaseEditor(dataType : string, editor : CellEditor<any,any>) : void;
+    getEditor(dataType : string) : CellEditor<any>;
+    releaseEditor(dataType : string, editor : CellEditor<any>) : void;
   }
 
   export type EditorCell = TextEditorCell|CheckBoxCell|SelectBoxCell;
 
-  export interface CellEditor<E,O> {
+  export interface CellEditor<E> {
     $el : E;
-    init : (opts : O) => void;
     beginEdit : (td : TdWrapper, cell : EditorCell) => void;
     focus : () => void;
     blur : () => void;

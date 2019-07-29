@@ -301,7 +301,7 @@ namespace comfortable {
     // body => head,foot
     var inheritFromBody = [ 'dataType',
       'options', 'labelField', 'valueField',
-      'booleanValues' ];
+      'decimalDigits', 'booleanValues' ];
     var bodyDataCells : any = {};
     template.tbody.forEach(function(tr) {
       tr.forEach(function(cell) {

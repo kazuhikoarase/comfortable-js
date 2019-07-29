@@ -24,8 +24,7 @@ namespace comfortable.renderer {
     beginEdit? : (td : TdWrapper, cell : TableCell) => void;
   }
 
-  export class TextEditor
-  implements CellEditor<HTMLElement,TextEditorOptions> {
+  export class TextEditor implements CellEditor<HTMLElement> {
 
     private lastStyle : any;
 
@@ -111,24 +110,6 @@ namespace comfortable.renderer {
       }
     }
 
-    public init(opts : TextEditorOptions) {
-      delete this.textfield.style.imeMode;
-      delete this.textfield.maxLength;
-      this.decimalDigits = opts.decimalDigits;
-      if (typeof opts.imeMode == 'string') {
-        this.textfield.style.imeMode = opts.imeMode;
-      } else {
-        if (this.dataType == 'number' ||
-            this.dataType == 'date' ||
-            this.dataType == 'select-one') {
-          this.textfield.style.imeMode = 'disabled';
-        }
-      }
-      if (typeof opts.maxLength == 'number') {
-        this.textfield.maxLength = opts.maxLength;
-      }
-    }
-
     public setVisible(visible : boolean) {
       if (this.delegator) {
         this.$el.style.display = visible?
@@ -142,6 +123,22 @@ namespace comfortable.renderer {
 
       this.tableModel = td.tableModel;
       this.cell = cell;
+
+      delete this.textfield.style.imeMode;
+      delete this.textfield.maxLength;
+      this.decimalDigits = cell.decimalDigits;
+      if (typeof cell.imeMode == 'string') {
+        this.textfield.style.imeMode = cell.imeMode;
+      } else {
+        if (this.dataType == 'number' ||
+            this.dataType == 'date' ||
+            this.dataType == 'select-one') {
+          this.textfield.style.imeMode = 'disabled';
+        }
+      }
+      if (typeof cell.maxLength == 'number') {
+        this.textfield.maxLength = cell.maxLength;
+      }
 
       var readOnly = !cell.editable;
       if (this.delegator && this.delegator.readOnlyText) {

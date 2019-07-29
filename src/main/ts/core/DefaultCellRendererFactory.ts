@@ -63,15 +63,15 @@ namespace comfortable {
   };
 
   var createEditorPool = function() : EditorPool {
-    var pool : { [ dataType : string ] : CellEditor<any,any>[] } = {}
-    var getPool = function(dataType :  string) : CellEditor<any,any>[] {
+    var pool : { [ dataType : string ] : CellEditor<any>[] } = {}
+    var getPool = function(dataType :  string) : CellEditor<any>[] {
       return pool[dataType] || (pool[dataType] = []);
     };
     return {
       /**
        * create or get an editor.
        */
-      getEditor : function(dataType : string) : CellEditor<any,any> {
+      getEditor : function(dataType : string) : CellEditor<any> {
         var pool = getPool(dataType);
         if (pool.length > 0) {
           return pool.shift();
@@ -83,7 +83,7 @@ namespace comfortable {
         }
         return new renderer.TextEditor(dataType);
       },
-      releaseEditor : function(dataType : string, editor : CellEditor<any,any>) {
+      releaseEditor : function(dataType : string, editor : CellEditor<any>) {
         getPool(dataType).push(editor);
       }
     };
@@ -98,13 +98,12 @@ namespace comfortable {
     return function(td : TdWrapper) : TableCellRenderer {
 
       var labelRenderer = createMultiLineLabelRenderer(td.$el);
-      var editor : CellEditor<any,any> = null;
+      var editor : CellEditor<any> = null;
       var oldValue : any = null;
 
       var beginEdit = function(cell : EditorCell) {
         if (editor == null) {
           editor = opts.editorPool.getEditor(opts.dataType);
-          editor.init(opts);
           td.$el.appendChild(editor.$el);
         }
         labelRenderer.setVisible(false);
