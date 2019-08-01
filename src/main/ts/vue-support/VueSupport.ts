@@ -28,6 +28,9 @@ namespace comfortable {
       setItems : function(items : any[]) {
         this.$options.table.model.items = items;
         this.invalidate();
+        if (this.getModel().filteredItems) {
+          this.getModel().trigger('filterchange');
+        }
         return this;
       },
       getItems : function() {
