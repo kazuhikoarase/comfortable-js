@@ -89,31 +89,41 @@ namespace comfortable.renderer {
     var barW = 10;
     var barH = 6;
 
+    var off = calcOffset(td);
+
     var box = util.createElement('div', {
       style : { position : 'absolute' },
       attrs : { 'class' : '${prefix}-tooltip-box' } });
+    createMultiLineLabelRenderer(box).setLabel(text);
+    document.body.appendChild(box);
+
+    var rblt = off.left + off.displayWidth + barW + box.offsetWidth <
+      document.documentElement.scrollLeft + window.innerWidth;
     var bar = util.createSVGElement('svg', {
         style : { position : 'absolute' },
         attrs : { width : '' + barW, height : '' + barH,
           tabindex: '-1', focusable: 'false' } },
       [ util.createSVGElement('path', {
-          attrs : { d : 'M0 ' + barH + 'L' + barW + ' 0' } }) ]);
-    document.body.appendChild(box);
+          attrs : { d : rblt?
+            'M0 ' + barH + 'L' + barW + ' 0' :
+            'M0 0L' + barW + ' ' + barH } }) ]);
     document.body.appendChild(bar);
 
     var cs = window.getComputedStyle(box, null);
     bar.style.stroke = cs.borderColor || cs.borderBottomColor;
     bar.style.fill = 'none';
 
-    //box.textContent = text;
-    createMultiLineLabelRenderer(box).setLabel(text);
-
-    var off = calcOffset(td);
-
-    box.style.left = (off.left + off.displayWidth + barW - 1) + 'px';
-    box.style.top = (off.top - barH + 1) + 'px';
-    bar.style.left = (off.left + off.displayWidth) + 'px';
-    bar.style.top = (off.top - barH + 1) + 'px';
+    if (rblt) {
+      box.style.left = (off.left + off.displayWidth + barW - 1) + 'px';
+      box.style.top = (off.top - barH + 1) + 'px';
+      bar.style.left = (off.left + off.displayWidth) + 'px';
+      bar.style.top = (off.top - barH + 1) + 'px';
+    } else {
+      box.style.left = (off.left + off.displayWidth - barW - box.offsetWidth + 1) + 'px';
+      box.style.top = (off.top - barH - box.offsetHeight + 1) + 'px';
+      bar.style.left = (off.left + off.displayWidth - barW) + 'px';
+      bar.style.top = (off.top - barH + 1) + 'px';
+    }
 
     return {
       dispose : function() {
