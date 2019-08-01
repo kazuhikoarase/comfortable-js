@@ -662,7 +662,12 @@ namespace comfortable {
         return typeof v == 'number'? v : this.defaultCellWidth;
       }
       public getCellHeightAt(row : number) {
-        var v = this.cellHeight[row];
+        var r = row < headLength? row :
+          row >= this.getRowCount() - footLength?
+              row - (this.getRowCount() - footLength) +
+                headLength + bodyLength :
+          (row - headLength) % bodyLength + headLength;
+        var v = this.cellHeight[r];
         return typeof v == 'number'? v : this.defaultCellHeight;
       }
       public isColumnDraggable() {
