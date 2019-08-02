@@ -101,7 +101,8 @@ namespace comfortable.renderer {
       document.documentElement.scrollLeft + window.innerWidth;
     var bar = util.createSVGElement('svg', {
         style : { position : 'absolute' },
-        attrs : { width : '' + barW, height : '' + barH,
+        attrs : { 'class' : '${prefix}-tooltip-bar',
+          width : '' + barW, height : '' + barH,
           tabindex: '-1', focusable: 'false' } },
       [ util.createSVGElement('path', {
           attrs : { d : rblt?
