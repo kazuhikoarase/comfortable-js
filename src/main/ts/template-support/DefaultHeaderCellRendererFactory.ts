@@ -240,6 +240,8 @@ namespace comfortable {
           style : { verticalAlign: 'middle', marginRight: '2px' },
           on : { mousedown : function(event) {
             event.preventDefault();
+            // force valuecommit at first.
+            td.tableModel.trigger('valuecommit', { force : true });
             var cell = (<any>checkBox).cell;
             var booleanValues = cell.booleanValues || [ false, true ];
             var itemCount = tableModel.getItemCount();

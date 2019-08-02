@@ -978,7 +978,7 @@ namespace comfortable {
     private createInternalEditor() : InternalEditor {
       var table = this;
       var valuecommitHandler = function(event : any, detail : any) {
-        if (!editor.active/*editor.cell && detail.row == editor.cell.row &&
+        if (!editor.active || (detail && detail.force) /*editor.cell && detail.row == editor.cell.row &&
             detail.col == editor.cell.col*/) {
           // still editing after lost focus.
           // then, force end edit.
