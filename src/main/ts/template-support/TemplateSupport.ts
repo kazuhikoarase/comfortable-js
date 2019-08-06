@@ -560,15 +560,19 @@ namespace comfortable {
       public getItemAt(row : number) {
         return (this.filteredItems || this.items)[row];
       }
-      public getOrderedColumnIndexAt(col : number) {
+      private getOrderedColumnIndices() {
         if (this.orderedColumnIndices == null) {
           this.orderedColumnIndices = createDefaultOrderedColumnIndices(this);
         }
-        return this.orderedColumnIndices[col];
+        return this.orderedColumnIndices;
+      }
+      public getOrderedColumnIndexAt(col : number) {
+        return this.getOrderedColumnIndices()[col];
       }
       public getRawColumnAt(col : number) {
-        for (var i = 0; i < this.orderedColumnIndices.length; i += 1) {
-          if (this.orderedColumnIndices[i] == col) {
+        var indices = this.getOrderedColumnIndices();
+        for (var i = 0; i < indices.length; i += 1) {
+          if (indices[i] == col) {
             return i;
           }
         }
@@ -830,7 +834,7 @@ namespace comfortable {
           hiddenColumns : hiddenColumns,
           sort : this.sort,
           filters : filters,
-          orderedColumnIndices : this.orderedColumnIndices
+          orderedColumnIndices : this.getOrderedColumnIndices()
         };
         return JSON.parse(JSON.stringify(tableState) );
       }
