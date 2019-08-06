@@ -290,7 +290,7 @@ namespace comfortable {
         if (changed) {
           this.render(null, true);
           this.model.trigger('rowselectionchange',
-              { selectedRows : this.model.selectedRows });
+              { selectedRows : this.model.selectedRows, reason : 'click' });
         }
       }
     });
@@ -902,6 +902,11 @@ namespace comfortable {
     }).on('filterchange', function() {
 
       // apply filter
+
+      // clear selected rows.
+      this.selectedRows = {};
+      this.trigger('rowselectionchange',
+          { selectedRows : this.selectedRows, reason : 'filterchange' });
 
       var filters : { [ dataField : string ] : Filter } = {};
       !function() {
