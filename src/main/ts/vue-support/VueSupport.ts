@@ -87,7 +87,7 @@ namespace comfortable {
           window.setTimeout(observeSize, this.$options.observeInterval);
         }
       }.bind(this);
-      window.setTimeout(observeSize, this.$options.observeInterval);
+      observeSize();
     },
     beforeDestroy : function() {
       // stop observing
