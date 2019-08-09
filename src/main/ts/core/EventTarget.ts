@@ -28,6 +28,7 @@ namespace comfortable {
     trigger : (type : string, detail? : any) => EventTarget;
     on : (type : string, listener : EventListener) => EventTarget;
     off : (type : string, listener : EventListener) => EventTarget;
+    once : (type : string, listener : EventListener) => EventTarget;
   }
 
   /**
@@ -54,6 +55,14 @@ namespace comfortable {
       this.map[type] = this.listeners(type).filter(function(l : EventListener) {
         return listener != l;
       });
+      return this;
+    }
+    public once(type : string, listener : EventListener) {
+      var wrapper = function(event : Event, detail? : any) {
+        listener.apply(this, arguments);
+        this.off(type, wrapper);
+      };
+      this.on(type,  wrapper);
       return this;
     }
   }

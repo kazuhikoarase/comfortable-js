@@ -156,6 +156,7 @@ declare namespace comfortable {
         trigger: (type: string, detail?: any) => EventTarget;
         on: (type: string, listener: EventListener) => EventTarget;
         off: (type: string, listener: EventListener) => EventTarget;
+        once: (type: string, listener: EventListener) => EventTarget;
     }
 }
 declare namespace comfortable {

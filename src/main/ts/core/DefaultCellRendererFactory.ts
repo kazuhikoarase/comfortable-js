@@ -149,6 +149,10 @@ namespace comfortable {
               editor.focus();
             },
             endEdit : function() {
+              if (!editor) {
+                // disposed.
+                return null;
+              }
               editing = false;
               if (!renderIsEditor) {
                 labelRenderer.setVisible(true);
