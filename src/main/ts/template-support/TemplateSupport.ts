@@ -540,6 +540,10 @@ namespace comfortable {
           (this.filters[dataField] = this.filterFactory(dataField) );
       }
       public hiddenColumns : { [ orderedCol : number ] : boolean } = {};
+      public isColumnHiddenAt(col : number) {
+        var orderedCol = this.getOrderedColumnIndexAt(col);
+        return this.hiddenColumns[orderedCol];
+      }
       public items : any[] = [];
       public filteredItems : any[] = null;
       public hoverRow = -1;

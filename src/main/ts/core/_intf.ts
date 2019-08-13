@@ -99,6 +99,7 @@ namespace comfortable {
     checkSpaned : (row : number, col : number) => { row : number, col : number };
     isColumnResizableAt : (col : number) => boolean;
     isColumnDraggable : () => boolean;
+    isColumnHiddenAt : (col : number) => boolean;
   }
 
   export interface TextEditorOptions {

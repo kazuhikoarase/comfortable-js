@@ -797,7 +797,9 @@ namespace comfortable {
           var height = rect.height;
           for (var col = tableState.minCol; col <= tableState.maxCol;
               col += 1, handleIndex += 1) {
-            var handle = getOrCrt();
+            if (this.model.isColumnHiddenAt(col) ) {
+              continue;
+            }
             left += tableModel.getCellWidthAt(col);
             if (left > rect.left + rect.width) {
               break;
@@ -805,6 +807,7 @@ namespace comfortable {
             if (!this.model.isColumnResizableAt(col) ) {
               continue;
             }
+            var handle = getOrCrt();
             util.set(handle.$el, { style : { display : '',
               left : left + 'px', height : height + 'px' } });
             util.set(handle.$el.childNodes[0], {

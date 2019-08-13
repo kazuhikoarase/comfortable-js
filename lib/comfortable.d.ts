@@ -85,6 +85,7 @@ declare namespace comfortable {
         };
         isColumnResizableAt: (col: number) => boolean;
         isColumnDraggable: () => boolean;
+        isColumnHiddenAt: (col: number) => boolean;
     }
     interface TextEditorOptions {
         decimalDigits?: number;

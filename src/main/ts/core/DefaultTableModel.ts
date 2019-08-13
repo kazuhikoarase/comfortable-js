@@ -62,6 +62,7 @@ namespace comfortable {
     }
     public isColumnResizableAt(col : number) { return true; }
     public isColumnDraggable() { return true; }
+    public isColumnHiddenAt(col : number) { return false; }
   }
 
 }
