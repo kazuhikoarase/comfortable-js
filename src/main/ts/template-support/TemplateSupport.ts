@@ -27,7 +27,7 @@ namespace comfortable {
     var lockLeft : number = (<any>tableModel).lockLeft;
 
     var ColumnType = { LOCK_COLUMN : 'lockColumn', COLUMN : 'column' };
-    
+
     interface ColumnItem {
       type : string;
       label : string;
@@ -80,6 +80,32 @@ namespace comfortable {
               var listitem = util.closest(event.target,
                   { className : '${prefix}-listitem', root : dialog.$el });
               if (!listitem) {
+                if (!scroll.active) {
+                  scroll.active = true;
+                  scroll.event = event;
+                  var scrollTarget = dialog.$el.firstChild;
+                  var off = util.offset(scrollTarget);
+                  var top : number = off.top + scrollTarget.scrollTop;
+                  var scrollHandler = function() {
+                    var pageY = scroll.event.pageY;
+                    var delta = 0;
+                    if (pageY < top) {
+                      delta = -scroll.delta;
+                    } else if (top + scrollTarget.offsetHeight < pageY) {
+                      delta = scroll.delta;
+                    }
+                    if (delta != 0) {
+                      scrollTarget.scrollTop += delta;
+                      bar.style.display = 'none';
+                    }
+                    if (scroll.active) {
+                      window.setTimeout(scrollHandler, scroll.timeout);
+                    }
+                  };
+                  scrollHandler();
+                } else {
+                  scroll.event = event;
+                }
                 return;
               }
               indexTo = columnItems.indexOf(listitem);
@@ -92,8 +118,10 @@ namespace comfortable {
               }
               bar.style.display = '';
               bar.style.top = top + 'px';
+              scroll.active = false;
             };
             var mouseupHandler = function(event : Event) {
+              scroll.active = false;
               util.$(document).off('mousemove', mousemoveHandler).
                 off('mouseup', mouseupHandler);
               columnItems.forEach(function(elm) {
@@ -125,6 +153,12 @@ namespace comfortable {
             var indexFrom = columnItems.indexOf(target);
             var indexTo = -1;
             var started = false;
+            var scroll = {
+              active : false,
+              event : null as Event,
+              delta : 16,
+              timeout : 100
+            };
             var dragPoint = { x : event.pageX, y : event.pageY };
             dialog.$el.appendChild(bar);
             if (lastTarget != null) {
