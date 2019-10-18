@@ -248,14 +248,10 @@ namespace comfortable {
                 this.frame.appendChild(marker);
                 return;
               }
-              // begin edit by logical row and col
-              if (this.editor.cell != null &&
-                  this.editor.cell.row == td.row &&
-                  this.editor.cell.col == td.col) {
-              } else if (this.isEditableAt(td.row, td.col) ) {
-                event.preventDefault();
-                this.editor.beginEdit(td.row, td.col, true);
-              }
+              this.beginEditIfNeed(event, td);
+            }),
+            focusin: cellEventHandler( (event, td) => {
+              this.beginEditIfNeed(event, td);
             })
           }
         } );
@@ -263,7 +259,16 @@ namespace comfortable {
 
       return tables;
     })();
-
+    private beginEditIfNeed(event : Event, td : ElmCache) {
+      // begin edit by logical row and col
+      if (this.editor.cell != null &&
+          this.editor.cell.row == td.row &&
+          this.editor.cell.col == td.col) {
+      } else if (this.isEditableAt(td.row, td.col) ) {
+        event.preventDefault();
+        this.editor.beginEdit(td.row, td.col, true);
+      }
+    }
     private barSize : { width : number, height : number } = null;
     private measureBarSize() {
       if (this.barSize == null) {
