@@ -182,7 +182,7 @@ namespace comfortable {
                       var tableState = tbl.tableState;
                       var rect = this.getCellSizeCache().rects[i];
                       var left = rect.left + tableState.left;
-                      for (var col = tableState.minCol; col <= tableState.maxCol; col += 1) {
+                      for (var col = tableState.minCol; col <= tableState.maxCol + 1; col += 1) {
                         var distance = Math.abs(left - centerX);
                         if ( (targetColumn == null ||
                                 distance < targetColumn.distance) &&
