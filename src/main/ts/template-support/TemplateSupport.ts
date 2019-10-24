@@ -906,18 +906,36 @@ namespace comfortable {
         return;
       }
 
+      detail.originalEvent.preventDefault();
+      this.trigger('showcontextmenu', {
+        x: detail.originalEvent.pageX,
+        y: detail.originalEvent.pageY });
+
+    }).on('showcontextmenu', function(event : Event, detail : any) {
+
       var menuItems = this.getContextMenuItems();
       if (!menuItems || menuItems.length == 0) {
         return;
       }
 
-      detail.originalEvent.preventDefault();
       util.callLater(function() {
-        ui.showMenu(
-            detail.originalEvent.pageX,
-            detail.originalEvent.pageY,
-            menuItems);
+        ui.showMenu(detail.x, detail.y, menuItems);
       });
+
+    });
+
+    util.set(table.$el, {
+      on : {
+        contextmenu : function(event) {
+          var tbl = util.closest(event.target,
+            { tagName : 'TABLE', root : table.$el });
+          if (tbl == null) {
+            event.preventDefault();
+            table.trigger('showcontextmenu', {
+              x: event.pageX, y: event.pageY });
+          }
+        }
+      }
     });
 
     table.model.on('valuechange', function(event : Event, detail : any) {
