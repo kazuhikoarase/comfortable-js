@@ -415,6 +415,7 @@ declare namespace comfortable {
         valueField?: string;
         factory?: TableCellRendererFactory;
         label?: (string | ((model: TemplateTableModel) => string));
+        description?: (string | ((model: TemplateTableModel) => string));
         comparator?: Comparator;
     }
     type Comparator = (v1: any, v2: any) => number;

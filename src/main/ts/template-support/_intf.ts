@@ -45,6 +45,7 @@ namespace comfortable {
     factory? : TableCellRendererFactory;
 
     label? : (string | ((model : TemplateTableModel) => string) );
+    description? : (string | ((model : TemplateTableModel) => string) );
     /** dataType : 'number' */
     comparator? : Comparator;
   }

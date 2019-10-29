@@ -47,9 +47,15 @@ namespace comfortable {
         }
         if (col < columnCount) {
           var cell = tableModel.getCellAt(0, col);
+          var label = tableModel.getValueAt(0, col);
+          if (!label) {
+            var style : any = tableModel.getCellStyleAt(0, col);
+            var desc = style.description;
+            label = (typeof desc == 'function'? desc(tableModel) : desc) || '';
+          }
           var orderedCol = tableModel.getOrderedColumnIndexAt(col);
           columns.push({ type : ColumnType.COLUMN,
-            label : tableModel.getValueAt(0, col),
+            label : label,
             hidden : !!tableModel.hiddenColumns[orderedCol],
             col : orderedCol, colSpan : cell.colSpan });
           col += cell.colSpan;
