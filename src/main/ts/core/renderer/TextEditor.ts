@@ -123,19 +123,20 @@ namespace comfortable.renderer {
 
       this.tableModel = td.tableModel;
       this.cell = cell;
-
-      delete this.textfield.style.imeMode;
-      delete this.textfield.maxLength;
       this.decimalDigits = cell.decimalDigits;
+
+      var imeMode = '';
       if (typeof cell.imeMode == 'string') {
-        this.textfield.style.imeMode = cell.imeMode;
+        imeMode = cell.imeMode;
       } else {
         if (this.dataType == 'number' ||
             this.dataType == 'date' ||
             this.dataType == 'select-one') {
-          this.textfield.style.imeMode = 'disabled';
+          imeMode = 'disabled';
         }
       }
+
+        delete this.textfield.maxLength;
       if (typeof cell.maxLength == 'number') {
         this.textfield.maxLength = cell.maxLength;
       }
@@ -150,6 +151,7 @@ namespace comfortable.renderer {
       var opts : ElementOptions = {
           props : { readOnly : readOnly },
           style : this.getChangedStyle({
+            imeMode : imeMode,
             textAlign : cs.textAlign,
             verticalAlign : cs.verticalAlign,
             color : cs.color,
