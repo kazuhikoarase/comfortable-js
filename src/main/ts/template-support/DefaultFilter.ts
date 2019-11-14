@@ -424,7 +424,7 @@ namespace comfortable {
         cfDialog.show();
       };
 
-      var dataType = (<any>cell).dataType || 'string';
+      var dataType = this.dataType || 'string';
       var customFilterButton = createFilterButton(
         dataType == 'number'? messages.NUMBER_FILTERS :
         dataType == 'date'? messages.DATE_FILTERS :
