@@ -493,7 +493,7 @@ namespace comfortable {
               filterItemList.items = filterItems.
                   filter(function(filterItem, i) {
                 return !(i > 0 && value &&
-                  filterItem.label.indexOf(value) == -1);
+                  (filterItem.label || '').indexOf(value) == -1);
               });
               filterItemList.invalidate();
             }} }),
