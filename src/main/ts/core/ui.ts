@@ -146,11 +146,14 @@ namespace comfortable.ui {
               },
               mousedown : function(event : Event) {
                 event.preventDefault();
+              },
+              click : function(event : Event) {
                 if (event.which != 1) {
                   return;
                 }
                 if (menuItem.action) {
                   menuItem.action(event);
+                  dispose();
                 }
               }
             }
@@ -163,6 +166,11 @@ namespace comfortable.ui {
       }
     };
     var mousedownHandler = function(event : Event) {
+      var menu = util.closest(event.target,
+        { className : '${prefix}-contextmenu', root : document.body });
+      if (menu != null) {
+        return;
+      }
       util.$(document).off('mousedown', mousedownHandler);
       dispose();
     };
