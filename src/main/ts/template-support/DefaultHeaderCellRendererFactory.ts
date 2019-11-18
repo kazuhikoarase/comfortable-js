@@ -82,7 +82,10 @@ namespace comfortable {
             style : filterLabelStyle, props : { textContent : label } })
         ], { attrs : { 'class' : '${prefix}-clickable-op' }, on : {
           mousedown : function(event) { event.preventDefault(); },
-          click : function() {
+          click : function(event) {
+            if (event.which != 1) {
+              return;
+            }
             flDialog.trigger('sortclick', { label : label }); }
         } })
       };
@@ -240,6 +243,9 @@ namespace comfortable {
           style : { verticalAlign: 'middle', marginRight: '2px' },
           on : { mousedown : function(event) {
             event.preventDefault();
+            if (event.which != 1) {
+              return;
+            }
             // force valuecommit at first.
             td.tableModel.trigger('valuecommit', { force : true });
             var cell = (<any>checkBox).cell;
@@ -303,6 +309,9 @@ namespace comfortable {
           attrs : { tabindex: '-1', focusable: 'false' },
           on : { mousedown : function(event) {
               event.preventDefault();
+              if (event.which != 1) {
+                return;
+              }
               if (dialog == null) {
                 // wait for end edit then show dialog.
                 util.callLater(function() {

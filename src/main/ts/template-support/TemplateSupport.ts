@@ -934,6 +934,12 @@ namespace comfortable {
     util.set(table.$el, {
       on : {
         contextmenu : function(event) {
+          
+          var menu = util.closest(event.target,
+            { className : '${prefix}-contextmenu', root : table.$el });
+          if (menu != null) {
+            return;
+          }
           var tbl = util.closest(event.target,
             { tagName : 'TABLE', root : table.$el });
           if (tbl == null) {
