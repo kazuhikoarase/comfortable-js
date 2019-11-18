@@ -733,10 +733,10 @@ namespace comfortable {
               cellWidth + deltaX) - cellWidth;
           handle.$el.style.left = (handle.left + deltaX) + 'px';
         };
+        event.preventDefault();
         if (event.which != 1) {
           return;
         }
-        event.preventDefault();
         this.editor.endEdit('mousedown');
         var handleIndex = this.colResizeHandles.map(function(handle) {
           return handle.$el; } ).indexOf(event.currentTarget);

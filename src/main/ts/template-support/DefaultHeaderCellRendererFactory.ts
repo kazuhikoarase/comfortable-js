@@ -81,7 +81,9 @@ namespace comfortable {
           util.createElement('span', {
             style : filterLabelStyle, props : { textContent : label } })
         ], { attrs : { 'class' : '${prefix}-clickable-op' }, on : {
-          mousedown : function(event) { event.preventDefault(); },
+          mousedown : function(event) {
+            event.preventDefault();
+          },
           click : function(event) {
             if (event.which != 1) {
               return;
