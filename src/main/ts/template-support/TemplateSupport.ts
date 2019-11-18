@@ -70,6 +70,9 @@ namespace comfortable {
             (column.type == ColumnType.LOCK_COLUMN?
                 ' ${prefix}-column-edit-lock-column' : '') },
           on : { mousedown : function(event) {
+            if (event.which != 1) {
+              return;
+            }
             event.preventDefault();
             columnItems.forEach(function(elm) {
               util.$(elm).removeClass('${prefix}-clickable');

@@ -42,6 +42,9 @@ namespace comfortable.ui {
       attrs : { 'class' : '${prefix}-button' },
       style : { verticalAlign : 'top' },
       on : { mousedown : function(event : Event) {
+        if (event.which != 1) {
+          return;
+        }
         event.preventDefault();
       }, click : function(event : Event) { action(event); } } });
   };
@@ -142,6 +145,9 @@ namespace comfortable.ui {
                 }
               },
               mousedown : function(event : Event) {
+                if (event.which != 1) {
+                  return;
+                }
                 if (menuItem.action) {
                   menuItem.action(event);
                 }
