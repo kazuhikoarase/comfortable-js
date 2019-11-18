@@ -363,6 +363,8 @@ namespace comfortable.ui {
 
     optionsData.options.forEach(function(option : any, index : number) {
       cont.appendChild(util.createElement('div', {
+        style : { display: option[optionsData.selectableField] === false?
+                           'none' : '' },
         attrs : { 'class': '${prefix}-option' },
         props : { textContent : option[optionsData.labelField] + '\u00a0' },
         on: {
@@ -391,7 +393,9 @@ namespace comfortable.ui {
         (<any>cont.parentNode).scrollTop = selectedOption.offsetTop;
       }
     };
-
+    var selectable = (index : number) => {
+      return optionsData.options[index][optionsData.selectableField] !== false;
+    };
     var options = util.extend(new EventTargetImpl(), {
       $el: util.createElement('div', {
         props : { },
@@ -399,11 +403,17 @@ namespace comfortable.ui {
         style : { overflow : 'auto' }
       }, [cont]),
       rollIndex : function(offset : number) {
-        var index = Math.max(0,
-          Math.min(selectedIndex + offset,
-            optionsData.options.length - 1) );
+        var index = selectedIndex;
+        while (offset != 0 && 0 <= index + offset &&
+            index + offset < optionsData.options.length) {
+          index += offset;
+          if (selectable(index) ) {
+            selectedIndex = index;
+            break;
+          }
+        }
         if (0 <= index && index < optionsData.options.length) {
-          selectedIndex = index;
+          // do nothing.
         } else {
           selectedIndex = -1;
         }

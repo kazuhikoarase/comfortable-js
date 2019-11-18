@@ -19,6 +19,7 @@ namespace comfortable.renderer {
     options : any[];
     labelField : string;
     valueField : string;
+    selectableField : string;
   }
 
   export var createTextEditorSelectBox =
@@ -29,12 +30,23 @@ namespace comfortable.renderer {
       editor.textfield.value = index == -1? '' :
         optionsData.options[index][optionsData.labelField];
     };
+
+    var selectable = (index : number) => {
+      return optionsData.options[index][optionsData.selectableField] !== false;
+    };
+
     var rollIndex = (offset : number) => {
-      var index = Math.max(0,
-        Math.min(optionsData.selectedIndex + offset,
-          optionsData.options.length - 1) );
+      var index = optionsData.selectedIndex;
+      while (offset != 0 && 0 <= index + offset &&
+          index + offset < optionsData.options.length) {
+        index += offset;
+        if (selectable(index) ) {
+          setSelectedIndex(index);
+          break;
+        }
+      }
       if (0 <= index && index < optionsData.options.length) {
-        setSelectedIndex(index);
+        // do nothing.
       } else {
         setSelectedIndex(-1);
       }
@@ -191,7 +203,8 @@ namespace comfortable.renderer {
         selectedIndex : -1,
         options : SelectBox.getOptions(cell),
         labelField : cell.labelField || 'label',
-        valueField : cell.valueField || 'value'
+        valueField : cell.valueField || 'value',
+        selectableField : cell.selectableField || 'selectable'
       };
     };
 

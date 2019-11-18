@@ -125,6 +125,7 @@ namespace comfortable {
   export interface SelectBoxCell extends TableCell {
     valueField? : string;
     labelField? : string;
+    selectableField? : string;
     options? : any[] | ( (row : number,col : number) => any[]);
   }
 
