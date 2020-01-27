@@ -240,11 +240,15 @@ namespace comfortable {
         util.extend(checkBox.$el.style,
           { border : 'none', verticalAlign : 'middle' });
         checkBox.setChecked(false);
+        var labelContent = (<any>cell).label;
+        if (typeof labelContent == 'function') {
+          labelContent = labelContent(tableModel);
+        }
         var label = util.createElement('span', {
               attrs : { 'class' : '${prefix}-clickable-op' },
               style : filterLabelStyle,
               props : { textContent :
-                util.format(messages.CLEAR_FILTER_FROM, (<any>cell).label) }
+                util.format(messages.CLEAR_FILTER_FROM, labelContent) }
             } );
         return {
           $el : util.createElement('div', [ checkBox.$el, label ],
