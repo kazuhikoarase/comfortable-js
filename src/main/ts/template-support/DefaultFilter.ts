@@ -108,6 +108,11 @@ namespace comfortable {
 
       var messages = i18n.getMessages();
 
+      var labelContent = (<any>cell).label;
+      if (typeof labelContent == 'function') {
+        labelContent = labelContent(tableModel);
+      }
+
       var dataField = cell.dataField;
       var filterValues = getFilterValues(tableModel, dataField);
 
@@ -240,10 +245,6 @@ namespace comfortable {
         util.extend(checkBox.$el.style,
           { border : 'none', verticalAlign : 'middle' });
         checkBox.setChecked(false);
-        var labelContent = (<any>cell).label;
-        if (typeof labelContent == 'function') {
-          labelContent = labelContent(tableModel);
-        }
         var label = util.createElement('span', {
               attrs : { 'class' : '${prefix}-clickable-op' },
               style : filterLabelStyle,
@@ -393,7 +394,7 @@ namespace comfortable {
             } }),
           util.createElement('fieldset', [
             util.createElement('legend', { props : {
-              textContent: '"' + (<any>cell).label +'"' } }),
+              textContent: '"' + labelContent +'"' } }),
             op1.$el, rdGrp, op2.$el ]),
           util.createElement('div',
             { style : { textAlign : 'right' } }, [
