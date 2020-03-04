@@ -20,6 +20,7 @@ namespace comfortable.renderer {
     labelField : string;
     valueField : string;
     selectableField : string;
+    disabledField : string;
   }
 
   export var createTextEditorSelectBox =
@@ -204,7 +205,8 @@ namespace comfortable.renderer {
         options : SelectBox.getOptions(cell),
         labelField : cell.labelField || 'label',
         valueField : cell.valueField || 'value',
-        selectableField : cell.selectableField || 'selectable'
+        selectableField : cell.selectableField || 'selectable',
+        disabledField : cell.disabledField || 'disabled'
       };
     };
 
