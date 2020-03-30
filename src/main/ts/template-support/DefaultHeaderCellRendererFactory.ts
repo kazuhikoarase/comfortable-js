@@ -271,13 +271,22 @@ namespace comfortable {
               }
             }
             var checked = trueCount != editableCount;
+            var changed = false;
+            var newValue = booleanValues[checked? 1 : 0];
             for (var i = 0; i < itemCount; i += 1) {
               var item = tableModel.getItemAt(i);
               if (editable[i]) {
-                item[cell.dataField] = booleanValues[checked? 1 : 0];
+                if (item[cell.dataField] !== newValue) {
+                  item[cell.dataField] = newValue;
+                  changed = true;
+                }
               }
             }
             updateCheckBoxState();
+            if (changed) {
+              tableModel.trigger('groupvaluechange',
+                { dataField : cell.dataField, newValue : newValue });
+            }
           }}});
 
         if (!valuechangeHandler) {
