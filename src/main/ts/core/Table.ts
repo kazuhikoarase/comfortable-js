@@ -98,6 +98,11 @@ namespace comfortable {
 
     private tabState = { keyCode : 0, shiftKey : false };
     private document_keydownHandler = (event : any) => {
+      if (event.keyCode != 18 /* not Alt */ && event.altKey) {
+        // endEdit on Alt + some key(not Alt) combination
+        this.editor.endEdit('altKey');
+        this.render();
+      }
       this.tabState = {
         keyCode : event.keyCode,
         shiftKey : event.shiftKey
