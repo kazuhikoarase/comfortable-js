@@ -377,14 +377,19 @@ namespace comfortable.ui {
     var selectedIndex = optionsData.selectedIndex;
 
     optionsData.options.forEach(function(option : any, index : number) {
+      var disabled = option[optionsData.disabledField] === true;
       cont.appendChild(util.createElement('div', {
-        style : { display: option[optionsData.selectableField] === false?
-                           'none' : '' },
-        attrs : { 'class': '${prefix}-option' },
+        style : { display:
+            option[optionsData.selectableField] === false? 'none' : '' },
+        attrs : { 'class': '${prefix}-option' +
+            (disabled? ' ${prefix}-option-disabled' : '') },
         props : { textContent : option[optionsData.labelField] + '\u00a0' },
         on: {
           mousedown: function(event) { event.preventDefault(); },
           click: function() {
+            if (disabled) {
+              return;
+            }
             selectedIndex = index;
             options.trigger('click', { index : index });
           } } 
@@ -409,7 +414,9 @@ namespace comfortable.ui {
       }
     };
     var selectable = (index : number) => {
-      return optionsData.options[index][optionsData.selectableField] !== false;
+      var option = optionsData.options[index];
+      return option[optionsData.selectableField] !== false &&
+        option[optionsData.disabledField] !== true;
     };
     var options = util.extend(new EventTargetImpl(), {
       $el: util.createElement('div', {

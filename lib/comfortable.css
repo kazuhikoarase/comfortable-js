@@ -159,6 +159,9 @@ TABLE.ctj-cal-table TD.ctj-current-date:hover {
 .ctj-option-selected {
   background-color: rgba(0,0,0,0.2);
 }
+.ctj-option-disabled {
+  color: rgba(0,0,0,0.4);
+}
 
 .ctj-tooltip-corner {
   stroke: none;

@@ -126,6 +126,7 @@ namespace comfortable {
     valueField? : string;
     labelField? : string;
     selectableField? : string;
+    disabledField? : string;
     options? : any[] | ( (row : number,col : number) => any[]);
   }
 
