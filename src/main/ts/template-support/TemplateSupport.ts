@@ -646,7 +646,7 @@ namespace comfortable {
           return c1.col < c2.col? -1 : 1;
         });
 
-        var lineRowOffset = this.getLineRowCountAt(0);
+        var lineRowOffset = this.getLockTop() > 0? this.getLineRowCountAt(0) : 0;
         var lineRowCount = this.getLineRowCountAt(this.getLockTop() );
         var items = this.filteredItems || this.items;
 
