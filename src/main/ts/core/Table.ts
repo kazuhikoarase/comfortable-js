@@ -601,9 +601,9 @@ namespace comfortable {
       this.findNextEditable(row, col, offset,
         function(r, c) {
           if (offset.row == -1 || offset.col == -1) {
-            found = !(row < r && col < c);
+            found = row > r || (row == r && col > c);
           } else if (offset.row == 1 || offset.col == 1) {
-            found = !(row > r && col > c);
+            found = row < r || (row == r && col < c);
           }
         });
 
