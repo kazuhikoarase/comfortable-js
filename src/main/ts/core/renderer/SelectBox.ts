@@ -26,7 +26,7 @@ namespace comfortable.renderer {
       attrs : { 'class' : '${prefix}-editor' },
       on : {
         blur : (event) => {
-          this.tableModel.trigger('valuecommit', this.cell);
+          this.tableModel.trigger('valuecommit', { force : true });
         },
         keydown : (event) => {
 
