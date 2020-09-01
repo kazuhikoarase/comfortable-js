@@ -27,7 +27,7 @@ namespace comfortable.renderer {
         tabindex : '-1' },
       on : {
         blur : (event) => {
-          this.tableModel.trigger('valuecommit', { force : true });
+          this.tableModel.trigger('valuecommit', this.cell);
         },
         keydown : (event) => {
 
