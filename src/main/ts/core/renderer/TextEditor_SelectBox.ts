@@ -115,13 +115,16 @@ namespace comfortable.renderer {
           }
         },
         blur : function() {
-          hideOptions();
+          if (!optionsMouseDown) {
+            hideOptions();
+          }
         }
       }
     });
 
     var options : any = null;
     var optionsData : OptionsData = null;
+    var optionsMouseDown = false;
 
     var mousedownHandler = function(event : any) {
       if (options && util.closest(event.target, { $el: options.$el }) ) {
@@ -140,16 +143,30 @@ namespace comfortable.renderer {
         .on('click', function(event : any, detail : any) {
           setSelectedIndex(detail.index);
           hideOptions();
+          editor.textfield.select();
         });
       editor.enableEvent = false;
       var target = editor.$el;
       var off = util.offset(target);
-      util.set(options.$el, { style: {
-        position: 'absolute',
-        left : off.left + 'px',
-        top : (off.top + target.offsetHeight) + 'px',
-        minWidth : target.offsetWidth + 'px',
-        maxHeight : '200px' } });
+      util.set(options.$el, {
+        style: {
+          position: 'absolute',
+          left : off.left + 'px',
+          top : (off.top + target.offsetHeight) + 'px',
+          minWidth : target.offsetWidth + 'px',
+          maxHeight : '200px'
+        },
+        on: {
+          mousedown: function(event) {
+            var mouseupHandler = function() {
+              util.$(document).off('mouseup', mouseupHandler);
+              optionsMouseDown = false;
+            };
+            util.$(document).on('mouseup', mouseupHandler);
+            optionsMouseDown = true;
+          }
+        }
+      });
       document.body.appendChild(options.$el);
       util.$(document).on('mousedown', mousedownHandler);
       // force updateUI
