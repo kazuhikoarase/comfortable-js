@@ -213,15 +213,16 @@ namespace comfortable {
           var hiddenColumns : { [ orderedCol : number ] : boolean } = {};
           var lockColumn = 0;
           var enableLockColumn = true;
-          columns.forEach(function(column, col) {
+          columns.forEach(function(column) {
             if (column.type == 'column') {
               for (var i = 0; i < column.colSpan; i += 1) {
                 orderedColumnIndices.push(i + column.col);
-              }
-              if (column.hidden) {
-                hiddenColumns[column.col] = true;
+                if (column.hidden) {
+                  hiddenColumns[i + column.col] = true;
+                }
               }
             } else if (column.type == ColumnType.LOCK_COLUMN) {
+              var col = orderedColumnIndices.length;
               lockColumn = col < columns.length - 1? col : 0;
               enableLockColumn = !column.hidden;
             }
