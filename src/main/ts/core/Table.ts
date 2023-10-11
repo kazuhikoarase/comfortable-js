@@ -110,14 +110,24 @@ namespace comfortable {
       };
     };
 
+    private document_mousedownHandler = (event : any) => {
+				      if (!util.closest(event.target, { $el : this.$el }) ) {
+					        // endEdit when mousedown outside table.
+        this.editor.endEdit('mousedown');
+        this.render();
+      }
+    };
+
     constructor(model : TableModel) {
       super();
       this.model = model;
       document.addEventListener('keydown', this.document_keydownHandler);
+      document.addEventListener('mousedown', this.document_mousedownHandler);
     }
 
     public dispose() {
       document.removeEventListener('keydown', this.document_keydownHandler);
+      document.removeEventListener('mousedown', this.document_mousedownHandler);
     }
 
     private tables = ( () => {
