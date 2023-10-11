@@ -111,8 +111,8 @@ namespace comfortable {
     };
 
     private document_mousedownHandler = (event : any) => {
-				      if (!util.closest(event.target, { $el : this.$el }) ) {
-					        // endEdit when mousedown outside table.
+      if (!util.closest(event.target, { $el : this.$el }) ) {
+        // endEdit when mousedown outside table.
         this.editor.endEdit('mousedown');
         this.render();
       }
