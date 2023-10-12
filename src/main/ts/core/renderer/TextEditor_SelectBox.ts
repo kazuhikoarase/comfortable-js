@@ -148,9 +148,11 @@ namespace comfortable.renderer {
       editor.enableEvent = false;
       var target = editor.$el;
       var off = util.offset(target);
+      // marker class for endEdit.
+      util.$(options.$el).addClass('${prefix}-options-frame');
       util.set(options.$el, {
         style: {
-          position: 'absolute',
+          position : 'absolute',
           left : off.left + 'px',
           top : (off.top + target.offsetHeight) + 'px',
           minWidth : target.offsetWidth + 'px',

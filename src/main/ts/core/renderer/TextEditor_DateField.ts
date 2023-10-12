@@ -140,6 +140,8 @@ namespace comfortable.renderer {
         position: 'absolute',
         left : off.left + 'px',
         top : (off.top + editor.textfield.offsetHeight) + 'px' } });
+      // marker class for endEdit.
+      util.$(cal.$el).addClass('${prefix}-options-frame');
       document.body.appendChild(cal.$el);
       util.$(document).on('mousedown', mousedownHandler);
     };

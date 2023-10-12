@@ -110,10 +110,15 @@ namespace comfortable {
       };
     };
 
-    private document_clickHandler = (event : any) => {
-      if (!util.closest(event.target, { $el : this.$el }) ) {
-        // endEdit when click outside table.
-        this.editor.endEdit('click');
+    private document_mousedownHandler = (event : any) => {
+      if (util.closest(event.target, { $el : this.$el }) ) {
+        // table itself. ignore.
+        return;
+      } else if (util.closest(event.target, { className : '${prefix}-options-frame' }) ) {
+        // parts ov table. ignore.
+        return;
+      } else {
+	        this.editor.endEdit('doc_mousedown');
         this.render();
       }
     };
@@ -122,12 +127,12 @@ namespace comfortable {
       super();
       this.model = model;
       document.addEventListener('keydown', this.document_keydownHandler);
-      document.addEventListener('click', this.document_clickHandler);
+      document.addEventListener('mousedown', this.document_mousedownHandler);
     }
 
     public dispose() {
       document.removeEventListener('keydown', this.document_keydownHandler);
-      document.removeEventListener('click', this.document_clickHandler);
+      document.removeEventListener('mousedown', this.document_mousedownHandler);
     }
 
     private tables = ( () => {
