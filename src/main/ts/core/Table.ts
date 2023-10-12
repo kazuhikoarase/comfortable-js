@@ -110,10 +110,10 @@ namespace comfortable {
       };
     };
 
-    private document_mousedownHandler = (event : any) => {
+    private document_clickHandler = (event : any) => {
       if (!util.closest(event.target, { $el : this.$el }) ) {
-        // endEdit when mousedown outside table.
-        this.editor.endEdit('mousedown');
+        // endEdit when click outside table.
+        this.editor.endEdit('click');
         this.render();
       }
     };
@@ -122,12 +122,12 @@ namespace comfortable {
       super();
       this.model = model;
       document.addEventListener('keydown', this.document_keydownHandler);
-      document.addEventListener('mousedown', this.document_mousedownHandler);
+      document.addEventListener('click', this.document_clickHandler);
     }
 
     public dispose() {
       document.removeEventListener('keydown', this.document_keydownHandler);
-      document.removeEventListener('mousedown', this.document_mousedownHandler);
+      document.removeEventListener('click', this.document_clickHandler);
     }
 
     private tables = ( () => {
